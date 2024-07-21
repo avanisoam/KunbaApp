@@ -14,24 +14,25 @@ import kotlinx.coroutines.launch
 
 class RootDetailViewModel(
     savedStateHandle: SavedStateHandle,
-    //private val apiRepository: IApiRepository
+    private val apiRepository: IApiRepository
 ): ViewModel(){
 
-    /*
-    val rootIdFromUrl: ULong = checkNotNull(
+
+    val rootIdFromUrl: Int = checkNotNull(
         savedStateHandle[
             RootDetailDestination.ID_ARG
         ]
     )
-     */
 
     private val _uiState = MutableStateFlow<RootDetailUiState>(RootDetailUiState())
     val uiState: StateFlow<RootDetailUiState> = _uiState
 
-    /*
+
     private fun getRootDetail(){
         viewModelScope.launch {
+            Log.d("rootIdFromUrl", rootIdFromUrl.toString())
             val response = apiRepository.fetchRootDetails(rootIdFromUrl)
+            Log.d("rootIdFromUrl", response.toString())
             val result = response.body()
             Log.d("URL", rootIdFromUrl.toString())
             if(result != null) {
@@ -44,11 +45,8 @@ class RootDetailViewModel(
         }
 
     }
-
-     */
-
     init {
-        //getRootDetail()
+        getRootDetail()
     }
 
 }

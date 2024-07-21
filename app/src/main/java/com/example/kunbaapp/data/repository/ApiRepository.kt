@@ -8,5 +8,5 @@ import retrofit2.Response
 
 class ApiRepository(private val kunbaAppApiService: KunbaAppApiService): IApiRepository {
     override suspend fun fetchRoots(): Response<List<RootRegisterDto>> = kunbaAppApiService.fetchRoots()
-    override suspend fun fetchRootDetails(rootId: ULong): Response<RootDetailDto> = kunbaAppApiService.fetchRootDetails(rootId)
+    override suspend fun fetchRootDetails(rootId: Int): Response<RootDetailDto> = kunbaAppApiService.fetchRootDetails(rootId)
 }

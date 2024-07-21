@@ -15,7 +15,7 @@ import com.example.kunbaapp.data.models.dto.RootRegisterDto
 @Composable
 fun RootItem(
     root: RootRegisterDto,
-    onItemClick: (ULong) -> Unit,
+    onItemClick: (Int) -> Unit,
     modifier: Modifier = Modifier
 ) {
     Card(

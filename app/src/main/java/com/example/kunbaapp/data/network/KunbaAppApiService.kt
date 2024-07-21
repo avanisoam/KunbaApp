@@ -12,6 +12,6 @@ interface KunbaAppApiService {
 
     @GET("{rootId}/roots")
     suspend fun fetchRootDetails(
-        @Path("rootId") rootId: ULong
+        @Path("rootId") rootId: Int
     ): Response<RootDetailDto>
 }

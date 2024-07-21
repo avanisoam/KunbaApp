@@ -7,5 +7,5 @@ import retrofit2.Response
 interface IApiRepository {
     suspend fun fetchRoots(): Response<List<RootRegisterDto>>
 
-    suspend fun fetchRootDetails(rootId: ULong) : Response<RootDetailDto>
+    suspend fun fetchRootDetails(rootId: Int) : Response<RootDetailDto>
 }

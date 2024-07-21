@@ -1,7 +1,7 @@
 package com.example.kunbaapp.data.models.dto
 
 data class FamilyDto(
-    val familyId : ULong,
+    val familyId : Int,
 
     val fatherInfo : NodeDto,
 

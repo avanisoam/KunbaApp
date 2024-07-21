@@ -33,7 +33,7 @@ object HomeDestination : NavigationDestination {
 
 @Composable
 fun HomeScreen(
-    navigateToDetailScreen: (ULong) -> Unit,
+    navigateToDetailScreen: (Int) -> Unit,
     navigateToFavorite: () -> Unit = {},
     viewModel: HomeViewModel = getViewModel<HomeViewModel>()
 ) {
@@ -73,7 +73,7 @@ fun HomeScreen(
 @Composable
 fun HomeBody(
     rootList : List<RootRegisterDto>,
-    onItemClick: (ULong) -> Unit,
+    onItemClick: (Int) -> Unit,
     modifier: Modifier = Modifier
 ) {
     LazyColumn(modifier = modifier) {

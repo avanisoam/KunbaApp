@@ -1,6 +1,6 @@
 package com.example.kunbaapp.data.models.dto
 
 data class RootRegisterDto(
-    val rootId: ULong,
+    val rootId: Int,
     val rootName: String
 )

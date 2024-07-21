@@ -11,7 +11,6 @@ val viewModelModule = module {
     }
 
     viewModel{
-        //RootDetailViewModel(get(),get())
-        RootDetailViewModel(get())
+        RootDetailViewModel(get(),get())
     }
 }
