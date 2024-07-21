@@ -10,11 +10,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
 import com.example.kunbaapp.R
+import com.example.kunbaapp.data.models.dto.RootRegisterDto
 
 @Composable
 fun RootItem(
-    name: String,
-    onItemClick: (String) -> Unit,
+    root: RootRegisterDto,
+    onItemClick: (ULong) -> Unit,
     modifier: Modifier = Modifier
 ) {
     Card(
@@ -24,10 +25,10 @@ fun RootItem(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(dimensionResource(R.dimen.padding_small))
-                .clickable { onItemClick(name) },
+                .clickable { onItemClick(root.rootId) },
             horizontalArrangement = Arrangement.Center
         ){
-            RootInformation(name)
+            RootInformation(root.rootName)
         }
     }
 }

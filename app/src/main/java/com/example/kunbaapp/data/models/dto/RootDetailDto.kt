@@ -1,7 +1,7 @@
 package com.example.kunbaapp.data.models.dto
 
 data class RootDetailDto (
-    val id: ULong,
-    val families: List<FamilyDto>,    // List of image urls
-    val nodes: List<NodeDto>
+    val id: ULong = 0u,
+    val families: List<FamilyDto> = listOf(),    // List of image urls
+    val nodes: List<NodeDto> = listOf()
 )

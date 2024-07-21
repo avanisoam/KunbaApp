@@ -1,4 +1,6 @@
 <resources>
     <string name="app_name">KunbaApp</string>
     <string name="kunba_app">Kunba APP</string>
+    <string name="back_button">Back Button</string>
+    <string name="go_to_favorite">Go To Favorite Screen</string>
 </resources>
