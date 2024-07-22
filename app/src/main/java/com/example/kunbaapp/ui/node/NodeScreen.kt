@@ -1,12 +1,19 @@
 package com.example.kunbaapp.ui.node
 
 import androidx.annotation.StringRes
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Modifier
 import com.example.kunbaapp.R
+import com.example.kunbaapp.ui.family.FamilyDestination
 import com.example.kunbaapp.ui.navigation.NavigationDestination
+import com.example.kunbaapp.ui.shared.KunbaAppTopBar
+import com.example.kunbaapp.ui.shared.NodeItem
 import org.koin.androidx.compose.getViewModel
 
 object NodeDestination : NavigationDestination {
@@ -19,9 +26,31 @@ object NodeDestination : NavigationDestination {
 
 @Composable
 fun NodeScreen(
+    navigateToFamilyScreen: (Int) -> Unit,
     viewModel: NodeViewModel = getViewModel<NodeViewModel>()
 ) {
     val uiState by viewModel.uiState.collectAsState()
 
-    Text(text = uiState.node.toString())
+    //Text(text = uiState.node.toString())
+    Scaffold(
+        topBar = {
+            KunbaAppTopBar(
+                canNavigateBack = false,
+                title = NodeDestination.titleRes
+            )
+        }
+    ) {innerPadding ->
+        LazyColumn(modifier = Modifier.padding(innerPadding)) {
+            item {
+                NodeItem(
+                    node = uiState.node,
+                    onItemClick = {navigateToFamilyScreen(it)}
+                )
+            }
+
+            item {
+                Text(text = uiState.node.toString())
+            }
+        }
+    }
 }

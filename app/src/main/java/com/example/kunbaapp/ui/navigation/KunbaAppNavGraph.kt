@@ -69,7 +69,9 @@ fun KunbaAppNavGraph(
                     type = NavType.IntType
                 })
         ){
-            NodeScreen()
+            NodeScreen(
+                navigateToFamilyScreen = {navController.navigate("${FamilyDestination.route}/$it")}
+            )
         }
 
         composable(FavoriteDestination.route){

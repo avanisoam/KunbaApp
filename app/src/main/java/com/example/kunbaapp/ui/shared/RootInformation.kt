@@ -12,12 +12,12 @@ import com.example.kunbaapp.R
 
 @Composable
 fun RootInformation(
-    dogName: String,
+    name: String,
     modifier: Modifier = Modifier
 ) {
     Column(modifier = modifier) {
         Text(
-            text = dogName.capitalize(),
+            text = name.capitalize(),
             style = MaterialTheme.typography.displayMedium,
             maxLines = 1,
             overflow = TextOverflow.Ellipsis,
