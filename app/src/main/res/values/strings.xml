@@ -5,4 +5,5 @@
     <string name="go_to_favorite">Go To Favorite Screen</string>
     <string name="root_detail">Root Detail</string>
     <string name="node">Member</string>
+    <string name="family">Family</string>
 </resources>

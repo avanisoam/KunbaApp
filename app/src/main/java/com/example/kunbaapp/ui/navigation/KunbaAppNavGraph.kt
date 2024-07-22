@@ -10,6 +10,8 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import com.example.kunbaapp.ui.family.FamilyDestination
 import com.example.kunbaapp.ui.family.FamilyScreen
+import com.example.kunbaapp.ui.favorite.FavoriteDestination
+import com.example.kunbaapp.ui.favorite.FavoriteScreen
 import com.example.kunbaapp.ui.home.HomeDestination
 import com.example.kunbaapp.ui.home.HomeScreen
 import com.example.kunbaapp.ui.node.NodeDestination
@@ -33,7 +35,7 @@ fun KunbaAppNavGraph(
                     Log.d("URL","3# - ${it.toString()}" )
                     navController.navigate("${RootDetailDestination.route}/$it")
                 },
-                navigateToFavorite = {}
+                navigateToFavorite = {navController.navigate(FavoriteDestination.route)}
             )
         }
 
@@ -54,7 +56,10 @@ fun KunbaAppNavGraph(
                     type = NavType.IntType
                 })
             ){
-            FamilyScreen()
+            FamilyScreen(
+                navigateToNodeScreen = {navController.navigate("${NodeDestination.route}/$it")},
+                navigateToFamilyScreen = {navController.navigate("${FamilyDestination.route}/$it")}
+            )
         }
 
         composable(
@@ -65,6 +70,10 @@ fun KunbaAppNavGraph(
                 })
         ){
             NodeScreen()
+        }
+
+        composable(FavoriteDestination.route){
+            FavoriteScreen()
         }
     }
 }

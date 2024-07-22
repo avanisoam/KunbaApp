@@ -13,7 +13,7 @@ object NodeDestination : NavigationDestination {
     override val route = "node"
     @StringRes
     override val titleRes = R.string.node
-    const val ID_ARG = "rootId"
+    const val ID_ARG = "nodeId"
     val routeWithArgs = "$route/{$ID_ARG}"
 }
 
