@@ -6,4 +6,6 @@
     <string name="root_detail">Root Detail</string>
     <string name="node">Member</string>
     <string name="family">Family</string>
+    <string name="about">About</string>
+    <string name="years_old">Years Old</string>
 </resources>

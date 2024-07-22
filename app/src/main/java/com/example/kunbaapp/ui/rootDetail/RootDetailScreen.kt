@@ -10,11 +10,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import com.example.kunbaapp.R
 import com.example.kunbaapp.data.models.dto.FamilyDto
 import com.example.kunbaapp.data.models.dto.NodeDto
 import com.example.kunbaapp.ui.navigation.NavigationDestination
+import com.example.kunbaapp.ui.shared.DogItem
 import com.example.kunbaapp.ui.shared.FavoriteItem
 import com.example.kunbaapp.ui.shared.KunbaAppTopBar
 import com.example.kunbaapp.ui.shared.RootFamilyItem
@@ -108,6 +110,7 @@ fun NodesBody(
 
                  */
                 //Text(text = "${node.firstName} ${node.lastName}")
+                /*
                 FavoriteItem(
                     node = node,
                     onItemClick = {onIndividualClick(it)},
@@ -115,6 +118,12 @@ fun NodesBody(
                         id = R.drawable.icons8_female_64
                     ),
                     description = if(node.gender == 'M') "Male" else "Female"
+                )
+                
+                 */
+                DogItem(
+                    dog = node,
+                    modifier = Modifier.padding(dimensionResource(R.dimen.padding_small))
                 )
 
             }
