@@ -3,4 +3,6 @@
     <string name="kunba_app">Kunba APP</string>
     <string name="back_button">Back Button</string>
     <string name="go_to_favorite">Go To Favorite Screen</string>
+    <string name="root_detail">Root Detail</string>
+    <string name="node">Member</string>
 </resources>

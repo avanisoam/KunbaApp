@@ -12,6 +12,8 @@ import com.example.kunbaapp.ui.family.FamilyDestination
 import com.example.kunbaapp.ui.family.FamilyScreen
 import com.example.kunbaapp.ui.home.HomeDestination
 import com.example.kunbaapp.ui.home.HomeScreen
+import com.example.kunbaapp.ui.node.NodeDestination
+import com.example.kunbaapp.ui.node.NodeScreen
 import com.example.kunbaapp.ui.rootDetail.RootDetailDestination
 import com.example.kunbaapp.ui.rootDetail.RootDetailScreen
 
@@ -41,7 +43,8 @@ fun KunbaAppNavGraph(
                     type = NavType.IntType
                 })){
             RootDetailScreen(
-                navigateToFamilyScreen = {navController.navigate("${FamilyDestination.route}/$it")}
+                navigateToFamilyScreen = {navController.navigate("${FamilyDestination.route}/$it")},
+                navigateToNodeScreen = {navController.navigate("${NodeDestination.route}/$it")}
             )
         }
 
@@ -52,6 +55,16 @@ fun KunbaAppNavGraph(
                 })
             ){
             FamilyScreen()
+        }
+
+        composable(
+            NodeDestination.routeWithArgs,
+            arguments = listOf(
+                navArgument(NodeDestination.ID_ARG) {
+                    type = NavType.IntType
+                })
+        ){
+            NodeScreen()
         }
     }
 }

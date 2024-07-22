@@ -33,7 +33,7 @@ import org.koin.androidx.compose.getViewModel
 object RootDetailDestination : NavigationDestination {
     override val route = "rootDetail"
     @StringRes
-    override val titleRes = R.string.kunba_app
+    override val titleRes = R.string.root_detail
     const val ID_ARG = "rootId"
     val routeWithArgs = "$route/{$ID_ARG}"
 }
@@ -41,6 +41,7 @@ object RootDetailDestination : NavigationDestination {
 @Composable
 fun RootDetailScreen(
     navigateToFamilyScreen: (Int) -> Unit,
+    navigateToNodeScreen: (Int) -> Unit,
     viewModel: RootDetailViewModel = getViewModel<RootDetailViewModel>()
 ) {
     val uiState by viewModel.uiState.collectAsState()
@@ -49,7 +50,7 @@ fun RootDetailScreen(
         topBar = {
             KunbaAppTopBar(
                 canNavigateBack = false,
-                title = HomeDestination.titleRes
+                title = RootDetailDestination.titleRes
             )
         }
     ){innerPadding ->
@@ -58,11 +59,13 @@ fun RootDetailScreen(
         RootDetailBody(
             families = uiState.rootDetail.familyDtos,
             onItemClick = {navigateToFamilyScreen(it)},
+            onIndividualClick = {navigateToNodeScreen(it)} ,
             modifier = Modifier.weight(1f)
         )
             Divider()
         NodesBody(
             nodes = uiState.rootDetail.nodeDtos,
+            onIndividualClick= {navigateToNodeScreen(it)},
             modifier = Modifier.weight(1f)
             )
 
@@ -74,6 +77,7 @@ fun RootDetailScreen(
 fun RootDetailBody(
     families: List<FamilyDto>,
     onItemClick: (Int) -> Unit,
+    onIndividualClick: (Int) -> Unit,
     modifier: Modifier = Modifier
 ) {
     LazyColumn(modifier = modifier) {
@@ -81,7 +85,8 @@ fun RootDetailBody(
             families.forEach { root ->
                 RootFamilyItem(
                     family = root,
-                    onItemClick = {onItemClick(root.familyId)}
+                    onItemClick = {onItemClick(root.familyId)},
+                    onIndividualClick = {onIndividualClick(it)}
                 )
 
             }
@@ -92,13 +97,17 @@ fun RootDetailBody(
 @Composable
 fun NodesBody(
     nodes: List<NodeDto>,
+    onIndividualClick: (Int) -> Unit,
     modifier: Modifier = Modifier
 ) {
     LazyColumn(modifier = modifier) {
         item {
             nodes.forEach { node ->
 
-                RootNodeItem(node = node, onItemClick = {})
+                RootNodeItem(
+                    node = node,
+                    onItemClick = {onIndividualClick(it)}
+                )
                 //Text(text = "${node.firstName} ${node.lastName}")
 
             }

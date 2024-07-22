@@ -19,6 +19,7 @@ import com.example.kunbaapp.data.models.dto.RootRegisterDto
 fun RootFamilyItem(
     family: FamilyDto,
     onItemClick: (Int) -> Unit,
+    onIndividualClick: (Int) -> Unit,
     modifier: Modifier = Modifier
 ) {
     Card(
@@ -32,7 +33,7 @@ fun RootFamilyItem(
             horizontalArrangement = Arrangement.Center
         ){
             if(family.fatherInfo != null) {
-                Button(onClick = { /*TODO*/ }) {
+                Button(onClick = { onIndividualClick(family.fatherInfo.nodeId) }) {
                     Text(text = family.fatherInfo.firstName)
                 }
             }
@@ -40,7 +41,7 @@ fun RootFamilyItem(
                 Text(text = "M")
             }
             if(family.motherInfo != null) {
-                Button(onClick = { /*TODO*/ }) {
+                Button(onClick = { onIndividualClick(family.motherInfo.nodeId) }) {
                     Text(text = family.motherInfo.firstName)
                 }
             }

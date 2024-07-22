@@ -26,7 +26,7 @@ fun RootNodeItem(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(dimensionResource(R.dimen.padding_small))
-                .clickable { onItemClick(node.rootId) },
+                .clickable { onItemClick(node.nodeId) },
             horizontalArrangement = Arrangement.Center
         ){
             RootInformation(node.firstName)
