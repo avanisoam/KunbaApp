@@ -1,5 +1,6 @@
 package com.example.kunbaapp.data.network
 
+import com.example.kunbaapp.data.models.dto.FamilyDto
 import com.example.kunbaapp.data.models.dto.RootDetailDto
 import com.example.kunbaapp.data.models.dto.RootRegisterDto
 import retrofit2.Response
@@ -14,4 +15,9 @@ interface KunbaAppApiService {
     suspend fun fetchRootDetails(
         @Path("rootId") rootId: Int
     ): Response<RootDetailDto>
+
+    @GET("{familyId}/family")
+    suspend fun fetchFamily(
+        @Path("familyId") familyId: Int
+    ): Response<FamilyDto>
 }

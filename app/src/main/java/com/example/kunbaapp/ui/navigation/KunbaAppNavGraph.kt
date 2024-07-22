@@ -8,6 +8,8 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
+import com.example.kunbaapp.ui.family.FamilyDestination
+import com.example.kunbaapp.ui.family.FamilyScreen
 import com.example.kunbaapp.ui.home.HomeDestination
 import com.example.kunbaapp.ui.home.HomeScreen
 import com.example.kunbaapp.ui.rootDetail.RootDetailDestination
@@ -38,7 +40,18 @@ fun KunbaAppNavGraph(
                 navArgument(RootDetailDestination.ID_ARG) {
                     type = NavType.IntType
                 })){
-            RootDetailScreen()
+            RootDetailScreen(
+                navigateToFamilyScreen = {navController.navigate("${FamilyDestination.route}/$it")}
+            )
+        }
+
+        composable(FamilyDestination.routeWithArgs,
+            arguments = listOf(
+                navArgument(FamilyDestination.ID_ARG) {
+                    type = NavType.IntType
+                })
+            ){
+            FamilyScreen()
         }
     }
 }

@@ -40,6 +40,7 @@ object RootDetailDestination : NavigationDestination {
 
 @Composable
 fun RootDetailScreen(
+    navigateToFamilyScreen: (Int) -> Unit,
     viewModel: RootDetailViewModel = getViewModel<RootDetailViewModel>()
 ) {
     val uiState by viewModel.uiState.collectAsState()
@@ -56,6 +57,7 @@ fun RootDetailScreen(
 
         RootDetailBody(
             families = uiState.rootDetail.familyDtos,
+            onItemClick = {navigateToFamilyScreen(it)},
             modifier = Modifier.weight(1f)
         )
             Divider()
@@ -71,6 +73,7 @@ fun RootDetailScreen(
 @Composable
 fun RootDetailBody(
     families: List<FamilyDto>,
+    onItemClick: (Int) -> Unit,
     modifier: Modifier = Modifier
 ) {
     LazyColumn(modifier = modifier) {
@@ -78,7 +81,7 @@ fun RootDetailBody(
             families.forEach { root ->
                 RootFamilyItem(
                     family = root,
-                    onItemClick = {}
+                    onItemClick = {onItemClick(root.familyId)}
                 )
 
             }

@@ -1,5 +1,6 @@
 package com.example.kunbaapp.di
 
+import com.example.kunbaapp.ui.family.FamilyViewModel
 import com.example.kunbaapp.ui.home.HomeViewModel
 import com.example.kunbaapp.ui.rootDetail.RootDetailViewModel
 import org.koin.androidx.viewmodel.dsl.viewModel
@@ -12,5 +13,9 @@ val viewModelModule = module {
 
     viewModel{
         RootDetailViewModel(get(),get())
+    }
+
+    viewModel{
+        FamilyViewModel(get(),get())
     }
 }

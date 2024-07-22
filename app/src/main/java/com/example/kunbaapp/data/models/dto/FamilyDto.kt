@@ -1,11 +1,11 @@
 package com.example.kunbaapp.data.models.dto
 
 data class FamilyDto(
-    val familyId : Int,
+    val familyId : Int = 0,
 
-    val fatherInfo : NodeDto,
+    val fatherInfo : NodeDto = NodeDto(),
 
-    val motherInfo : NodeDto,
+    val motherInfo : NodeDto = NodeDto(),
 
-    val children : List<NodeDto>,
+    val children : List<NodeDto> = listOf(),
 )

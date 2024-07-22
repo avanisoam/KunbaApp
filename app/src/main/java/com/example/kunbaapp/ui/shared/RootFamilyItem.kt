@@ -27,8 +27,8 @@ fun RootFamilyItem(
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(dimensionResource(R.dimen.padding_small))
-                .clickable { onItemClick(family.familyId) },
+                .padding(dimensionResource(R.dimen.padding_small)),
+                //.clickable { onItemClick(family.familyId) },
             horizontalArrangement = Arrangement.Center
         ){
             if(family.fatherInfo != null) {
@@ -36,7 +36,7 @@ fun RootFamilyItem(
                     Text(text = family.fatherInfo.firstName)
                 }
             }
-            Button(onClick = { /*TODO*/ }) {
+            Button(onClick = { onItemClick(family.familyId) }) {
                 Text(text = "M")
             }
             if(family.motherInfo != null) {
