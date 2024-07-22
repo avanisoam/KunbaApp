@@ -4,17 +4,15 @@ import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
 import com.example.kunbaapp.R
 import com.example.kunbaapp.ui.navigation.NavigationDestination
-import com.example.kunbaapp.ui.rootDetail.RootDetailDestination
 import com.example.kunbaapp.ui.shared.KunbaAppTopBar
 import com.example.kunbaapp.ui.shared.RootFamilyItem
-import com.example.kunbaapp.ui.shared.RootItem
 import com.example.kunbaapp.ui.shared.RootNodeItem
 import org.koin.androidx.compose.getViewModel
 
@@ -57,7 +55,11 @@ fun FamilyScreen(
                 uiState.family.children.forEach { node ->
                     RootNodeItem(
                         node = node,
-                        onItemClick = { navigateToNodeScreen(it) }
+                        onItemClick = { navigateToNodeScreen(it) },
+                        avatar = if(node.gender == 'M') painterResource(id = R.drawable.family_tree_logo) else painterResource(
+                            id = R.drawable.woman__1_
+                        ),
+                        description = if(node.gender == 'M') "Male" else "Female"
                     )
                 }
             }
