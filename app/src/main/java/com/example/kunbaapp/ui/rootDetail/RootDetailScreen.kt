@@ -42,6 +42,7 @@ object RootDetailDestination : NavigationDestination {
 fun RootDetailScreen(
     navigateToFamilyScreen: (Int) -> Unit,
     navigateToNodeScreen: (Int) -> Unit,
+    navigateUp: () -> Unit,
     viewModel: RootDetailViewModel = getViewModel<RootDetailViewModel>()
 ) {
     val uiState by viewModel.uiState.collectAsState()
@@ -49,8 +50,9 @@ fun RootDetailScreen(
     Scaffold(
         topBar = {
             KunbaAppTopBar(
-                canNavigateBack = false,
-                title = RootDetailDestination.titleRes
+                canNavigateBack = true,
+                title = RootDetailDestination.titleRes,
+                navigateUp = navigateUp
             )
         }
     ){innerPadding ->

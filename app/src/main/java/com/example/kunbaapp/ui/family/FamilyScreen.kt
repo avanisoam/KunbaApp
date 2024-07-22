@@ -30,6 +30,7 @@ object FamilyDestination : NavigationDestination {
 fun FamilyScreen(
     navigateToFamilyScreen: (Int) -> Unit,
     navigateToNodeScreen: (Int) -> Unit,
+    navigateUp: () -> Unit,
     viewModel: FamilyViewModel = getViewModel<FamilyViewModel>()
 ) {
     val uiState by viewModel.uiState.collectAsState()
@@ -38,8 +39,9 @@ fun FamilyScreen(
     Scaffold(
         topBar = {
             KunbaAppTopBar(
-                canNavigateBack = false,
-                title = FamilyDestination.titleRes
+                canNavigateBack = true,
+                title = FamilyDestination.titleRes,
+                navigateUp = navigateUp
             )
         }
     ) {innerPadding ->

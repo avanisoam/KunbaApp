@@ -46,7 +46,8 @@ fun KunbaAppNavGraph(
                 })){
             RootDetailScreen(
                 navigateToFamilyScreen = {navController.navigate("${FamilyDestination.route}/$it")},
-                navigateToNodeScreen = {navController.navigate("${NodeDestination.route}/$it")}
+                navigateToNodeScreen = {navController.navigate("${NodeDestination.route}/$it")},
+                navigateUp = {navController.navigate(HomeDestination.route)}
             )
         }
 
@@ -58,7 +59,8 @@ fun KunbaAppNavGraph(
             ){
             FamilyScreen(
                 navigateToNodeScreen = {navController.navigate("${NodeDestination.route}/$it")},
-                navigateToFamilyScreen = {navController.navigate("${FamilyDestination.route}/$it")}
+                navigateToFamilyScreen = {navController.navigate("${FamilyDestination.route}/$it")},
+                navigateUp = {navController.popBackStack()}
             )
         }
 
@@ -70,7 +72,8 @@ fun KunbaAppNavGraph(
                 })
         ){
             NodeScreen(
-                navigateToFamilyScreen = {navController.navigate("${FamilyDestination.route}/$it")}
+                navigateToFamilyScreen = {navController.navigate("${FamilyDestination.route}/$it")},
+                navigateUp = {navController.popBackStack()}
             )
         }
 

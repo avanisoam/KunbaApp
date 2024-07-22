@@ -27,6 +27,7 @@ object NodeDestination : NavigationDestination {
 @Composable
 fun NodeScreen(
     navigateToFamilyScreen: (Int) -> Unit,
+    navigateUp: () -> Unit,
     viewModel: NodeViewModel = getViewModel<NodeViewModel>()
 ) {
     val uiState by viewModel.uiState.collectAsState()
@@ -35,8 +36,9 @@ fun NodeScreen(
     Scaffold(
         topBar = {
             KunbaAppTopBar(
-                canNavigateBack = false,
-                title = NodeDestination.titleRes
+                canNavigateBack = true,
+                title = NodeDestination.titleRes,
+                navigateUp = navigateUp
             )
         }
     ) {innerPadding ->
