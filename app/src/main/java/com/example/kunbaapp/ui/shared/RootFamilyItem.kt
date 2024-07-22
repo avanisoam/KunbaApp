@@ -31,18 +31,17 @@ fun RootFamilyItem(
                 .clickable { onItemClick(family.familyId) },
             horizontalArrangement = Arrangement.Center
         ){
-            if(family.motherInfo != null) {
+            if(family.fatherInfo != null) {
                 Button(onClick = { /*TODO*/ }) {
-                    Text(text = family.motherInfo.firstName)
+                    Text(text = family.fatherInfo.firstName)
                 }
             }
             Button(onClick = { /*TODO*/ }) {
                 Text(text = "M")
             }
-
-            if(family.fatherInfo != null) {
+            if(family.motherInfo != null) {
                 Button(onClick = { /*TODO*/ }) {
-                    Text(text = family.fatherInfo.firstName)
+                    Text(text = family.motherInfo.firstName)
                 }
             }
             }
