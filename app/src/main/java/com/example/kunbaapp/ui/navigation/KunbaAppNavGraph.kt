@@ -77,8 +77,26 @@ fun KunbaAppNavGraph(
             )
         }
 
-        composable(FavoriteDestination.route){
-            FavoriteScreen()
+        composable(FavoriteDestination.route) {
+            FavoriteScreen(
+                navigateUp = {navController.navigate(HomeDestination.route)},
+                filterFavorite = {navController.navigate("${FavoriteDestination.route}/$it")},
+                resetFilter = {navController.navigate(FavoriteDestination.route)}
+            )
+        }
+        composable(
+            route= FavoriteDestination.routeWithArgs,
+            arguments = listOf(
+                navArgument("entity") {
+                    type = NavType.StringType
+                }
+            )
+        ) {
+            FavoriteScreen(
+                navigateUp = {navController.navigate(HomeDestination.route)},
+                filterFavorite = {navController.navigate("${FavoriteDestination.route}/$it")},
+                resetFilter = {navController.navigate(FavoriteDestination.route)}
+            )
         }
     }
 }

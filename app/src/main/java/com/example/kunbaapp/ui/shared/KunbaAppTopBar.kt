@@ -59,7 +59,7 @@ fun KunbaAppTopBar(
                 }
             }
         },
-        /*
+
         actions = {
             if(showFilter) {
                 IconButton(
@@ -72,8 +72,6 @@ fun KunbaAppTopBar(
                 }
             }
         },
-
-         */
         modifier = modifier
     )
 }

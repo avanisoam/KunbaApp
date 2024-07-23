@@ -14,5 +14,6 @@ data class Favorite(
     val id: Int,
     val type: EntityType,
     val refId: Int,
-    val addedOn: String = LocalDateTime.now().toString()
+    val displayText : String,
+    val addedOn: String = LocalDateTime.now().toString(),
 ): Parcelable
