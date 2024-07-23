@@ -1,7 +1,9 @@
 package com.example.kunbaapp
 
 import android.app.Application
+import com.example.kunbaapp.di.dataBaseModule
 import com.example.kunbaapp.di.dataSourceModule
+import com.example.kunbaapp.di.databaseRepositoryModule
 import com.example.kunbaapp.di.networkModule
 import com.example.kunbaapp.di.viewModelModule
 import org.koin.android.ext.koin.androidContext
@@ -17,7 +19,9 @@ class KunbaAppApplication : Application(){
             modules(
                 networkModule,
                 dataSourceModule,
-                viewModelModule
+                viewModelModule,
+                dataBaseModule,
+                databaseRepositoryModule
             )
         }
     }

@@ -5,6 +5,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import com.example.kunbaapp.R
 import com.example.kunbaapp.ui.navigation.NavigationDestination
+import org.koin.androidx.compose.getViewModel
 
 object FavoriteDestination : NavigationDestination {
     override val route = "favorite"
@@ -15,6 +16,8 @@ object FavoriteDestination : NavigationDestination {
 }
 
 @Composable
-fun FavoriteScreen() {
+fun FavoriteScreen(
+    viewModel: FavoriteViewModel = getViewModel<FavoriteViewModel>()
+) {
     Text(text = "Favorite Screen")
 }

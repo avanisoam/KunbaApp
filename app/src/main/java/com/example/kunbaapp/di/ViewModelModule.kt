@@ -1,6 +1,7 @@
 package com.example.kunbaapp.di
 
 import com.example.kunbaapp.ui.family.FamilyViewModel
+import com.example.kunbaapp.ui.favorite.FavoriteViewModel
 import com.example.kunbaapp.ui.home.HomeViewModel
 import com.example.kunbaapp.ui.node.NodeViewModel
 import com.example.kunbaapp.ui.rootDetail.RootDetailViewModel
@@ -22,5 +23,9 @@ val viewModelModule = module {
 
     viewModel{
         NodeViewModel(get(),get())
+    }
+
+    viewModel{
+        FavoriteViewModel(get())
     }
 }
