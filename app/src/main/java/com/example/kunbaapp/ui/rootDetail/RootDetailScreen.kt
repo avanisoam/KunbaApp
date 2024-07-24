@@ -7,6 +7,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.FavoriteBorder
+import androidx.compose.material.icons.filled.Home
 import androidx.compose.material3.Divider
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
@@ -44,6 +45,7 @@ fun RootDetailScreen(
     navigateToFamilyScreen: (Int) -> Unit,
     navigateToNodeScreen: (Int) -> Unit,
     navigateUp: () -> Unit,
+    navigateToHome: () -> Unit,
     viewModel: RootDetailViewModel = getViewModel<RootDetailViewModel>()
 ) {
     val uiState by viewModel.uiState.collectAsState()
@@ -53,17 +55,21 @@ fun RootDetailScreen(
             KunbaAppTopBar(
                 canNavigateBack = true,
                 title = RootDetailDestination.titleRes,
-                navigateUp = navigateUp
+                navigateUp = navigateUp,
+                isFavorite = uiState.isFavorite,
+                toggleFavorite = {viewModel.toggleFavoriteButton(viewModel.rootIdFromUrl)},
+                showFavorite = true
             )
         },
         floatingActionButton = {
             FloatingActionButton(
-                onClick = {viewModel.toggleFavoriteButton(viewModel.rootIdFromUrl)},//navigateToFavorite,
+                onClick = navigateToHome,
                 shape = MaterialTheme.shapes.medium,
                 modifier = Modifier.padding(20.dp)
             ) {
                 Icon(
-                    imageVector = if(uiState.isFavorite) Icons.Filled.Favorite else Icons.Filled.FavoriteBorder,
+                    //imageVector = if(uiState.isFavorite) Icons.Filled.Favorite else Icons.Filled.FavoriteBorder,
+                    imageVector = Icons.Filled.Home,
                     contentDescription = stringResource(R.string.go_to_favorite)
                 )
             }

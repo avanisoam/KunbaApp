@@ -42,7 +42,7 @@ fun HomeScreen(
         topBar = {
             KunbaAppTopBar(
                 canNavigateBack = false,
-                title = HomeDestination.titleRes
+                title = HomeDestination.titleRes,
             )
         },
         floatingActionButton = {

@@ -6,6 +6,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -28,6 +30,9 @@ fun KunbaAppTopBar(
     showFilter: Boolean = false,
     navigateUp: () -> Unit = {},
     resetFilter: () -> Unit = {},
+    isFavorite: Boolean = false,
+    toggleFavorite:() -> Unit = {},
+    showFavorite: Boolean = false,
     modifier: Modifier = Modifier
 ) {
     CenterAlignedTopAppBar(
@@ -67,6 +72,17 @@ fun KunbaAppTopBar(
                 ) {
                     Icon(
                         painterResource(id = R.drawable.undo),
+                        contentDescription = null
+                    )
+                }
+            }
+            else if(showFavorite)
+            {
+                IconButton(
+                    onClick = toggleFavorite
+                ) {
+                    Icon(
+                        imageVector = if(isFavorite) Icons.Filled.Favorite else Icons.Filled.FavoriteBorder,
                         contentDescription = null
                     )
                 }

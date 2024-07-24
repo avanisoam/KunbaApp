@@ -47,7 +47,8 @@ fun KunbaAppNavGraph(
             RootDetailScreen(
                 navigateToFamilyScreen = {navController.navigate("${FamilyDestination.route}/$it")},
                 navigateToNodeScreen = {navController.navigate("${NodeDestination.route}/$it")},
-                navigateUp = {navController.popBackStack()}
+                navigateUp = {navController.popBackStack()},
+                navigateToHome = {navController.navigate(HomeDestination.route)}
             )
         }
 
@@ -60,7 +61,8 @@ fun KunbaAppNavGraph(
             FamilyScreen(
                 navigateToNodeScreen = {navController.navigate("${NodeDestination.route}/$it")},
                 navigateToFamilyScreen = {navController.navigate("${FamilyDestination.route}/$it")},
-                navigateUp = {navController.popBackStack()}
+                navigateUp = {navController.popBackStack()},
+                navigateToHome = {navController.navigate(HomeDestination.route)}
             )
         }
 
@@ -73,7 +75,8 @@ fun KunbaAppNavGraph(
         ){
             NodeScreen(
                 navigateToFamilyScreen = {navController.navigate("${FamilyDestination.route}/$it")},
-                navigateUp = {navController.popBackStack()}
+                navigateUp = {navController.popBackStack()},
+                navigateToHome = {navController.navigate(HomeDestination.route)}
             )
         }
 
@@ -84,7 +87,8 @@ fun KunbaAppNavGraph(
                 resetFilter = {navController.navigate(FavoriteDestination.route)},
                 navigateToFamilyScreen = {navController.navigate("${FamilyDestination.route}/$it")},
                 navigateToNodeScreen = {navController.navigate("${NodeDestination.route}/$it")},
-                navigateToRootDetailScreen = {navController.navigate("${RootDetailDestination.route}/$it")}
+                navigateToRootDetailScreen = {navController.navigate("${RootDetailDestination.route}/$it")},
+                navigateToHome = {navController.navigate(HomeDestination.route)}
             )
         }
         composable(
@@ -101,7 +105,8 @@ fun KunbaAppNavGraph(
                 resetFilter = {navController.navigate(FavoriteDestination.route)},
                 navigateToFamilyScreen = {navController.navigate("${FamilyDestination.route}/$it")},
                 navigateToNodeScreen = {navController.navigate("${NodeDestination.route}/$it")},
-                navigateToRootDetailScreen = {navController.navigate("${RootDetailDestination.route}/$it")}
+                navigateToRootDetailScreen = {navController.navigate("${RootDetailDestination.route}/$it")},
+                navigateToHome = {navController.navigate(HomeDestination.route)}
             )
         }
     }
