@@ -23,6 +23,9 @@ interface FavoriteDao {
     @Query("SELECT * from favorite WHERE type= :type")
     fun getFavoriteByType(type: EntityType): List<Favorite>
 
+    @Query("SELECT * from favorite WHERE type= :type AND refId= :refId")
+    fun getFavoriteByRefIdAndType(type: EntityType, refId:Int): Favorite?
+
     @Delete
     suspend fun deleteFavorite(favorite: Favorite)
 }

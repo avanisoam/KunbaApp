@@ -30,7 +30,7 @@ fun FavoriteItemV1(
                 else if(item.type == EntityType.Node)
                 R.drawable.node
                 else
-                R.drawable.family
+                    R.drawable.family
             )
             DogInformation(item.displayText,item.addedOn)
         }

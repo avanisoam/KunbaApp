@@ -7,4 +7,5 @@ data class NodeDto(
     val firstName : String = "",
     val lastName : String = "",
     val gender : Char = 'x',
+    //val isFavorite : Boolean = false
 )

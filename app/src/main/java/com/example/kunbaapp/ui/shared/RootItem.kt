@@ -1,8 +1,10 @@
 package com.example.kunbaapp.ui.shared
 
+import android.util.Log
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Card
@@ -15,7 +17,10 @@ import com.example.kunbaapp.data.models.dto.RootRegisterDto
 @Composable
 fun RootItem(
     root: RootRegisterDto,
+    favoriteIds: List<Int>,
     onItemClick: (Int) -> Unit,
+    toggleFavorite: (Int) -> Unit,
+    //isFavorite: Boolean,
     modifier: Modifier = Modifier
 ) {
     Card(
@@ -29,6 +34,16 @@ fun RootItem(
             horizontalArrangement = Arrangement.Center
         ){
             RootInformation(root.rootName)
+            Spacer(Modifier.weight(1f))
+            Log.d("Toggle", root.rootId.toString())
+            if(favoriteIds.contains(root.rootId))
+            {
+                FavoriteButton(
+                    isFavorite = true ?: false ,
+                    onClick = { toggleFavorite(root.rootId) }
+                )
+            }
+
         }
     }
 }

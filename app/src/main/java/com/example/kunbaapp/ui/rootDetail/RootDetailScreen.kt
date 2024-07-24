@@ -4,7 +4,13 @@ import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material3.Divider
+import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -12,6 +18,8 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
 import com.example.kunbaapp.R
 import com.example.kunbaapp.data.models.dto.FamilyDto
 import com.example.kunbaapp.data.models.dto.NodeDto
@@ -47,6 +55,18 @@ fun RootDetailScreen(
                 title = RootDetailDestination.titleRes,
                 navigateUp = navigateUp
             )
+        },
+        floatingActionButton = {
+            FloatingActionButton(
+                onClick = {viewModel.toggleFavoriteButton(viewModel.rootIdFromUrl)},//navigateToFavorite,
+                shape = MaterialTheme.shapes.medium,
+                modifier = Modifier.padding(20.dp)
+            ) {
+                Icon(
+                    imageVector = if(uiState.isFavorite) Icons.Filled.Favorite else Icons.Filled.FavoriteBorder,
+                    contentDescription = stringResource(R.string.go_to_favorite)
+                )
+            }
         }
     ){innerPadding ->
         Column(modifier = Modifier.padding(innerPadding)) {
@@ -55,7 +75,9 @@ fun RootDetailScreen(
             families = uiState.rootDetail.familyDtos,
             onItemClick = {navigateToFamilyScreen(it)},
             onIndividualClick = {navigateToNodeScreen(it)} ,
-            modifier = Modifier.weight(1f)
+            modifier = Modifier.weight(1f),
+            //toggleFavoriteButton = {viewModel.toggleFavoriteButton(it)},
+            //isFavorite = uiState.isFavorite
         )
             Divider()
         NodesBody(
@@ -81,7 +103,7 @@ fun RootDetailBody(
                 RootFamilyItem(
                     family = root,
                     onItemClick = {onItemClick(root.familyId)},
-                    onIndividualClick = {onIndividualClick(it)}
+                    onIndividualClick = {onIndividualClick(it)},
                 )
 
             }

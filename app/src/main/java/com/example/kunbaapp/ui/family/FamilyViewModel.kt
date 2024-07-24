@@ -1,12 +1,17 @@
 package com.example.kunbaapp.ui.family
 
+import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.kunbaapp.data.models.dto.FamilyDto
+import com.example.kunbaapp.data.models.entity.Favorite
 import com.example.kunbaapp.data.repository.contract.IApiRepository
+import com.example.kunbaapp.data.repository.contract.IDatabaseRepository
 import com.example.kunbaapp.ui.rootDetail.RootDetailDestination
 import com.example.kunbaapp.ui.rootDetail.RootDetailUiState
+import com.example.kunbaapp.utils.EntityType
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
@@ -14,7 +19,8 @@ import kotlinx.coroutines.launch
 
 class FamilyViewModel(
     savedStateHandle: SavedStateHandle,
-    private val apiRepository: IApiRepository
+    private val apiRepository: IApiRepository,
+    private val databaseRepository: IDatabaseRepository
 ): ViewModel(){
 
     val familyIdFromUrl: Int = checkNotNull(
@@ -41,11 +47,86 @@ class FamilyViewModel(
         }
     }
 
+    /*
+    private fun getFavoritesFromDb() {
+        viewModelScope.launch(Dispatchers.IO) {
+            val response = databaseRepository.getFavoriteByType(EntityType.Family)
+            _uiState.update {
+                it.copy(
+                    favoritesFromDb = response
+                )
+            }
+        }
+    }
+     */
+
+    fun toggleFavoriteButton(id: Int) {
+        Log.d("Favorite - family", id.toString())
+        viewModelScope.launch(Dispatchers.IO) {
+            val favoriteFromDb =
+                databaseRepository.getFavoriteByTypeAndRefId(type = EntityType.Family, refId = id)
+            Log.d("Favorite - family", favoriteFromDb.toString())
+            if (favoriteFromDb != null) {
+                databaseRepository.removeFavorite(favoriteFromDb)
+                Log.d("Favorite - family", "Removed from Favorites")
+                _uiState.update {
+                    it.copy(
+                        isFavorite = false
+                    )
+                }
+            }
+            else {
+                val favorite = Favorite(
+                    id = 0,
+                    type = EntityType.Family,
+                    refId = id,
+                    displayText = "Family: ${id}"
+                )
+                databaseRepository.addFavorite(favorite)
+                Log.d("Favorite", "Added to Favorites")
+                _uiState.update {
+                    it.copy(
+                        isFavorite = true
+                    )
+                }
+            }
+        }
+    }
+
+    private fun isFavoriteExist(){
+        viewModelScope.launch(Dispatchers.IO) {
+            val favoriteFromDb = databaseRepository.getFavoriteByTypeAndRefId(
+                type = EntityType.Family,
+                refId = familyIdFromUrl
+            )
+            if(favoriteFromDb != null)
+            {
+                _uiState.update {
+                    it.copy(
+                        isFavorite = true
+                    )
+                }
+            }
+            else
+            {
+                _uiState.update {
+                    it.copy(
+                        isFavorite = false
+                    )
+                }
+            }
+        }
+    }
+
     init {
         getFamily()
+        //getFavoritesFromDb()
+        isFavoriteExist()
     }
 }
 
 data class FamilyUiState(
-    val family : FamilyDto = FamilyDto()
+    val family : FamilyDto = FamilyDto(),
+    //val favoritesFromDb: List<Favorite> = listOf(),
+    val isFavorite: Boolean = false
 )

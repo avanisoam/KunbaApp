@@ -8,4 +8,5 @@
     <string name="family">Family</string>
     <string name="about">About</string>
     <string name="years_old">Years Old</string>
+    <string name="favorite_button_content_description">Favorite Button</string>
 </resources>

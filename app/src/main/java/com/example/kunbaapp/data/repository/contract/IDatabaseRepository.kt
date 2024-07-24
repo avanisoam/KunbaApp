@@ -23,6 +23,8 @@ interface IDatabaseRepository {
 
     fun getFavoriteByType(type: EntityType): List<Favorite>
 
+    suspend fun getFavoriteByTypeAndRefId(type: EntityType, refId: Int): Favorite?
+
     /**
      * Delete item from the database
      */

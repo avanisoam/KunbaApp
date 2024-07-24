@@ -52,8 +52,8 @@ fun HomeScreen(
                 modifier = Modifier.padding(20.dp)
             ) {
                 Icon(
-                    imageVector = Icons.Filled.Favorite,
-                    //painter = painterResource(id = R.drawable.heart),
+                    //imageVector = Icons.Filled.Favorite,
+                    painter = painterResource(id = R.drawable.heart),
                     contentDescription = stringResource(R.string.go_to_favorite)
                 )
             }
@@ -65,6 +65,8 @@ fun HomeScreen(
                 Log.d("URL","2# - ${it.toString()}" )
                 navigateToDetailScreen(it)
                           },
+            toggleFavorite = {viewModel.toggleFavoriteButton(it)},
+            favoriteIds = uiState.favoritesRootIds,
             modifier = Modifier.padding(innerPadding)
         )
     }
@@ -73,7 +75,9 @@ fun HomeScreen(
 @Composable
 fun HomeBody(
     rootList : List<RootRegisterDto>,
+    favoriteIds: List<Int>,
     onItemClick: (Int) -> Unit,
+    toggleFavorite: (Int) -> Unit,
     modifier: Modifier = Modifier
 ) {
     LazyColumn(modifier = modifier) {
@@ -85,7 +89,10 @@ fun HomeBody(
                     onItemClick = {
                         Log.d("URL","1# - ${root.rootId.toString()}" )
                         onItemClick(root.rootId)
-                    }
+                    },
+                    toggleFavorite = {toggleFavorite(root.rootId)},
+                    favoriteIds = favoriteIds
+
                 )
 
             }

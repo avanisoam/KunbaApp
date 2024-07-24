@@ -14,6 +14,7 @@ class DatabaseRepository(private val favoriteDao: FavoriteDao): IDatabaseReposit
     override fun getFavoriteById(id: Int): Favorite = favoriteDao.getFavoriteById(id)
 
     override fun getFavoriteByType(type: EntityType): List<Favorite> = favoriteDao.getFavoriteByType(type)
+    override suspend fun getFavoriteByTypeAndRefId(type: EntityType, refId: Int): Favorite? =favoriteDao.getFavoriteByRefIdAndType(type, refId)
 
     override suspend fun removeFavorite(favorite: Favorite) = favoriteDao.deleteFavorite(favorite)
 }
