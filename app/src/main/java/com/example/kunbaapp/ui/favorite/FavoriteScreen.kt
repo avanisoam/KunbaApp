@@ -16,10 +16,12 @@ import com.example.kunbaapp.ui.shared.FavoriteItem
 import com.example.kunbaapp.ui.shared.FavoriteItemV1
 import com.example.kunbaapp.ui.shared.FilterDropdown
 import com.example.kunbaapp.ui.shared.KunbaAppTopBar
+import com.example.kunbaapp.utils.EntityType
 import org.koin.androidx.compose.getViewModel
 
 object FavoriteDestination : NavigationDestination {
     override val route = "favorite"
+
     @StringRes
     override val titleRes = R.string.node
     const val NAME_ARG = "entity"
@@ -29,7 +31,10 @@ object FavoriteDestination : NavigationDestination {
 @Composable
 fun FavoriteScreen(
     filterFavorite: (String) -> Unit,
-    navigateUp : () -> Unit,
+    navigateUp: () -> Unit,
+    navigateToNodeScreen: (Int) -> Unit,
+    navigateToFamilyScreen: (Int) -> Unit,
+    navigateToRootDetailScreen: (Int) -> Unit,
     resetFilter: () -> Unit,
     viewModel: FavoriteViewModel = getViewModel<FavoriteViewModel>()
 ) {
@@ -61,7 +66,23 @@ fun FavoriteScreen(
                 uiState.favorites?.forEach { item ->
                     if (uiState.selectedEntity.isEmpty() || uiState.selectedEntity == item.type.name) {
                         FavoriteItemV1(
-                            item = item
+                            item = item,
+                            onClick = {
+                                when (item.type) {
+                                    EntityType.Node -> {
+                                        navigateToNodeScreen(it)
+                                    }
+                                    EntityType.Family -> {
+                                        navigateToFamilyScreen(it)
+                                    }
+                                    EntityType.Root -> {
+                                        navigateToRootDetailScreen(it)
+                                    }
+                                    else -> {
+                                        navigateUp()
+                                    }
+                                }
+                            }
                         )
                     }
                 }

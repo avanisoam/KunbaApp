@@ -1,5 +1,6 @@
 package com.example.kunbaapp.ui.shared
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -14,6 +15,7 @@ import com.example.kunbaapp.utils.EntityType
 @Composable
 fun FavoriteItemV1(
     item: Favorite,
+    onClick: (Int) -> Unit,
     modifier: Modifier = Modifier
 ) {
     Card(
@@ -23,6 +25,7 @@ fun FavoriteItemV1(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(dimensionResource(R.dimen.padding_small))
+                .clickable { onClick(item.refId) }
         ){
             DogIcon(
                 if(item.type == EntityType.Root)
