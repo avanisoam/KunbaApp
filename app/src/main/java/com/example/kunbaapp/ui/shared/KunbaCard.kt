@@ -64,7 +64,7 @@ fun DogItem(
                 DogIcon(
                     if(dog.gender == 'M') R.drawable.icons8_male_64 else R.drawable.icons8_female_64)
                 val fullName = "${dog.firstName} ${dog.lastName}"
-                DogInformation(fullName, dog.familyId.toString())
+                DogInformation(fullName, dog.placeOfBirth)
                 Spacer(Modifier.weight(1f))
                 DogItemButton(
                     expanded = expanded,
@@ -73,7 +73,7 @@ fun DogItem(
             }
             if (expanded) {
                 DogHobby(
-                    dog.nodeId.toString(), modifier = Modifier.padding(
+                    dog.dateOfBirth, modifier = Modifier.padding(
                         start = dimensionResource(R.dimen.padding_medium),
                         top = dimensionResource(R.dimen.padding_small),
                         bottom = dimensionResource(R.dimen.padding_medium),
@@ -126,7 +126,7 @@ fun DogIcon(
 @Composable
 fun DogInformation(
     dogName: String,
-    dogAge: String,
+    place: String?,
     modifier: Modifier = Modifier
 ) {
     Column(modifier = modifier) {
@@ -136,7 +136,7 @@ fun DogInformation(
             modifier = Modifier.padding(top = dimensionResource(R.dimen.padding_small))
         )
         Text(
-            text = stringResource(R.string.years_old, dogAge),
+            text = place ?: "Unknown",//stringResource(R.string.years_old, place),
             style = MaterialTheme.typography.bodyLarge
         )
     }
@@ -144,18 +144,18 @@ fun DogInformation(
 
 @Composable
 fun DogHobby(
-     dogHobby: String,
+     dogHobby: String?,
     modifier: Modifier = Modifier
 ) {
     Column(
         modifier = modifier
     ) {
         Text(
-            text = stringResource(R.string.about),
+            text = "Date Of Birth",//stringResource(R.string.about),
             style = MaterialTheme.typography.labelSmall
         )
         Text(
-            text = dogHobby,
+            text = dogHobby?: "",
             style = MaterialTheme.typography.bodyLarge
         )
     }

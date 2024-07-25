@@ -1,5 +1,6 @@
 package com.example.kunbaapp.data.repository
 
+import com.example.kunbaapp.data.models.dto.ChildFamilyDto
 import com.example.kunbaapp.data.models.dto.FamilyDto
 import com.example.kunbaapp.data.models.dto.NodeDto
 import com.example.kunbaapp.data.models.dto.RootDetailDto
@@ -13,4 +14,5 @@ class ApiRepository(private val kunbaAppApiService: KunbaAppApiService): IApiRep
     override suspend fun fetchRootDetails(rootId: Int): Response<RootDetailDto> = kunbaAppApiService.fetchRootDetails(rootId)
     override suspend fun fetchFamily(familyId: Int): Response<FamilyDto> = kunbaAppApiService.fetchFamily(familyId)
     override suspend fun fetchNode(nodeId: Int): Response<NodeDto> = kunbaAppApiService.fetchNode(nodeId)
+    override suspend fun getChildrenFamily(familyId: Int): Response<List<ChildFamilyDto>> = kunbaAppApiService.getChildrenFamily(familyId)
 }

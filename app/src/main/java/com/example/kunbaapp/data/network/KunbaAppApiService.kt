@@ -1,5 +1,6 @@
 package com.example.kunbaapp.data.network
 
+import com.example.kunbaapp.data.models.dto.ChildFamilyDto
 import com.example.kunbaapp.data.models.dto.FamilyDto
 import com.example.kunbaapp.data.models.dto.NodeDto
 import com.example.kunbaapp.data.models.dto.RootDetailDto
@@ -26,4 +27,9 @@ interface KunbaAppApiService {
     suspend fun fetchNode(
         @Path("nodeId") nodeId: Int
     ) : Response<NodeDto>
+
+    @GET("{familyId}/ChildFamily")
+    suspend fun getChildrenFamily(
+        @Path("familyId") familyId: Int
+    ): Response<List<ChildFamilyDto>>
 }

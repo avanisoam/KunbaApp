@@ -37,6 +37,10 @@ fun NodeItem(
             ) {
                 val fullName = "${node.firstName} ${node.lastName}"
                 RootInformation(fullName)
+                val placeOfBirth = "Birth Place: ${node.placeOfBirth}"
+                RootInformation(placeOfBirth)
+                val dateOfBirth = "DOB: ${node.dateOfBirth}"
+                RootInformation(dateOfBirth)
                 if (node.gender == 'M') {
                     RootInformation(name = "Male")
                 } else {

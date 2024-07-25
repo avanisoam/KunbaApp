@@ -1,5 +1,6 @@
 package com.example.kunbaapp.data.repository.contract
 
+import com.example.kunbaapp.data.models.dto.ChildFamilyDto
 import com.example.kunbaapp.data.models.dto.FamilyDto
 import com.example.kunbaapp.data.models.dto.NodeDto
 import com.example.kunbaapp.data.models.dto.RootDetailDto
@@ -14,4 +15,6 @@ interface IApiRepository {
     suspend fun fetchFamily(familyId: Int) : Response<FamilyDto>
 
     suspend fun fetchNode(nodeId: Int) : Response<NodeDto>
+
+    suspend fun getChildrenFamily(familyId: Int) : Response<List<ChildFamilyDto>>
 }

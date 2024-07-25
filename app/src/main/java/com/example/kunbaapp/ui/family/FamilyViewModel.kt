@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.kunbaapp.data.models.dto.ChildFamilyDto
 import com.example.kunbaapp.data.models.dto.FamilyDto
 import com.example.kunbaapp.data.models.entity.Favorite
 import com.example.kunbaapp.data.repository.contract.IApiRepository
@@ -118,8 +119,24 @@ class FamilyViewModel(
         }
     }
 
+    fun getChildrenFamily() {
+        viewModelScope.launch {
+            val response = apiRepository.getChildrenFamily(familyIdFromUrl)
+            val result = response.body()
+            if(result != null)
+            {
+                _uiState.update {
+                    it.copy(
+                        childrenFamily = result
+                    )
+                }
+            }
+        }
+    }
+
     init {
         getFamily()
+        getChildrenFamily()
         //getFavoritesFromDb()
         isFavoriteExist()
     }
@@ -128,5 +145,6 @@ class FamilyViewModel(
 data class FamilyUiState(
     val family : FamilyDto = FamilyDto(),
     //val favoritesFromDb: List<Favorite> = listOf(),
-    val isFavorite: Boolean = false
+    val isFavorite: Boolean = false,
+    val childrenFamily : List<ChildFamilyDto> = listOf()
 )
