@@ -6,7 +6,7 @@ import java.time.format.DateTimeFormatter
 data class NodeDto(
     val nodeId : Int = 0,
     val rootId : Int = 0,
-    val familyId : Int = 0,
+    val familyId : Int? = null,
     val firstName : String = "",
     val lastName : String = "",
     val gender : Char = 'x',

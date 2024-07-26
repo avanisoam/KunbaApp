@@ -5,6 +5,7 @@ import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.spring
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -41,11 +42,12 @@ fun KunbaCard() {
 @Composable
 fun DogItem(
     dog: NodeDto,
+    onClick: (Int) -> Unit,
     modifier: Modifier = Modifier
 ) {
     var expanded by remember { mutableStateOf(false) }
     Card(
-        modifier = modifier
+        modifier = modifier.clickable { onClick(dog.nodeId) }
     ) {
         Column(
             modifier = Modifier

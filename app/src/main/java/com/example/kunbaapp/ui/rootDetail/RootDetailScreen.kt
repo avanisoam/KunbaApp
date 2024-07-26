@@ -151,6 +151,7 @@ fun NodesBody(
                  */
                 DogItem(
                     dog = node,
+                    onClick = {onIndividualClick(it)} ,
                     modifier = Modifier.padding(dimensionResource(R.dimen.padding_small))
                 )
 

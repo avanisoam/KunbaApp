@@ -46,9 +46,11 @@ fun NodeItem(
                 } else {
                     RootInformation(name = "Female")
                 }
-
-                Button(onClick = { onItemClick(node.familyId) }) {
-                    Text(text = "Family")
+                // Show Family Button if not null
+                if(node.familyId != null) {
+                    Button(onClick = { onItemClick(node.familyId) }) {
+                        Text(text = "Family")
+                    }
                 }
             }
     }
