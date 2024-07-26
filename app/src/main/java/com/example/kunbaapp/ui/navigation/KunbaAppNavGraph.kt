@@ -80,6 +80,22 @@ fun KunbaAppNavGraph(
             )
         }
 
+        /*
+        composable(
+            NodeDestination.routeWithStringArgs,
+            arguments = listOf(
+                navArgument(NodeDestination.UniqueId_ARG) {
+                    type = NavType.StringType
+                })
+        ){
+            NodeScreen(
+                navigateToFamilyScreen = {navController.navigate("${FamilyDestination.route}/$it")},
+                navigateUp = {navController.popBackStack()},
+                navigateToHome = {navController.navigate(HomeDestination.route)}
+            )
+        }
+         */
+
         composable(FavoriteDestination.route) {
             FavoriteScreen(
                 navigateUp = {navController.navigate(HomeDestination.route)},

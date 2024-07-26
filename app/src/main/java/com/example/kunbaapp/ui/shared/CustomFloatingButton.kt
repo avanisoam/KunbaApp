@@ -45,7 +45,8 @@ fun CustomFloatingButton(
     modifier: Modifier = Modifier,
     items: List<FABItem>,
     fabButton: FABItem = FABItem(icon = Icons.Rounded.Add, text = "Expanded",uniqueId="plus"),
-    onItemClick: (FABItem) -> Unit
+    onItemClick: (FABItem) -> Unit,
+    selectedItemId: String = ""
 ) {
 
     var buttonClicked by remember {
@@ -113,18 +114,30 @@ fun CustomFloatingButton(
                 Row(
                     modifier = Modifier.padding(vertical = 20.dp, horizontal = 30.dp)
                 ) {
-                    Icon(
-                        imageVector = fabButton.icon, contentDescription = "refresh"
-                    )
+                    if(selectedItemId.isNotEmpty())
+                    {
+                        Row {
+                            Spacer(modifier = Modifier.width(20.dp))
+                            Text(text = selectedItemId)
+                        }
+                        // TODO: Add Cancel/Reset button
+                    }
+                    else{
+                        Icon(
+                            imageVector = fabButton.icon, contentDescription = "refresh"
+                        )
+                    }
                     AnimatedVisibility(
                         visible = buttonClicked,
                         enter = expandVertically(animationSpec = tween(1500)) + fadeIn(),
                         exit = shrinkVertically(tween(1200)) + fadeOut(tween(1200))
                     ) {
+                        /*
                         Row {
                             Spacer(modifier = Modifier.width(20.dp))
                             Text(text = fabButton.text)
                         }
+                         */
                     }
                 }
             }

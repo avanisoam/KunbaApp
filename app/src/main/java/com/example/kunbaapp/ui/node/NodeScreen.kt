@@ -45,6 +45,8 @@ object NodeDestination : NavigationDestination {
     override val titleRes = R.string.node
     const val ID_ARG = "nodeId"
     val routeWithArgs = "$route/{$ID_ARG}"
+    const val UniqueId_ARG = "uniqueId"
+    val routeWithStringArgs = "$route/{$UniqueId_ARG}"
 }
 
 @Composable
@@ -96,6 +98,7 @@ fun NodeScreen(
             }
             CustomFloatingButton(
                 items = itemList,
+                selectedItemId = uiState.uniqueId,
                 onItemClick = {item ->
 
                     when(item.uniqueId) {
@@ -103,8 +106,8 @@ fun NodeScreen(
                             // navigating to Home
                             navigateToHome()
                         }//Toast.makeText(context, "call clicked", Toast.LENGTH_SHORT).show()
-                        "add_father" -> openAlertDialog.value=true//Toast.makeText(context, "create clicked", Toast.LENGTH_SHORT).show()
-                        "add_mother" -> Toast.makeText(context, "account clicked", Toast.LENGTH_SHORT).show()
+                        "add_father" -> {viewModel.setUniqueId(item.uniqueId)}//openAlertDialog.value=true//Toast.makeText(context, "create clicked", Toast.LENGTH_SHORT).show()
+                        "add_mother" -> {viewModel.setUniqueId(item.uniqueId)}//Toast.makeText(context, "account clicked", Toast.LENGTH_SHORT).show()
                         "add_son" -> Toast.makeText(context, "account clicked", Toast.LENGTH_SHORT).show()
                         "add_daughter" -> Toast.makeText(context, "account clicked", Toast.LENGTH_SHORT).show()
                         "add_brother" -> Toast.makeText(context, "account clicked", Toast.LENGTH_SHORT).show()
@@ -130,17 +133,38 @@ fun NodeScreen(
              */
         }
     ) {innerPadding ->
-        LazyColumn(modifier = Modifier.padding(innerPadding)) {
-            item {
-                NodeItem(
-                    node = uiState.node,
-                    onItemClick = {navigateToFamilyScreen(it)},
+        when(uiState.uniqueId)
+        {
+            "" -> {
+                LazyColumn(modifier = Modifier.padding(innerPadding)) {
+                    item {
+                        NodeItem(
+                            node = uiState.node,
+                            onItemClick = {navigateToFamilyScreen(it)},
+                        )
+                    }
+
+                    item {
+                        Text(text = uiState.node.toString())
+                    }
+                    item {
+                        Text(text = "Unique Id: ${uiState.uniqueId}")
+                    }
+                }
+            }
+            "add_mother" -> {
+                Text(
+                    text = "Add Node Form: TODO",
+                    modifier = Modifier.padding(innerPadding)
+                )
+            }
+            "add_father" -> {
+                Text(
+                    text = "Add Father Form",
+                    modifier = Modifier.padding(innerPadding)
                 )
             }
 
-            item {
-                Text(text = uiState.node.toString())
-            }
         }
     }
 }

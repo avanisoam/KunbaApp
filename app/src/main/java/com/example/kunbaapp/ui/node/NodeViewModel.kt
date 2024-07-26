@@ -29,6 +29,13 @@ class NodeViewModel(
             NodeDestination.ID_ARG
         ]
     )
+    /*
+    val uniqueIdFromUrl: String = checkNotNull(
+        savedStateHandle[
+            NodeDestination.UniqueId_ARG
+        ]
+    )
+     */
 
     private val _uiState = MutableStateFlow<NodeUiState>(NodeUiState())
     val uiState: StateFlow<NodeUiState> = _uiState
@@ -105,6 +112,14 @@ class NodeViewModel(
         }
     }
 
+    fun setUniqueId(value: String){
+        _uiState.update {
+            it.copy(
+                uniqueId = value
+            )
+        }
+    }
+
     init {
         getNode()
         //getFavoritesFromDb()
@@ -116,5 +131,6 @@ class NodeViewModel(
 data class NodeUiState(
     val node: NodeDto = NodeDto(),
     //val favoritesFromDb: List<Favorite> = listOf(),
-    val isFavorite: Boolean = false
+    val isFavorite: Boolean = false,
+    val uniqueId: String = ""
 )
