@@ -36,6 +36,7 @@ import com.example.kunbaapp.ui.shared.CustomFloatingButton
 import com.example.kunbaapp.ui.shared.FABItem
 import com.example.kunbaapp.ui.shared.KunbaAppTopBar
 import com.example.kunbaapp.ui.shared.NodeItem
+import com.example.kunbaapp.ui.shared.Nodes.AddNodeBody
 import com.example.kunbaapp.ui.shared.PopupDialog
 import org.koin.androidx.compose.getViewModel
 
@@ -159,8 +160,17 @@ fun NodeScreen(
                 )
             }
             "add_father" -> {
+                /*
                 Text(
                     text = "Add Father Form",
+                    modifier = Modifier.padding(innerPadding)
+                )
+                 */
+                AddNodeBody(
+                    addNode = uiState.addNodeDto,
+                    onItemValueChange = {viewModel.updateAddNodeDto(it)},
+                    onSaveClick = { viewModel.saveNode() },
+                    isEntryValid = uiState.isEntryValid,
                     modifier = Modifier.padding(innerPadding)
                 )
             }

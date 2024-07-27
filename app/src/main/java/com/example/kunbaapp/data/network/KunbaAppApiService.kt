@@ -3,10 +3,13 @@ package com.example.kunbaapp.data.network
 import com.example.kunbaapp.data.models.dto.ChildFamilyDto
 import com.example.kunbaapp.data.models.dto.FamilyDto
 import com.example.kunbaapp.data.models.dto.NodeDto
+import com.example.kunbaapp.data.models.dto.NodeDtos.AddNodeDto
 import com.example.kunbaapp.data.models.dto.RootDetailDto
 import com.example.kunbaapp.data.models.dto.RootRegisterDto
 import retrofit2.Response
+import retrofit2.http.Body
 import retrofit2.http.GET
+import retrofit2.http.POST
 import retrofit2.http.Path
 
 interface KunbaAppApiService {
@@ -32,4 +35,7 @@ interface KunbaAppApiService {
     suspend fun getChildrenFamily(
         @Path("familyId") familyId: Int
     ): Response<List<ChildFamilyDto>>
+
+    @POST("addNode")
+    suspend fun addNode(@Body addNodeDto: AddNodeDto) : Response<NodeDto>
 }

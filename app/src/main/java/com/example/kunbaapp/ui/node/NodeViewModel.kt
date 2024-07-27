@@ -5,6 +5,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.kunbaapp.data.models.dto.NodeDto
+import com.example.kunbaapp.data.models.dto.NodeDtos.AddNodeDto
 import com.example.kunbaapp.data.models.entity.Favorite
 import com.example.kunbaapp.data.repository.contract.IApiRepository
 import com.example.kunbaapp.data.repository.contract.IDatabaseRepository
@@ -120,6 +121,32 @@ class NodeViewModel(
         }
     }
 
+    fun updateAddNodeDto(addNodeDto: AddNodeDto){
+        _uiState.update {
+            it.copy(
+                addNodeDto = addNodeDto
+            )
+        }
+    }
+
+    fun saveNode() {
+        viewModelScope.launch(Dispatchers.IO) {
+            val response = apiRepository.addNode(_uiState.value.addNodeDto)
+            val result = response.body()
+            Log.d("New Node", result.toString())
+            /*
+            if(response.isSuccessful && result != null)
+            {
+                _uiState.update {
+                    it.copy(
+                        node = result
+                    )
+                }
+            }
+             */
+        }
+    }
+
     init {
         getNode()
         //getFavoritesFromDb()
@@ -132,5 +159,7 @@ data class NodeUiState(
     val node: NodeDto = NodeDto(),
     //val favoritesFromDb: List<Favorite> = listOf(),
     val isFavorite: Boolean = false,
-    val uniqueId: String = ""
+    val uniqueId: String = "",
+    val addNodeDto : AddNodeDto = AddNodeDto(),
+    val isEntryValid: Boolean = false
 )

@@ -9,4 +9,12 @@
     <string name="about">About</string>
     <string name="years_old">Years Old</string>
     <string name="favorite_button_content_description">Favorite Button</string>
+    <string name="firstName">Firstname</string>
+    <string name="required_fields">Required Fields</string>
+    <string name="lastName">Lastname</string>
+    <string name="imageUrl">ImageUrl</string>
+    <string name="placeOfBirth">Birth Place</string>
+    <string name="dateOfBirth">Date Of Birth</string>
+    <string name="gender">Gender</string>
+    <string name="save_action">Save</string>
 </resources>
