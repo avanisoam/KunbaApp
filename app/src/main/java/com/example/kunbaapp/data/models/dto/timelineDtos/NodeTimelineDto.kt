@@ -6,7 +6,7 @@ data class NodeTimelineDto(
     val gender: Char = 'M',
     val firstName: String = "",
     val lastName: String = "",
-    //val dateOfBirth: String = "",
+    val dateOfBirth: String = "",
     val familyId: Int = 0,
     val index: Int = 0
 )

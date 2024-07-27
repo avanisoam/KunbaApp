@@ -6,6 +6,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.kunbaapp.data.models.dto.NodeDto
 import com.example.kunbaapp.data.models.dto.NodeDtos.AddNodeDto
+import com.example.kunbaapp.data.models.dto.timelineDtos.NodeStage
+import com.example.kunbaapp.data.models.dto.timelineDtos.NodeStatus
 import com.example.kunbaapp.data.models.dto.timelineDtos.NodeTimelineDto
 import com.example.kunbaapp.data.models.entity.Favorite
 import com.example.kunbaapp.data.repository.contract.IApiRepository
@@ -14,12 +16,15 @@ import com.example.kunbaapp.ui.family.FamilyDestination
 import com.example.kunbaapp.ui.family.FamilyUiState
 import com.example.kunbaapp.utils.EntityType
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import java.time.LocalDate
 
 class NodeViewModel(
     savedStateHandle: SavedStateHandle,
@@ -162,10 +167,22 @@ class NodeViewModel(
                         nodeTimelineDtos = result
                     )
                 }
+                val nodeStage : MutableList<NodeStage> = mutableListOf()
+                _uiState.value.nodeTimelineDtos.forEach {
+                    val temp = it
+                    val temp1 = NodeStage(initiator = temp)
+                    nodeStage.add(
+                        temp1
+                    )
+                }
+                _uiState.update {
+                    it.copy(
+                        nodeStage = nodeStage
+                    )
+                }
             }
         }
     }
-
     init {
         getNode()
         //getFavoritesFromDb()
@@ -180,5 +197,6 @@ data class NodeUiState(
     val uniqueId: String = "",
     val addNodeDto : AddNodeDto = AddNodeDto(),
     val isEntryValid: Boolean = false,
-    val nodeTimelineDtos : List<NodeTimelineDto> = listOf()
+    val nodeTimelineDtos : List<NodeTimelineDto> = listOf(),
+    val nodeStage : List<NodeStage> = listOf()
 )

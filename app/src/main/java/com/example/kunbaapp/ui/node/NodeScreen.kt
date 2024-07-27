@@ -2,6 +2,7 @@ package com.example.kunbaapp.ui.node
 
 import android.widget.Toast
 import androidx.annotation.StringRes
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
@@ -18,6 +19,7 @@ import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -30,6 +32,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Popup
 import com.example.kunbaapp.R
+import com.example.kunbaapp.data.models.dto.timelineDtos.NodeStage
 import com.example.kunbaapp.ui.family.FamilyDestination
 import com.example.kunbaapp.ui.navigation.NavigationDestination
 import com.example.kunbaapp.ui.shared.CustomFloatingButton
@@ -38,6 +41,7 @@ import com.example.kunbaapp.ui.shared.KunbaAppTopBar
 import com.example.kunbaapp.ui.shared.NodeItem
 import com.example.kunbaapp.ui.shared.Nodes.AddNodeBody
 import com.example.kunbaapp.ui.shared.PopupDialog
+import com.example.kunbaapp.ui.shared.Timeline.LazyTimelineKunba
 import org.koin.androidx.compose.getViewModel
 
 object NodeDestination : NavigationDestination {
@@ -55,6 +59,7 @@ fun NodeScreen(
     navigateToFamilyScreen: (Int) -> Unit,
     navigateUp: () -> Unit,
     navigateToHome: () -> Unit,
+    navigateToNodeScreen: (Int) -> Unit,
     viewModel: NodeViewModel = getViewModel<NodeViewModel>()
 ) {
     val uiState by viewModel.uiState.collectAsState()
@@ -137,6 +142,13 @@ fun NodeScreen(
         when(uiState.uniqueId)
         {
             "" -> {
+                //KunbaFamilyTime(timelineStages = uiState.nodeStage)
+                LazyTimelineKunba(
+                    stages= uiState.nodeStage,
+                    modifier = Modifier.padding(innerPadding),
+                    onClick = {navigateToNodeScreen(it)}
+                )
+                /*
                 LazyColumn(modifier = Modifier.padding(innerPadding)) {
                     item {
                         NodeItem(
@@ -152,9 +164,12 @@ fun NodeScreen(
                         Text(text = "Unique Id: ${uiState.uniqueId}")
                     }
                     item{
-                        Text(text = uiState.nodeTimelineDtos.toString())
+                        //Text(text = uiState.nodeTimelineDtos.toString())
+                        KunbaFamilyTime(timelineStages = uiState.nodeStage)
                     }
                 }
+
+                 */
             }
             "add_mother" -> {
                 Text(
