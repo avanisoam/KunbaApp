@@ -6,6 +6,7 @@ import com.example.kunbaapp.data.models.dto.NodeDto
 import com.example.kunbaapp.data.models.dto.NodeDtos.AddNodeDto
 import com.example.kunbaapp.data.models.dto.RootDetailDto
 import com.example.kunbaapp.data.models.dto.RootRegisterDto
+import com.example.kunbaapp.data.models.dto.timelineDtos.NodeTimelineDto
 import retrofit2.Response
 import retrofit2.http.Body
 
@@ -21,4 +22,6 @@ interface IApiRepository {
     suspend fun getChildrenFamily(familyId: Int) : Response<List<ChildFamilyDto>>
 
     suspend fun addNode(addNodeDto: AddNodeDto) : Response<NodeDto>
+
+    suspend fun getFamilyTimeLine(nodeDto: NodeDto) : Response<List<NodeTimelineDto>>
 }

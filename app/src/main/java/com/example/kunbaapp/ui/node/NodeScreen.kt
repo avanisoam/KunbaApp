@@ -151,6 +151,9 @@ fun NodeScreen(
                     item {
                         Text(text = "Unique Id: ${uiState.uniqueId}")
                     }
+                    item{
+                        Text(text = uiState.nodeTimelineDtos.toString())
+                    }
                 }
             }
             "add_mother" -> {

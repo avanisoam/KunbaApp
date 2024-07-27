@@ -6,6 +6,7 @@ import com.example.kunbaapp.data.models.dto.NodeDto
 import com.example.kunbaapp.data.models.dto.NodeDtos.AddNodeDto
 import com.example.kunbaapp.data.models.dto.RootDetailDto
 import com.example.kunbaapp.data.models.dto.RootRegisterDto
+import com.example.kunbaapp.data.models.dto.timelineDtos.NodeTimelineDto
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.GET
@@ -38,4 +39,7 @@ interface KunbaAppApiService {
 
     @POST("addNode")
     suspend fun addNode(@Body addNodeDto: AddNodeDto) : Response<NodeDto>
+
+    @POST("getFamilyTimeLine")
+    suspend fun getFamilyTimeLine(@Body nodeDto: NodeDto) : Response<List<NodeTimelineDto>>
 }

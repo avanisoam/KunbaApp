@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.kunbaapp.data.models.dto.NodeDto
 import com.example.kunbaapp.data.models.dto.NodeDtos.AddNodeDto
+import com.example.kunbaapp.data.models.dto.timelineDtos.NodeTimelineDto
 import com.example.kunbaapp.data.models.entity.Favorite
 import com.example.kunbaapp.data.repository.contract.IApiRepository
 import com.example.kunbaapp.data.repository.contract.IDatabaseRepository
@@ -52,6 +53,8 @@ class NodeViewModel(
                         node = result
                     )
                 }
+                getFamilyTimeline()
+                isFavoriteExist()
             }
         }
     }
@@ -147,10 +150,25 @@ class NodeViewModel(
         }
     }
 
+    fun getFamilyTimeline() {
+        viewModelScope.launch {
+            val response = apiRepository.getFamilyTimeLine(_uiState.value.node)
+            val result = response.body()
+
+            if(response.isSuccessful && result != null)
+            {
+                _uiState.update {
+                    it.copy(
+                        nodeTimelineDtos = result
+                    )
+                }
+            }
+        }
+    }
+
     init {
         getNode()
         //getFavoritesFromDb()
-        isFavoriteExist()
     }
 }
 
@@ -161,5 +179,6 @@ data class NodeUiState(
     val isFavorite: Boolean = false,
     val uniqueId: String = "",
     val addNodeDto : AddNodeDto = AddNodeDto(),
-    val isEntryValid: Boolean = false
+    val isEntryValid: Boolean = false,
+    val nodeTimelineDtos : List<NodeTimelineDto> = listOf()
 )
