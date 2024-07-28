@@ -7,13 +7,15 @@ import com.example.kunbaapp.data.models.dto.NodeDtos.AddNodeDto
 import com.example.kunbaapp.data.models.dto.RootDetailDto
 import com.example.kunbaapp.data.models.dto.RootRegisterDto
 import com.example.kunbaapp.data.models.dto.timelineDtos.NodeTimelineDto
+import kotlinx.coroutines.flow.Flow
 import retrofit2.Response
-import retrofit2.http.Body
 
 interface IApiRepository {
     suspend fun fetchRoots(): Response<List<RootRegisterDto>>
 
     suspend fun fetchRootDetails(rootId: Int) : Response<RootDetailDto>
+
+    suspend fun fetchRootDetailsV1(rootId: Int) : Flow<Response<RootDetailDto>>
 
     suspend fun fetchFamily(familyId: Int) : Response<FamilyDto>
 
