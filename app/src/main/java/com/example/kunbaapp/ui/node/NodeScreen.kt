@@ -2,8 +2,11 @@ package com.example.kunbaapp.ui.node
 
 import android.widget.Toast
 import androidx.annotation.StringRes
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
@@ -143,11 +146,18 @@ fun NodeScreen(
         {
             "" -> {
                 //KunbaFamilyTime(timelineStages = uiState.nodeStage)
-                LazyTimelineKunba(
-                    stages= uiState.nodeStage,
-                    modifier = Modifier.padding(innerPadding),
-                    onClick = {navigateToNodeScreen(it)}
-                )
+                Column(modifier = Modifier.padding(innerPadding)) {
+                    NodeItem(
+                        node = uiState.node,
+                        onItemClick = {navigateToFamilyScreen(it)},
+                    )
+                    Spacer(modifier = Modifier.width(20.dp))
+                    LazyTimelineKunba(
+                        stages= uiState.nodeStage,
+                        onClick = {navigateToNodeScreen(it)}
+                    )
+                }
+
                 /*
                 LazyColumn(modifier = Modifier.padding(innerPadding)) {
                     item {
