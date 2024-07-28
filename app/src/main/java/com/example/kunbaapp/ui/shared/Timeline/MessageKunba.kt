@@ -1,6 +1,5 @@
 package com.example.kunbaapp.ui.shared.Timeline
 
-import android.service.autofill.OnClickAction
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -18,17 +17,18 @@ import androidx.compose.ui.text.font.FontWeight.Companion.W500
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.example.kunbaapp.data.models.dto.timelineDtos.NodeStage
+import com.example.kunbaapp.data.models.dto.timelineDtos.TimelineObject
 import com.example.kunbaapp.data.models.dto.timelineDtos.NodeStatus
 import com.example.kunbaapp.data.models.dto.timelineDtos.NodeTimelineDto
-import com.example.kunbaapp.data.models.dto.timelineDtos.TimeLineDto
-import com.example.kunbaapp.ui.theme.KunbaAppTheme
+import com.example.kunbaapp.data.models.dto.timelineDtos.TempTimelineObject
 import java.time.LocalDate
 
 @Composable
 internal fun MessageKunba(
-    hiringStage: NodeStage,
+    //hiringStage: TimelineObject,
+    hiringStage: TempTimelineObject,
     onClick: (Int) -> Unit,
+    cardAlignment: Alignment = Alignment.CenterStart,
     modifier: Modifier = Modifier,
 ) {
     Box(
@@ -39,28 +39,34 @@ internal fun MessageKunba(
         Card(
             modifier = Modifier
                 .fillMaxWidth(0.65f)
-                .align(Alignment.CenterStart)
-                .clickable { onClick(hiringStage.initiator.nodeId) },
-            colors = CardDefaults.cardColors(containerColor = getBackgroundColor(hiringStage))
+                //.align(Alignment.CenterStart)
+                //.align(Alignment.CenterEnd)
+                .align(cardAlignment)
+                .clickable { onClick(hiringStage.id) },
+            colors = CardDefaults.cardColors(
+                //containerColor = getBackgroundColor(hiringStage)
+                containerColor = MaterialTheme.colorScheme.surfaceVariant
+            )
         ) {
-            val fullName = "${hiringStage.initiator.firstName} ${hiringStage.initiator.lastName}"
+            //val fullName = "${hiringStage.initiator.firstName} ${hiringStage.initiator.lastName}"
             Text(
                 modifier = Modifier
                     .fillMaxWidth()
                     .wrapContentHeight()
                     .padding(12.dp),
-                text = fullName,
+                text = hiringStage.name,//fullName,
                 textAlign =  TextAlign.Start,//getTextAlign(hiringStage),
-                style = getTextStyle(hiringStage),
-                fontWeight = getFontWeight(hiringStage),
-                color = getTextColor(hiringStage)
+                //style = getTextStyle(hiringStage),
+                //fontWeight = getFontWeight(hiringStage),
+                //color = getTextColor(hiringStage)
             )
         }
     }
 }
 
+/*
 @Composable
-private fun getBoxAlign(hiringStage: NodeStage) =
+private fun getBoxAlign(hiringStage: TimelineObject) =
     if (hiringStage.initiator is NodeTimelineDto) {
         Alignment.CenterEnd
     } else {
@@ -68,22 +74,23 @@ private fun getBoxAlign(hiringStage: NodeStage) =
     }
 
 @Composable
-private fun getTextAlign(hiringStage: NodeStage) =
+private fun getTextAlign(hiringStage: TimelineObject) =
     if (hiringStage.initiator is NodeTimelineDto) {
         TextAlign.End
     } else {
         TextAlign.Start
     }
+ */
 
 @Composable
-private fun getBackgroundColor(hiringStage: NodeStage) = when (hiringStage.status) {
+private fun getBackgroundColor(hiringStage: TimelineObject) = when (hiringStage.status) {
     NodeStatus.UPCOMING -> MaterialTheme.colorScheme.surface.copy(alpha = 0.3f)
     NodeStatus.CURRENT -> MaterialTheme.colorScheme.tertiary.copy(alpha = 0.3f)
     else -> MaterialTheme.colorScheme.surfaceVariant
 }
 
 @Composable
-private fun getTextColor(hiringStage: NodeStage) =
+private fun getTextColor(hiringStage: TimelineObject) =
     if (hiringStage.status == NodeStatus.UPCOMING) {
         MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.63f)
     } else {
@@ -91,7 +98,7 @@ private fun getTextColor(hiringStage: NodeStage) =
     }
 
 @Composable
-private fun getFontWeight(hiringStage: NodeStage) =
+private fun getFontWeight(hiringStage: TimelineObject) =
     if (hiringStage.status == NodeStatus.CURRENT) {
         W500
     } else {
@@ -99,19 +106,20 @@ private fun getFontWeight(hiringStage: NodeStage) =
     }
 
 @Composable
-private fun getTextStyle(hiringStage: NodeStage) =
+private fun getTextStyle(hiringStage: TimelineObject) =
     if (hiringStage.status == NodeStatus.CURRENT) {
         MaterialTheme.typography.bodyLarge
     } else {
         MaterialTheme.typography.bodyMedium
     }
 
+/*
 @Preview(showBackground = true)
 @Composable
 private fun MessagePreview() {
     //KunbaAppTheme {
         MessageKunba(
-            hiringStage = NodeStage(
+            hiringStage = TimelineObject(
                 date = LocalDate.now(),
                 initiator = NodeTimelineDto(
                     nodeId = 1,
@@ -136,7 +144,7 @@ private fun MessagePreview() {
 private fun UpcomingStageMessagePreview() {
     //KunbaAppTheme {
         MessageKunba(
-            hiringStage = NodeStage(
+            hiringStage = TimelineObject(
                 date = LocalDate.now(),
                 initiator = NodeTimelineDto(
                     nodeId = 1,
@@ -162,7 +170,7 @@ private fun FinishedMessagePreview() {
     //KunbaAppTheme {
         MessageKunba(
             modifier = Modifier,
-            hiringStage = NodeStage(
+            hiringStage = TimelineObject(
                 date = LocalDate.now(),
                 initiator = NodeTimelineDto(
                     nodeId = 1,
@@ -180,4 +188,6 @@ private fun FinishedMessagePreview() {
             onClick = {}
         )
     }
+
+ */
 //}

@@ -4,25 +4,13 @@ import android.widget.Toast
 import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.Favorite
-import androidx.compose.material.icons.filled.FavoriteBorder
-import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.rounded.AccountCircle
 import androidx.compose.material.icons.rounded.Add
-import androidx.compose.material.icons.rounded.Call
-import androidx.compose.material.icons.rounded.Create
 import androidx.compose.material.icons.rounded.Home
-import androidx.compose.material3.FloatingActionButton
-import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -31,12 +19,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.window.Popup
 import com.example.kunbaapp.R
-import com.example.kunbaapp.data.models.dto.timelineDtos.NodeStage
-import com.example.kunbaapp.ui.family.FamilyDestination
 import com.example.kunbaapp.ui.navigation.NavigationDestination
 import com.example.kunbaapp.ui.shared.CustomFloatingButton
 import com.example.kunbaapp.ui.shared.FABItem
@@ -154,7 +138,8 @@ fun NodeScreen(
                     Spacer(modifier = Modifier.width(20.dp))
                     LazyTimelineKunba(
                         stages= uiState.nodeStage,
-                        onClick = {navigateToNodeScreen(it)}
+                        navigateToNodeScreen = {},
+                        navigateToFamilyScreen = {navigateToNodeScreen(it)}
                     )
                 }
 

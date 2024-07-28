@@ -5,6 +5,8 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.kunbaapp.data.models.dto.RootDetailDto
+import com.example.kunbaapp.data.models.dto.timelineDtos.TempTimelineObject
+import com.example.kunbaapp.data.models.dto.timelineDtos.TimelineObject
 import com.example.kunbaapp.data.models.entity.Favorite
 import com.example.kunbaapp.data.repository.contract.IApiRepository
 import com.example.kunbaapp.data.repository.contract.IDatabaseRepository
@@ -20,6 +22,7 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.withContext
 
 class RootDetailViewModel(
     savedStateHandle: SavedStateHandle,
@@ -51,6 +54,7 @@ class RootDetailViewModel(
                         rootDetail = result
                     )
                 }
+                getTimelineObject()
             }
         }
 
@@ -130,6 +134,52 @@ class RootDetailViewModel(
         }
     }
 
+   suspend fun getTimelineObject(){
+        withContext(Dispatchers.IO) {
+            if(_uiState.value.rootDetail.familyDtos.isNotEmpty())
+            {
+                val families = _uiState.value.rootDetail.familyDtos//result.familyDtos
+
+                val tempTimeLine : MutableList<TimelineObject> = mutableListOf()
+
+             val temp =  families.forEach {family ->
+                     val fName = "${family.fatherInfo.firstName} ${family.fatherInfo.lastName}"
+                     val mName = "${family.motherInfo.firstName} ${family.motherInfo.lastName}"
+                     val t = TimelineObject(
+                         initiator = TempTimelineObject(
+                             id = family.familyId,
+                             name = "$fName - $mName"
+                         ),
+                         children =  _uiState.value.rootDetail.nodeDtos
+                             .filter {node ->
+                                 node.familyId == family.familyId
+                             }
+                             .map {child ->
+                             val fullName = "${child.firstName} ${child.lastName}"
+                             TempTimelineObject(
+                                 id = child.nodeId,
+                                 name = fullName
+                             )
+                         }
+
+                     )
+
+                 tempTimeLine.add(t)
+
+
+
+                 }
+
+                _uiState.update {
+                    it.copy(
+                        rootTimeLineList = tempTimeLine
+                    )
+                }
+
+            }
+        }
+    }
+
     init {
             getRootDetail()
             //getFavoritesFromDb()
@@ -142,5 +192,6 @@ class RootDetailViewModel(
 data class RootDetailUiState(
     val rootDetail : RootDetailDto = RootDetailDto(),
     //val favoritesRootIds: List<Int> = listOf(),
-    val isFavorite: Boolean = false
+    val isFavorite: Boolean = false,
+    val rootTimeLineList : List<TimelineObject> = listOf()
 )

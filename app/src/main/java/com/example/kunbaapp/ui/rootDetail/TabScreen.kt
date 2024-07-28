@@ -19,6 +19,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import com.example.kunbaapp.data.models.dto.FamilyDto
 import com.example.kunbaapp.data.models.dto.NodeDto
+import com.example.kunbaapp.data.models.dto.timelineDtos.TimelineObject
 
 @Composable
 fun TabScreen(
@@ -26,6 +27,7 @@ fun TabScreen(
     onItemClick: (Int) -> Unit,
     onIndividualClick: (Int) -> Unit,
     nodes: List<NodeDto>,
+    timelineObjects: List<TimelineObject>,
     modifier: Modifier = Modifier
 ) {
     var tabIndex by remember { mutableStateOf(0) }
@@ -58,7 +60,11 @@ fun TabScreen(
                 nodes = nodes,
                 onIndividualClick = onIndividualClick,
             )
-            2 -> TimelineScreen()
+            2 -> TimelineScreen(
+                timelineObjects = timelineObjects,
+                navigateToFamilyScreen = onItemClick,
+                navigateToNodeScreen = onIndividualClick
+                )
         }
     }
 }

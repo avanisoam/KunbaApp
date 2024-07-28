@@ -80,7 +80,8 @@ fun RootDetailScreen(
             onItemClick =  {navigateToFamilyScreen(it) },
             onIndividualClick = { navigateToNodeScreen(it) },
             nodes = uiState.rootDetail.nodeDtos,
-            modifier = Modifier.padding(innerPadding)
+            modifier = Modifier.padding(innerPadding),
+            timelineObjects = uiState.rootTimeLineList,
         )
         /*
         Column(modifier = Modifier.padding(innerPadding)) {
