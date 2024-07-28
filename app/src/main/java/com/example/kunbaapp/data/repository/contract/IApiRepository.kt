@@ -17,6 +17,8 @@ interface IApiRepository {
 
     suspend fun fetchRootDetailsV1(rootId: Int) : Flow<Response<RootDetailDto>>
 
+    fun fetchRootDetailHotFlow(rootId: Int) : Flow<Response<RootDetailDto>>
+
     suspend fun fetchFamily(familyId: Int) : Response<FamilyDto>
 
     suspend fun fetchNode(nodeId: Int) : Response<NodeDto>

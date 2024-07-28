@@ -27,6 +27,15 @@ class ApiRepository(private val kunbaAppApiService: KunbaAppApiService): IApiRep
         }
     }
 
+    override fun fetchRootDetailHotFlow(rootId: Int): Flow<Response<RootDetailDto>> = flow {
+        while(true){
+            Log.d("RAW_FLOW", "Fetching Root ${rootId} details.")
+            val rootDetailDto = kunbaAppApiService.fetchRootDetails(rootId)
+            emit(rootDetailDto)
+            delay(5000)
+        }
+    }
+
     override suspend fun fetchFamily(familyId: Int): Response<FamilyDto> = kunbaAppApiService.fetchFamily(familyId)
     override suspend fun fetchNode(nodeId: Int): Response<NodeDto> = kunbaAppApiService.fetchNode(nodeId)
     override suspend fun getChildrenFamily(familyId: Int): Response<List<ChildFamilyDto>> = kunbaAppApiService.getChildrenFamily(familyId)

@@ -4,23 +4,75 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import com.example.kunbaapp.data.models.dto.RootDetailDto
 import com.example.kunbaapp.data.repository.contract.IApiRepository
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
+import java.time.LocalDateTime
 
 class Poc_RootDetailViewModel(
     private val apiRepository: IApiRepository,
-): ViewModel() {
+) : ViewModel() {
 
-    //val currentRootDetailAsLiveData : LiveData<Poc_RootDetailUiState> = MutableLiveData()
+    // Step 0 does not require any uiState
+    // as we are not setting any UiState only capturing data in Logcat
+    // It will work with Step1 and 2
+    val currentRootDetailAsLiveData: MutableLiveData<Poc_RootDetailUiState> = MutableLiveData()
 
-    fun getRootDetail(){
+    // Step3 : To make asLiveData and UiState as observable on Ui
+    val currentRootDetailAsLiveData1 : LiveData<Poc_RootDetailUiState> =
+        apiRepository.fetchRootDetailHotFlow(3)
+            .map {
+             Poc_RootDetailUiState(
+                 rootDetail = it.body()?: RootDetailDto()
+             )
+            }
+            .asLiveData()
+
+     fun getRootDetail() {
         // TODO
+        /* Step 1:
+        viewModelScope.launch {
+            //getDogBreedData()
+            apiRepository
+                .fetchRootDetailsV1(3).collect { rootDetail ->
+                    val result = rootDetail.body()
+                    if (rootDetail.isSuccessful && result != null) {
+                        Log.d("RAW_FLOW", "Received Item : ${rootDetail.toString()}")
+                        // _uiState.value = HomeUiState.Success(dogBreedsList = result.message)
+                        currentRootDetailAsLiveData.value = Poc_RootDetailUiState(
+                            rootDetail = result
+                        )
+                    }
+                }
+        }
+         */
+
+        // Step 2:
+         viewModelScope.launch {
+             apiRepository
+                 .fetchRootDetailsV1(3).onEach { rootDetail ->
+                     val result = rootDetail.body()
+                     if (rootDetail.isSuccessful && result != null) {
+                         Log.d("RAW_FLOW", "Received Item : ${rootDetail.toString()}")
+                         // _uiState.value = HomeUiState.Success(dogBreedsList = result.message)
+                         currentRootDetailAsLiveData.value = Poc_RootDetailUiState(
+                             rootDetail = result
+                         )
+                     }
+                 }
+                 .launchIn(viewModelScope)
+         }
     }
 
     init {
         //getRootDetail()
+        /* Step : 0
         viewModelScope.launch {
             //getDogBreedData()
             apiRepository
@@ -32,11 +84,15 @@ class Poc_RootDetailViewModel(
                 }
             }
         }
+
+         */
+
     }
 
 }
 
 data class Poc_RootDetailUiState(
-    val rootDetail : RootDetailDto = RootDetailDto(),
-    val selectedRootId: Int = 3
+    val rootDetail: RootDetailDto = RootDetailDto(),
+    val selectedRootId: Int = 3,
+    val dateTime: LocalDateTime = LocalDateTime.now()
 )
