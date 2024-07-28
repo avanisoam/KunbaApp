@@ -15,9 +15,20 @@ import java.time.format.DateTimeFormatter
 fun Poc_RootDetail(
     viewModel: Poc_RootDetailViewModel = getViewModel<Poc_RootDetailViewModel>()
 ) {
-    
+
+    // AS LiveData
     //val uiState by viewModel.currentRootDetailAsLiveData.observeAsState()
-    val uiState by viewModel.currentRootDetailAsLiveData1.observeAsState()
+    //val uiState by viewModel.currentRootDetailAsLiveData1.observeAsState()
+
+    // As ColdFlow
+    //val uiState by viewModel.currentRootDetailAsLiveData2.collectAsStateWithLifecycle(
+    //    initialValue = Poc_RootDetailUiState(),
+    //)
+
+    // As HotFlow
+    val uiState by viewModel.currentRootDetailAsLiveData3.collectAsStateWithLifecycle(
+        initialValue = Poc_RootDetailUiState(),
+    )
 
     Column {
         // TODO
@@ -29,7 +40,10 @@ fun Poc_RootDetail(
        // Text(text = "lastUpdatedTime: ${LocalDateTime.now().toString()} - ${uiState?.rootDetail.toString()}")
 
         // Here time is updated as it is part of Ui State
-        Text(text = "lastUpdatedTime: ${uiState?.dateTime} - ${uiState?.rootDetail.toString()}")
+        //Text(text = "lastUpdatedTime: ${uiState?.dateTime} - ${uiState?.rootDetail.toString()}")
+
+        // UiState changed from LiveData to Flow with stateIn
+        Text(text = "lastUpdatedTime: ${uiState.dateTime} - ${uiState.rootDetail.toString()}")
     }
     
     //Text(text = "TODO - check response in Logcat")
