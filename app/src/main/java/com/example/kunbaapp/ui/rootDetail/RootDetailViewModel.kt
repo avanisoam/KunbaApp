@@ -9,10 +9,14 @@ import com.example.kunbaapp.data.models.entity.Favorite
 import com.example.kunbaapp.data.repository.contract.IApiRepository
 import com.example.kunbaapp.data.repository.contract.IDatabaseRepository
 import com.example.kunbaapp.ui.home.HomeUiState
+import com.example.kunbaapp.ui.poc.Poc_RootDetailUiState
 import com.example.kunbaapp.utils.EntityType
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
@@ -49,6 +53,23 @@ class RootDetailViewModel(
                 }
             }
         }
+
+    }
+
+    private fun getRootDetailFlow(){
+        apiRepository.fetchRootDetailHotFlow(3)
+            .map {
+                RootDetailUiState(
+                    rootDetail = it.body() ?: RootDetailDto()
+                )
+            }
+            .stateIn(
+                scope = viewModelScope,
+                //started = SharingStarted.Eagerly
+                //started = SharingStarted.Lazily
+                started = SharingStarted.WhileSubscribed(5000),
+                initialValue = Poc_RootDetailUiState()
+            )
 
     }
     fun toggleFavoriteButton(id: Int) {

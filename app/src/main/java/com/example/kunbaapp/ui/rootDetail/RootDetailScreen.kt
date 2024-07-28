@@ -75,6 +75,28 @@ fun RootDetailScreen(
             }
         }
     ){innerPadding ->
+        TabScreen(
+            families = uiState.rootDetail.familyDtos,
+            onItemClick =  {navigateToFamilyScreen(it) },
+            onIndividualClick = { navigateToNodeScreen(it) },
+            nodes = uiState.rootDetail.nodeDtos,
+            modifier = Modifier.padding(innerPadding)
+        )
+        /*
+        Column(modifier = Modifier.padding(innerPadding)) {
+            TabScreen()
+
+            RootDetailSplitUI(
+                families = uiState.rootDetail.familyDtos,
+                onItemClick = { navigateToFamilyScreen(it) },
+                onIndividualClick = { navigateToNodeScreen(it) },
+                nodes = uiState.rootDetail.nodeDtos,
+                //modifier = Modifier.padding(innerPadding)
+            )
+        }
+
+         */
+        /*
         Column(modifier = Modifier.padding(innerPadding)) {
 
         RootDetailBody(
@@ -93,69 +115,7 @@ fun RootDetailScreen(
             )
 
         }
+         */
     }
 }
 
-@Composable
-fun RootDetailBody(
-    families: List<FamilyDto>,
-    onItemClick: (Int) -> Unit,
-    onIndividualClick: (Int) -> Unit,
-    modifier: Modifier = Modifier
-) {
-    LazyColumn(modifier = modifier) {
-        item {
-            families.forEach { root ->
-                RootFamilyItem(
-                    family = root,
-                    onItemClick = {onItemClick(root.familyId)},
-                    onIndividualClick = {onIndividualClick(it)},
-                )
-
-            }
-        }
-    }
-}
-
-@Composable
-fun NodesBody(
-    nodes: List<NodeDto>,
-    onIndividualClick: (Int) -> Unit,
-    modifier: Modifier = Modifier
-) {
-    LazyColumn(modifier = modifier) {
-        item {
-            nodes.forEach { node ->
-                /*
-                RootNodeItem(
-                    node = node,
-                    onItemClick = {onIndividualClick(it)},
-                    avatar = if(node.gender == 'M') painterResource(id = R.drawable.graphic_designer__1_)else painterResource(
-                        id = R.drawable.woman__1_
-                    ),
-                    description = if(node.gender == 'M') "Male" else "Female"
-                )
-
-                 */
-                //Text(text = "${node.firstName} ${node.lastName}")
-                /*
-                FavoriteItem(
-                    node = node,
-                    onItemClick = {onIndividualClick(it)},
-                    avatar = if(node.gender == 'M') painterResource(id = R.drawable.icons8_male_64)else painterResource(
-                        id = R.drawable.icons8_female_64
-                    ),
-                    description = if(node.gender == 'M') "Male" else "Female"
-                )
-                
-                 */
-                DogItem(
-                    dog = node,
-                    onClick = {onIndividualClick(it)} ,
-                    modifier = Modifier.padding(dimensionResource(R.dimen.padding_small))
-                )
-
-            }
-        }
-    }
-}

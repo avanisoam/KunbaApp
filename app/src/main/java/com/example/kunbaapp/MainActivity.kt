@@ -23,9 +23,9 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    //KunbaAppScreen()
+                    KunbaAppScreen()
 
-                    Poc_RootDetail()
+                    //Poc_RootDetail()
                 }
             }
         }
