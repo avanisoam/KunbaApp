@@ -28,6 +28,7 @@ fun TabScreen(
     onIndividualClick: (Int) -> Unit,
     nodes: List<NodeDto>,
     timelineObjects: List<TimelineObject>,
+    refreshTimeline: () -> Unit = {},
     modifier: Modifier = Modifier
 ) {
     var tabIndex by remember { mutableStateOf(0) }
@@ -60,11 +61,13 @@ fun TabScreen(
                 nodes = nodes,
                 onIndividualClick = onIndividualClick,
             )
-            2 -> TimelineScreen(
+            2 -> {
+                refreshTimeline()
+                TimelineScreen(
                 timelineObjects = timelineObjects,
                 navigateToFamilyScreen = onItemClick,
                 navigateToNodeScreen = onIndividualClick
-                )
+                )}
         }
     }
 }

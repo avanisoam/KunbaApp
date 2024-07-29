@@ -211,6 +211,16 @@ class NodeViewModel(
             }
         }
     }
+
+    fun addParents(){
+        Log.d("Parents", "Init")
+        viewModelScope.launch {
+            val response = apiRepository.addParents(nodeIdFromUrl)
+            val result = response.body()
+            Log.d("Parents", result.toString())
+        }
+        Log.d("Parents", "End")
+    }
     init {
         getNode()
         //getFavoritesFromDb()

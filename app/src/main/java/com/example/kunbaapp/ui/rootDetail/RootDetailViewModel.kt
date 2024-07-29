@@ -14,6 +14,7 @@ import com.example.kunbaapp.ui.home.HomeUiState
 import com.example.kunbaapp.ui.poc.Poc_RootDetailUiState
 import com.example.kunbaapp.utils.EntityType
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -37,10 +38,11 @@ class RootDetailViewModel(
         ]
     )
 
-    private val _uiState = MutableStateFlow<RootDetailUiState>(RootDetailUiState())
-    val uiState: StateFlow<RootDetailUiState> = _uiState
+    //private val _uiState = MutableStateFlow<RootDetailUiState>(RootDetailUiState())
+    //val uiState: StateFlow<RootDetailUiState> = _uiState
 
 
+    /*
     private fun getRootDetail(){
         viewModelScope.launch {
             Log.d("rootIdFromUrl", rootIdFromUrl.toString())
@@ -60,8 +62,61 @@ class RootDetailViewModel(
 
     }
 
+     */
+
+    val uiState : Flow<RootDetailUiState> = apiRepository.fetchRootDetailHotFlow(rootIdFromUrl)
+        .map {
+           RootDetailUiState(
+                rootDetail = it.body() ?: RootDetailDto(),
+                rootTimeLineList = getTimelineObject(it.body() ?: RootDetailDto())
+            )
+        }
+        .stateIn(
+            scope = viewModelScope,
+            //started = SharingStarted.Eagerly
+            //started = SharingStarted.Lazily
+            started = SharingStarted.WhileSubscribed(5000),
+            initialValue = RootDetailUiState()
+        )
+
+
+    private fun getTimelineObject(rootDetail: RootDetailDto) : List<TimelineObject>{
+        val tempTimeLine: MutableList<TimelineObject> = mutableListOf()
+        if (rootDetail.familyDtos.isNotEmpty()) {
+            val families = rootDetail.familyDtos//result.familyDtos
+
+            val temp = families.forEach { family ->
+                val fName = "${family.fatherInfo.firstName} ${family.fatherInfo.lastName}"
+                val mName = "${family.motherInfo.firstName} ${family.motherInfo.lastName}"
+                val t = TimelineObject(
+                    initiator = TempTimelineObject(
+                        id = family.familyId,
+                        name = "$fName - $mName"
+                    ),
+                    children = rootDetail.nodeDtos
+                        .filter { node ->
+                            node.familyId == family.familyId
+                        }
+                        .map { child ->
+                            val fullName = "${child.firstName} ${child.lastName}"
+                            TempTimelineObject(
+                                id = child.nodeId,
+                                name = fullName
+                            )
+                        }
+
+                )
+
+                tempTimeLine.add(t)
+
+
+            }
+
+        }
+        return tempTimeLine
+    }
     private fun getRootDetailFlow(){
-        apiRepository.fetchRootDetailHotFlow(3)
+        apiRepository.fetchRootDetailHotFlow(rootIdFromUrl)
             .map {
                 RootDetailUiState(
                     rootDetail = it.body() ?: RootDetailDto()
@@ -72,10 +127,12 @@ class RootDetailViewModel(
                 //started = SharingStarted.Eagerly
                 //started = SharingStarted.Lazily
                 started = SharingStarted.WhileSubscribed(5000),
-                initialValue = Poc_RootDetailUiState()
+                initialValue = RootDetailUiState()
             )
 
     }
+
+    /*
     fun toggleFavoriteButton(id: Int) {
         Log.d("Favorite - family", id.toString())
         viewModelScope.launch(Dispatchers.IO) {
@@ -180,10 +237,13 @@ class RootDetailViewModel(
         }
     }
 
+     */
+
     init {
-            getRootDetail()
+            //getRootDetail()
             //getFavoritesFromDb()
-            isFavoriteExist()
+            //getRootDetailFlow()
+            //isFavoriteExist()
 
     }
 

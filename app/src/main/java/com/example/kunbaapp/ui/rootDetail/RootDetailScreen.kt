@@ -48,7 +48,8 @@ fun RootDetailScreen(
     navigateToHome: () -> Unit,
     viewModel: RootDetailViewModel = getViewModel<RootDetailViewModel>()
 ) {
-    val uiState by viewModel.uiState.collectAsState()
+    //val uiState by viewModel.uiState.collectAsState()
+    val uiState by viewModel.uiState.collectAsState(initial = RootDetailUiState())
     //Text(text = uiState.rootDetail.toString())
     Scaffold(
         topBar = {
@@ -57,7 +58,7 @@ fun RootDetailScreen(
                 title = RootDetailDestination.titleRes,
                 navigateUp = navigateUp,
                 isFavorite = uiState.isFavorite,
-                toggleFavorite = {viewModel.toggleFavoriteButton(viewModel.rootIdFromUrl)},
+                toggleFavorite = {},//{viewModel.toggleFavoriteButton(viewModel.rootIdFromUrl)},
                 showFavorite = true
             )
         },
@@ -82,6 +83,7 @@ fun RootDetailScreen(
             nodes = uiState.rootDetail.nodeDtos,
             modifier = Modifier.padding(innerPadding),
             timelineObjects = uiState.rootTimeLineList,
+            //refreshTimeline = {viewModel.}
         )
         /*
         Column(modifier = Modifier.padding(innerPadding)) {

@@ -41,4 +41,5 @@ class ApiRepository(private val kunbaAppApiService: KunbaAppApiService): IApiRep
     override suspend fun getChildrenFamily(familyId: Int): Response<List<ChildFamilyDto>> = kunbaAppApiService.getChildrenFamily(familyId)
     override suspend fun addNode(addNodeDto: AddNodeDto): Response<NodeDto> = kunbaAppApiService.addNode(addNodeDto)
     override suspend fun getFamilyTimeLine(nodeDto: NodeDto): Response<List<NodeTimelineDto>> = kunbaAppApiService.getFamilyTimeLine(nodeDto)
+    override suspend fun addParents(nodeId: Int): Response<List<NodeDto>> = kunbaAppApiService.addParents(nodeId)
 }

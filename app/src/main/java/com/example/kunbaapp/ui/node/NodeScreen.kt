@@ -75,6 +75,7 @@ fun NodeScreen(
                 FABItem(icon = Icons.Rounded.Add, text = "Add sister",uniqueId="add_sister"),
                 FABItem(icon = Icons.Rounded.Add, text = "Add spouse",uniqueId="add_spouse"),
                 FABItem(icon = Icons.Rounded.Add, text = "Add half-sibling",uniqueId="add_half_sibling"),
+                FABItem(icon = Icons.Rounded.Add, text = "Add Parents",uniqueId="add_parents"),
             )
             val openAlertDialog = remember { mutableStateOf(false) }
             if(openAlertDialog.value)
@@ -107,6 +108,7 @@ fun NodeScreen(
                         "add_sister" -> Toast.makeText(context, "account clicked", Toast.LENGTH_SHORT).show()
                         "add_spouse" -> Toast.makeText(context, "account clicked", Toast.LENGTH_SHORT).show()
                         "add_half_sibling" -> Toast.makeText(context, "account clicked", Toast.LENGTH_SHORT).show()
+                        "add_parents" -> {viewModel.setUniqueId(item.uniqueId)}//Toast.makeText(context, "account clicked", Toast.LENGTH_SHORT).show()
                     }
 
                 }
@@ -187,7 +189,9 @@ fun NodeScreen(
                     modifier = Modifier.padding(innerPadding)
                 )
             }
-
+            "add_parents" -> {
+                viewModel.addParents()
+            }
         }
     }
 }

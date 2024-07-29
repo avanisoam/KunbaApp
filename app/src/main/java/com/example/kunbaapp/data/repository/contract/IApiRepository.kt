@@ -28,4 +28,6 @@ interface IApiRepository {
     suspend fun addNode(addNodeDto: AddNodeDto) : Response<NodeDto>
 
     suspend fun getFamilyTimeLine(nodeDto: NodeDto) : Response<List<NodeTimelineDto>>
+
+    suspend fun addParents(nodeId: Int) : Response<List<NodeDto>>
 }
