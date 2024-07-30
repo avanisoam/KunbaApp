@@ -67,15 +67,18 @@ fun NodeScreen(
         floatingActionButton = {
             val itemList = listOf(
                 FABItem(icon = Icons.Rounded.Home, text = "Home",uniqueId="open_home"),
-                FABItem(icon = Icons.Rounded.Add, text = "Add father",uniqueId="add_father"),
-                FABItem(icon = Icons.Rounded.Add, text = "Add mother",uniqueId="add_mother"),
-                FABItem(icon = Icons.Rounded.Add, text = "Add son",uniqueId="add_son"),
-                FABItem(icon = Icons.Rounded.Add, text = "Add daughter",uniqueId="add_daughter"),
-                FABItem(icon = Icons.Rounded.Add, text = "Add brother",uniqueId="add_brother"),
-                FABItem(icon = Icons.Rounded.Add, text = "Add sister",uniqueId="add_sister"),
+                //FABItem(icon = Icons.Rounded.Add, text = "Add father",uniqueId="add_father"),
+               // FABItem(icon = Icons.Rounded.Add, text = "Add mother",uniqueId="add_mother"),
+                //FABItem(icon = Icons.Rounded.Add, text = "Add son",uniqueId="add_son"),
+                //FABItem(icon = Icons.Rounded.Add, text = "Add daughter",uniqueId="add_daughter"),
+                //FABItem(icon = Icons.Rounded.Add, text = "Add brother",uniqueId="add_brother"),
+                //FABItem(icon = Icons.Rounded.Add, text = "Add sister",uniqueId="add_sister"),
                 FABItem(icon = Icons.Rounded.Add, text = "Add spouse",uniqueId="add_spouse"),
-                FABItem(icon = Icons.Rounded.Add, text = "Add half-sibling",uniqueId="add_half_sibling"),
+                //FABItem(icon = Icons.Rounded.Add, text = "Add half-sibling",uniqueId="add_half_sibling"),
                 FABItem(icon = Icons.Rounded.Add, text = "Add Parents",uniqueId="add_parents"),
+                FABItem(icon = Icons.Rounded.Add, text = "Add Sibling",uniqueId="add_sibling"),
+                FABItem(icon = Icons.Rounded.Add, text = "Add Child",uniqueId="add_child"),
+                FABItem(icon = Icons.Rounded.Add, text = "Add New Node",uniqueId="add_newNode"),
             )
             val openAlertDialog = remember { mutableStateOf(false) }
             if(openAlertDialog.value)
@@ -106,9 +109,12 @@ fun NodeScreen(
                         "add_daughter" -> Toast.makeText(context, "account clicked", Toast.LENGTH_SHORT).show()
                         "add_brother" -> Toast.makeText(context, "account clicked", Toast.LENGTH_SHORT).show()
                         "add_sister" -> Toast.makeText(context, "account clicked", Toast.LENGTH_SHORT).show()
-                        "add_spouse" -> Toast.makeText(context, "account clicked", Toast.LENGTH_SHORT).show()
+                        "add_spouse" -> {viewModel.setUniqueId(item.uniqueId)}//Toast.makeText(context, "account clicked", Toast.LENGTH_SHORT).show()
                         "add_half_sibling" -> Toast.makeText(context, "account clicked", Toast.LENGTH_SHORT).show()
                         "add_parents" -> {viewModel.setUniqueId(item.uniqueId)}//Toast.makeText(context, "account clicked", Toast.LENGTH_SHORT).show()
+                        "add_sibling" -> {viewModel.setUniqueId(item.uniqueId)}//Toast.makeText(context, "account clicked", Toast.LENGTH_SHORT).show()
+                        "add_child" -> {viewModel.setUniqueId(item.uniqueId)}//Toast.makeText(context, "account clicked", Toast.LENGTH_SHORT).show()
+                        "add_newNode" -> {viewModel.setUniqueId(item.uniqueId)}//Toast.makeText(context, "account clicked", Toast.LENGTH_SHORT).show()
                     }
 
                 }
@@ -128,6 +134,7 @@ fun NodeScreen(
              */
         }
     ) {innerPadding ->
+        Text(text = uiState.uniqueId, modifier = Modifier.padding(innerPadding))
         when(uiState.uniqueId)
         {
             "" -> {
@@ -175,12 +182,12 @@ fun NodeScreen(
                 )
             }
             "add_father" -> {
-                /*
+
                 Text(
                     text = "Add Father Form",
                     modifier = Modifier.padding(innerPadding)
                 )
-                 */
+                /*
                 AddNodeBody(
                     addNode = uiState.addNodeDto,
                     onItemValueChange = {viewModel.updateAddNodeDto(it)},
@@ -188,10 +195,40 @@ fun NodeScreen(
                     isEntryValid = uiState.isEntryValid,
                     modifier = Modifier.padding(innerPadding)
                 )
+                 */
+            }
+            "add_sibling" -> {
+                viewModel.addSibling()
+                viewModel.setUniqueId("")
+            }
+            "add_spouse" -> {
+                viewModel.addPartner()
+               viewModel.setUniqueId("")
             }
             "add_parents" -> {
                 viewModel.addParents()
+               viewModel.setUniqueId("")
+            }
+            "add_child" -> {
+                //Text(text = "Add Child")
+                viewModel.addChild()
+               viewModel.setUniqueId("")
+            }
+            "add_newNode" -> {
+                AddNodeBody(
+                    addNode = uiState.addNodeDto,
+                    onItemValueChange = {viewModel.updateAddNodeDto(it)},
+                    onSaveClick = {
+                        viewModel.saveNode()
+                        viewModel.setUniqueId("")
+                    },
+                    isEntryValid = uiState.isEntryValid,
+                    modifier = Modifier.padding(innerPadding)
+                )
             }
         }
+
+        // Reset UniqueId after performing action (add_parents, add_partner, add_child, add_sibling)
+        //viewModel.setUniqueId("")
     }
 }

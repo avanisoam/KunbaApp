@@ -44,7 +44,22 @@ interface KunbaAppApiService {
     suspend fun getFamilyTimeLine(@Body nodeDto: NodeDto) : Response<List<NodeTimelineDto>>
 
     @POST("addPartner/{nodeId}")
+    suspend fun addPartner(
+        @Path("nodeId") nodeId: Int
+    ) : Response<NodeDto>
+
+    @POST("addNewParents/{nodeId}")
     suspend fun addParents(
         @Path("nodeId") nodeId: Int
-    ) : Response<List<NodeDto>>
+    ) : Response<NodeDto>
+
+    @POST("addNewSibling/{nodeId}")
+    suspend fun addSibling(
+        @Path("nodeId") nodeId: Int
+    ) : Response<NodeDto>
+
+    @POST("addChildWithNewPartner/{fatherId}")
+    suspend fun addChild(
+        @Path("fatherId") fatherId: Int
+    ) : Response<NodeDto>
 }

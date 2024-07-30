@@ -212,14 +212,51 @@ class NodeViewModel(
         }
     }
 
+    fun addPartner(){
+        Log.d("Partner", "Init")
+        viewModelScope.launch {
+            val response = apiRepository.addPartner(nodeIdFromUrl)
+            val result = response.body()
+            Log.d("Partner", result.toString())
+            /*
+            if(response.isSuccessful && result != null)
+            {
+                _uiState.update {
+                    it.copy(
+                        partnerId = result.nodeId
+                    )
+                }
+            }
+
+             */
+        }
+        Log.d("Partner", "End")
+    }
+
     fun addParents(){
-        Log.d("Parents", "Init")
         viewModelScope.launch {
             val response = apiRepository.addParents(nodeIdFromUrl)
             val result = response.body()
-            Log.d("Parents", result.toString())
+            Log.d("Partner", result.toString())
         }
-        Log.d("Parents", "End")
+    }
+
+    fun addSibling(){
+        viewModelScope.launch {
+            val response = apiRepository.addSibling(nodeIdFromUrl)
+            Log.d("Partner", response.body().toString())
+            val result = response.body()
+
+        }
+    }
+
+
+    fun addChild() {
+        viewModelScope.launch {
+            val response = apiRepository.addChild(nodeIdFromUrl)
+            Log.d("Child", response.body().toString())
+            val result = response.body()
+        }
     }
     init {
         getNode()
@@ -236,5 +273,6 @@ data class NodeUiState(
     val addNodeDto : AddNodeDto = AddNodeDto(),
     val isEntryValid: Boolean = false,
     val nodeTimelineDtos : List<NodeTimelineDto> = listOf(),
-    val nodeStage : List<TimelineObject> = listOf()
+    val nodeStage : List<TimelineObject> = listOf(),
+    //val partnerId: Int = 0
 )
