@@ -19,10 +19,15 @@ import com.example.kunbaapp.data.repository.contract.IDatabaseRepository
 import com.example.kunbaapp.ui.poc.Item
 import com.example.kunbaapp.ui.poc.ItemDetails
 import com.example.kunbaapp.ui.poc.toItem
+import com.example.kunbaapp.ui.rootDetail.RootDetailUiState
 import com.example.kunbaapp.utils.EntityType
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
@@ -47,8 +52,19 @@ class NodeViewModel(
     private val _uiState = MutableStateFlow<NodeUiState>(NodeUiState())
     val uiState: StateFlow<NodeUiState> = _uiState
 
-    var itemUiState by mutableStateOf(NodeUiState())
-        private set
+    val uiState1 : Flow<NodeUiState> =
+            apiRepository.fetchNodeHotFlow(nodeIdFromUrl)
+                .map {
+                    NodeUiState(
+                        node = it.body()?: NodeDto()
+                    )
+                }.stateIn(
+                    scope = viewModelScope,
+                    //started = SharingStarted.Eagerly
+                    //started = SharingStarted.Lazily
+                    started = SharingStarted.WhileSubscribed(5000),
+                    initialValue = NodeUiState()
+                )
 
     private fun getNode() {
         viewModelScope.launch {
@@ -279,6 +295,9 @@ class NodeViewModel(
             if (_uiState.value.isEntryValid) {
                 val item = _uiState.value.updateNodeDto.toNodeDto()
 
+                val response = apiRepository.updateNode(nodeIdFromUrl, item)
+                Log.d("UpdateNodeDto", "After: ${response.body().toString()}")
+                val result = response.body()
                 // TODO: Send converted item to API or DB
                 Log.d("UpdateNodeDto", "After: ${item.toString()}")
             }
@@ -312,7 +331,8 @@ class NodeViewModel(
         _uiState.update {
             it.copy(
                 updateNodeDto = updateNodeDto,
-                isEntryValid = validateInput(updateNodeDto)
+                isEntryValid = validateInput(updateNodeDto),
+                selectedEntity = updateNodeDto.gender
             )
         }
     }
@@ -341,15 +361,16 @@ data class NodeUiState(
     val nodeTimelineDtos : List<NodeTimelineDto> = listOf(),
     val nodeStage : List<TimelineObject> = listOf(),
     val updateNodeDto: UpdateNodeDto = UpdateNodeDto(),
+    val selectedEntity: String = ""
 )
 
 fun NodeDto.toUpdateNodeDto(): UpdateNodeDto = UpdateNodeDto(
     nodeId = nodeId,
     rootId = rootId,
     familyId = familyId.toString(),
-    firstName = firstName,
-    lastName = lastName,
-    gender = gender.toString(),
+    firstName = firstName?:"",
+    lastName = lastName?:"",
+    gender = gender.toString()?:"",
     dateOfBirth = dateOfBirth?:"",
     placeOfBirth = placeOfBirth?:"",
     image_Url = image_Url?:""

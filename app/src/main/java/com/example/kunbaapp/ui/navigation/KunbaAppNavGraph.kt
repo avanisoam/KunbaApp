@@ -77,7 +77,7 @@ fun KunbaAppNavGraph(
                 navigateToFamilyScreen = {navController.navigate("${FamilyDestination.route}/$it")},
                 navigateUp = {navController.popBackStack()},
                 navigateToHome = {navController.navigate(HomeDestination.route)},
-                navigateToNodeScreen = {navController.navigate("${NodeDestination.route}/$it")}
+                navigateToNodeScreen = {navController.navigate("${NodeDestination.route}/$it")},
             )
         }
 

@@ -20,6 +20,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
+import androidx.compose.material3.TextFieldColors
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -31,6 +32,7 @@ import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.res.dimensionResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -41,7 +43,10 @@ import com.example.kunbaapp.R
 fun FilterDropdown(
     distinctValues:List<String>,
     filterValue: String,
-    onSelect: (String) -> Unit
+    onSelect: (String) -> Unit,
+    //label: String = "",
+    colors: TextFieldColors = TextFieldDefaults.colors(),
+    modifier: Modifier = Modifier
 ) {
     val heightTextFields by remember {
         mutableStateOf(55.dp)
@@ -93,7 +98,8 @@ fun FilterDropdown(
                             )
                         }
                     },
-                    enabled = false
+                    enabled = false,
+                    //label = { Text(text = label) },
                 )
             }
 
@@ -113,7 +119,11 @@ fun FilterDropdown(
                             ) {
                                 FilterItemDisplay(
                                     title = it,
-                                    onSelect = {onSelect(it)}
+                                    onSelect = {
+                                        onSelect(it)
+                                        // Added this line to close the dropdown after selection
+                                        expanded = !expanded
+                                    }
                                 )
                             }
                         }

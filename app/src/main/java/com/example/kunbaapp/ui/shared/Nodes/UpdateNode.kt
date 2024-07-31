@@ -1,17 +1,23 @@
 package com.example.kunbaapp.ui.shared.Nodes
 
+import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
@@ -20,6 +26,7 @@ import com.example.kunbaapp.R
 import com.example.kunbaapp.data.models.dto.NodeDto
 import com.example.kunbaapp.data.models.dto.NodeDtos.AddNodeDto
 import com.example.kunbaapp.data.models.dto.NodeDtos.UpdateNodeDto
+import com.example.kunbaapp.ui.shared.FilterDropdown
 import org.koin.core.component.getScopeName
 import java.util.Currency
 import java.util.Locale
@@ -31,16 +38,21 @@ fun UpdateNodeBody(
     onItemValueChange: (UpdateNodeDto) -> Unit,
     onSaveClick: (UpdateNodeDto) -> Unit,
     isEntryValid: Boolean,
+    selectedValue: String,
+    //filterGender: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
     Column(
         verticalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.padding_medium)),
-        modifier = modifier.padding(dimensionResource(id = R.dimen.padding_medium))
+        modifier = modifier.verticalScroll(rememberScrollState())
+            .padding(dimensionResource(id = R.dimen.padding_medium))
     ) {
         ItemUpdateForm(
             node = node,
             onValueChange = onItemValueChange,
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth(),
+            selectedValue = selectedValue,
+            //filterGender = filterGender
         )
         Button(
             onClick = { onSaveClick(node) },
@@ -58,10 +70,12 @@ fun ItemUpdateForm(
     node: UpdateNodeDto,
     modifier: Modifier = Modifier,
     onValueChange: (UpdateNodeDto) -> Unit = {},
+    selectedValue: String,
+    //filterGender: (String) -> Unit,
     enabled: Boolean = true
 ) {
     Column(
-        modifier = modifier,
+        modifier = modifier,//.verticalScroll(rememberScrollState()),
         verticalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.padding_medium))
     ) {
         /*
@@ -100,6 +114,20 @@ fun ItemUpdateForm(
             enabled = enabled,
             singleLine = true
         )
+        FilterDropdown(
+            distinctValues = listOf("Male","Female"),
+            filterValue = selectedValue.ifEmpty { "Gender" },
+            onSelect = {onValueChange(node.copy(gender = it))},
+            //label = "Gender",
+            modifier = Modifier.fillMaxWidth()
+                .border(BorderStroke(1.dp, Color.Black)),
+            colors = TextFieldDefaults.colors(
+                focusedTextColor = MaterialTheme.colorScheme.secondaryContainer,
+                unfocusedTextColor = MaterialTheme.colorScheme.secondaryContainer,
+                disabledTextColor = MaterialTheme.colorScheme.secondaryContainer,
+            ),
+        )
+        /*
         OutlinedTextField(
             value = node.gender,
             onValueChange = { onValueChange(node.copy(gender = it)) },
@@ -113,6 +141,8 @@ fun ItemUpdateForm(
             enabled = enabled,
             singleLine = true
         )
+
+         */
 
         OutlinedTextField(
             value = node.dateOfBirth,

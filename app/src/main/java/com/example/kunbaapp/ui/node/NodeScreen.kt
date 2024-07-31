@@ -23,6 +23,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import com.example.kunbaapp.R
 import com.example.kunbaapp.ui.navigation.NavigationDestination
+import com.example.kunbaapp.ui.rootDetail.RootDetailUiState
 import com.example.kunbaapp.ui.shared.CustomFloatingButton
 import com.example.kunbaapp.ui.shared.FABItem
 import com.example.kunbaapp.ui.shared.KunbaAppTopBar
@@ -49,9 +50,11 @@ fun NodeScreen(
     navigateUp: () -> Unit,
     navigateToHome: () -> Unit,
     navigateToNodeScreen: (Int) -> Unit,
+    //filterGender: (String) -> Unit,
     viewModel: NodeViewModel = getViewModel<NodeViewModel>()
 ) {
     val uiState by viewModel.uiState.collectAsState()
+    val uiState1 by viewModel.uiState1.collectAsState(initial = NodeUiState())
 
     //Text(text = uiState.node.toString())
     val context = LocalContext.current
@@ -145,7 +148,7 @@ fun NodeScreen(
                 //KunbaFamilyTime(timelineStages = uiState.nodeStage)
                 Column(modifier = Modifier.padding(innerPadding)) {
                     NodeItem(
-                        node = uiState.node,
+                        node = uiState1.node,
                         onItemClick = {navigateToFamilyScreen(it)},
                     )
                     Spacer(modifier = Modifier.width(20.dp))
@@ -242,7 +245,9 @@ fun NodeScreen(
                        viewModel.setUniqueId("")
                     },
                     isEntryValid = uiState.isEntryValid,
-                    modifier = Modifier.padding(innerPadding)
+                    modifier = Modifier.padding(innerPadding),
+                    selectedValue = uiState.selectedEntity,
+                    //filterGender = {filterGender(it)}
                 )
             }
         }

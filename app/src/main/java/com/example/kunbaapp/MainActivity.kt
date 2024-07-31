@@ -12,6 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.kunbaapp.ui.poc.Poc_RootDetail
 import com.example.kunbaapp.ui.poc.Poc_Screen
+import com.example.kunbaapp.ui.shared.Nodes.DateSelector
 import com.example.kunbaapp.ui.theme.KunbaAppTheme
 
 class MainActivity : ComponentActivity() {
@@ -28,6 +29,7 @@ class MainActivity : ComponentActivity() {
 
                     //Poc_RootDetail()
                     //Poc_Screen()
+                    //DateSelector()
                 }
             }
         }

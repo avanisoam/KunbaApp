@@ -23,6 +23,8 @@ interface IApiRepository {
 
     suspend fun fetchNode(nodeId: Int) : Response<NodeDto>
 
+    fun fetchNodeHotFlow(nodeId: Int) : Flow<Response<NodeDto>>
+
     suspend fun getChildrenFamily(familyId: Int) : Response<List<ChildFamilyDto>>
 
     suspend fun addNode(addNodeDto: AddNodeDto) : Response<NodeDto>
