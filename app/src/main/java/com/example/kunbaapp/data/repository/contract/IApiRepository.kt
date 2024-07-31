@@ -35,4 +35,6 @@ interface IApiRepository {
 
     suspend fun addSibling(nodeId: Int) : Response<NodeDto>
     suspend fun addChild(fatherNodeId: Int) : Response<NodeDto>
+
+    suspend fun updateNode(nodeId: Int, nodeDto: NodeDto) : Response<NodeDto>
 }

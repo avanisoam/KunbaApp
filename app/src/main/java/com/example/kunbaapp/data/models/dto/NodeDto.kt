@@ -9,7 +9,7 @@ data class NodeDto(
     val familyId : Int? = null,
     val firstName : String = "",
     val lastName : String = "",
-    val gender : Char = 'x',
+    val gender : Char = 'M',
     var dateOfBirth : String = "",
     val placeOfBirth : String = "",
     val image_Url : String = ""

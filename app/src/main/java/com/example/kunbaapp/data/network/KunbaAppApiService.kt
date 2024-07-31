@@ -11,6 +11,7 @@ import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.POST
+import retrofit2.http.PUT
 import retrofit2.http.Path
 
 interface KunbaAppApiService {
@@ -61,5 +62,11 @@ interface KunbaAppApiService {
     @POST("addChildWithNewPartner/{fatherId}")
     suspend fun addChild(
         @Path("fatherId") fatherId: Int
+    ) : Response<NodeDto>
+
+    @PUT("{nodeId}/updateNode")
+    suspend fun updateNode(
+        @Path("nodeId") nodeId: Int,
+        @Body nodeDto: NodeDto
     ) : Response<NodeDto>
 }

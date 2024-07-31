@@ -1,17 +1,24 @@
 package com.example.kunbaapp.ui.node
 
 import android.util.Log
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.kunbaapp.data.models.dto.NodeDto
 import com.example.kunbaapp.data.models.dto.NodeDtos.AddNodeDto
+import com.example.kunbaapp.data.models.dto.NodeDtos.UpdateNodeDto
 import com.example.kunbaapp.data.models.dto.timelineDtos.TimelineObject
 import com.example.kunbaapp.data.models.dto.timelineDtos.NodeTimelineDto
 import com.example.kunbaapp.data.models.dto.timelineDtos.TempTimelineObject
 import com.example.kunbaapp.data.models.entity.Favorite
 import com.example.kunbaapp.data.repository.contract.IApiRepository
 import com.example.kunbaapp.data.repository.contract.IDatabaseRepository
+import com.example.kunbaapp.ui.poc.Item
+import com.example.kunbaapp.ui.poc.ItemDetails
+import com.example.kunbaapp.ui.poc.toItem
 import com.example.kunbaapp.utils.EntityType
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -40,6 +47,9 @@ class NodeViewModel(
     private val _uiState = MutableStateFlow<NodeUiState>(NodeUiState())
     val uiState: StateFlow<NodeUiState> = _uiState
 
+    var itemUiState by mutableStateOf(NodeUiState())
+        private set
+
     private fun getNode() {
         viewModelScope.launch {
             val response = apiRepository.fetchNode(nodeIdFromUrl)
@@ -48,9 +58,12 @@ class NodeViewModel(
             if (result != null) {
                 _uiState.update {
                     it.copy(
-                        node = result
+                        node = result,
+                        updateNodeDto = result.toUpdateNodeDto()
                     )
                 }
+                //itemUiState = NodeUiState(node = result)
+
                 getFamilyTimeline()
                 isFavoriteExist()
             }
@@ -258,9 +271,62 @@ class NodeViewModel(
             val result = response.body()
         }
     }
+
+    fun updateNode(updateNodeDto: UpdateNodeDto) {
+        viewModelScope.launch {
+            Log.d("UpdateNodeDto", "Before: ${updateNodeDto.toString()}")
+            Log.d("UpdateNodeDto", "IsValid: ${_uiState.value.isEntryValid.toString()}")
+            if (_uiState.value.isEntryValid) {
+                val item = _uiState.value.updateNodeDto.toNodeDto()
+
+                // TODO: Send converted item to API or DB
+                Log.d("UpdateNodeDto", "After: ${item.toString()}")
+            }
+            /*
+            val nodeDto = NodeDto(
+                nodeId = updateNode.nodeId,
+                rootId = updateNode.rootId,
+                familyId = updateNode.familyId,
+                firstName = updateNode.firstName?: "",
+                lastName = updateNode.lastName?:"",
+                dateOfBirth = updateNode.dateOfBirth?:"",
+                placeOfBirth = updateNode.placeOfBirth?:"",
+                image_Url = updateNode.image_Url?:""
+            )
+            if(_uiState.value.node != NodeDto()) {
+                val updatedNode = apiRepository.updateNode(nodeIdFromUrl, updateNode.toNodeDto())
+                if(updatedNode.isSuccessful && updatedNode.body() != null) {
+                    _uiState.update {
+                        it.copy(
+                            node = updatedNode.body()?: NodeDto()
+                        )
+                    }
+                }
+            }
+             */
+        }
+
+    }
+
+    fun updateNodeDto(updateNodeDto: UpdateNodeDto){
+        _uiState.update {
+            it.copy(
+                updateNodeDto = updateNodeDto,
+                isEntryValid = validateInput(updateNodeDto)
+            )
+        }
+    }
+
+    private fun validateInput(uiState: UpdateNodeDto = _uiState.value.updateNodeDto): Boolean {
+        return with(uiState) {
+            firstName.isNotBlank() && lastName.isNotBlank() && gender.isNotBlank()
+                    && dateOfBirth.isNotBlank() && placeOfBirth.isNotBlank() && image_Url.isNotBlank()
+        }
+    }
     init {
         getNode()
         //getFavoritesFromDb()
+
     }
 }
 
@@ -274,5 +340,29 @@ data class NodeUiState(
     val isEntryValid: Boolean = false,
     val nodeTimelineDtos : List<NodeTimelineDto> = listOf(),
     val nodeStage : List<TimelineObject> = listOf(),
-    //val partnerId: Int = 0
+    val updateNodeDto: UpdateNodeDto = UpdateNodeDto(),
+)
+
+fun NodeDto.toUpdateNodeDto(): UpdateNodeDto = UpdateNodeDto(
+    nodeId = nodeId,
+    rootId = rootId,
+    familyId = familyId.toString(),
+    firstName = firstName,
+    lastName = lastName,
+    gender = gender.toString(),
+    dateOfBirth = dateOfBirth?:"",
+    placeOfBirth = placeOfBirth?:"",
+    image_Url = image_Url?:""
+)
+
+fun UpdateNodeDto.toNodeDto(): NodeDto = NodeDto(
+    nodeId = nodeId,
+    rootId = rootId,
+    familyId = familyId.toIntOrNull(),
+    firstName = firstName,
+    lastName = lastName,
+    gender = gender.toCharArray()[0],
+    dateOfBirth = dateOfBirth,
+    placeOfBirth = placeOfBirth,
+    image_Url = image_Url
 )

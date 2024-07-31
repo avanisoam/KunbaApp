@@ -1,5 +1,6 @@
 package com.example.kunbaapp.ui.node
 
+import android.util.Log
 import android.widget.Toast
 import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.Column
@@ -27,6 +28,7 @@ import com.example.kunbaapp.ui.shared.FABItem
 import com.example.kunbaapp.ui.shared.KunbaAppTopBar
 import com.example.kunbaapp.ui.shared.NodeItem
 import com.example.kunbaapp.ui.shared.Nodes.AddNodeBody
+import com.example.kunbaapp.ui.shared.Nodes.UpdateNodeBody
 import com.example.kunbaapp.ui.shared.PopupDialog
 import com.example.kunbaapp.ui.shared.Timeline.LazyTimelineKunba
 import org.koin.androidx.compose.getViewModel
@@ -79,6 +81,7 @@ fun NodeScreen(
                 FABItem(icon = Icons.Rounded.Add, text = "Add Sibling",uniqueId="add_sibling"),
                 FABItem(icon = Icons.Rounded.Add, text = "Add Child",uniqueId="add_child"),
                 FABItem(icon = Icons.Rounded.Add, text = "Add New Node",uniqueId="add_newNode"),
+                FABItem(icon = Icons.Rounded.Add, text = "Edit Node",uniqueId="edit_Node"),
             )
             val openAlertDialog = remember { mutableStateOf(false) }
             if(openAlertDialog.value)
@@ -115,6 +118,7 @@ fun NodeScreen(
                         "add_sibling" -> {viewModel.setUniqueId(item.uniqueId)}//Toast.makeText(context, "account clicked", Toast.LENGTH_SHORT).show()
                         "add_child" -> {viewModel.setUniqueId(item.uniqueId)}//Toast.makeText(context, "account clicked", Toast.LENGTH_SHORT).show()
                         "add_newNode" -> {viewModel.setUniqueId(item.uniqueId)}//Toast.makeText(context, "account clicked", Toast.LENGTH_SHORT).show()
+                        "edit_Node" -> {viewModel.setUniqueId(item.uniqueId)}//Toast.makeText(context, "account clicked", Toast.LENGTH_SHORT).show()
                     }
 
                 }
@@ -134,7 +138,7 @@ fun NodeScreen(
              */
         }
     ) {innerPadding ->
-        Text(text = uiState.uniqueId, modifier = Modifier.padding(innerPadding))
+        //Text(text = uiState.uniqueId, modifier = Modifier.padding(innerPadding))
         when(uiState.uniqueId)
         {
             "" -> {
@@ -221,6 +225,21 @@ fun NodeScreen(
                     onSaveClick = {
                         viewModel.saveNode()
                         viewModel.setUniqueId("")
+                    },
+                    isEntryValid = uiState.isEntryValid,
+                    modifier = Modifier.padding(innerPadding)
+                )
+            }
+            "edit_Node" -> {
+                Log.d("NodeDto", uiState.node.toString())
+                //viewModel.convertNodeDtoIntoUpdateNodeDto()
+                UpdateNodeBody(
+                    node = uiState.updateNodeDto,//viewModel.itemUiState.node.firstName,
+                    onItemValueChange = {viewModel.updateNodeDto(it)},
+                    onSaveClick = {
+                        viewModel.updateNode(it)
+                        //viewModel.saveTemp(it)
+                       viewModel.setUniqueId("")
                     },
                     isEntryValid = uiState.isEntryValid,
                     modifier = Modifier.padding(innerPadding)

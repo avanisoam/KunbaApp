@@ -11,6 +11,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.kunbaapp.ui.poc.Poc_RootDetail
+import com.example.kunbaapp.ui.poc.Poc_Screen
 import com.example.kunbaapp.ui.theme.KunbaAppTheme
 
 class MainActivity : ComponentActivity() {
@@ -26,6 +27,7 @@ class MainActivity : ComponentActivity() {
                     KunbaAppScreen()
 
                     //Poc_RootDetail()
+                    //Poc_Screen()
                 }
             }
         }

@@ -47,4 +47,7 @@ class ApiRepository(private val kunbaAppApiService: KunbaAppApiService): IApiRep
     override suspend fun addSibling(nodeId: Int): Response<NodeDto> = kunbaAppApiService.addSibling(nodeId)
     override suspend fun addChild(fatherNodeId: Int): Response<NodeDto> =
         kunbaAppApiService.addChild(fatherNodeId)
+
+    override suspend fun updateNode(nodeId: Int, nodeDto: NodeDto): Response<NodeDto> =
+        kunbaAppApiService.updateNode(nodeId, nodeDto)
 }
