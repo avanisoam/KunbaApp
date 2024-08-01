@@ -12,7 +12,7 @@ import org.koin.dsl.module
 
 val viewModelModule = module {
     viewModel{
-        HomeViewModel(get(), get())
+        HomeViewModel(get(), get(), get())
     }
 
     viewModel{
@@ -20,7 +20,7 @@ val viewModelModule = module {
     }
 
     viewModel{
-        FamilyViewModel(get(),get(),get())
+        FamilyViewModel(get(),get(),get(),get())
     }
 
     viewModel{

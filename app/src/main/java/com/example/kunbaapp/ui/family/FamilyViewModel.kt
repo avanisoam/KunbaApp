@@ -6,9 +6,14 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.kunbaapp.data.models.dto.ChildFamilyDto
 import com.example.kunbaapp.data.models.dto.FamilyDto
+import com.example.kunbaapp.data.models.dto.NodeDto
+import com.example.kunbaapp.data.models.entity.FamilyDbo
 import com.example.kunbaapp.data.models.entity.Favorite
+import com.example.kunbaapp.data.models.entity.NodeDbo
+import com.example.kunbaapp.data.repository.OfflineApiRepository
 import com.example.kunbaapp.data.repository.contract.IApiRepository
 import com.example.kunbaapp.data.repository.contract.IDatabaseRepository
+import com.example.kunbaapp.data.repository.contract.IOfflineApiRepository
 import com.example.kunbaapp.ui.rootDetail.RootDetailDestination
 import com.example.kunbaapp.ui.rootDetail.RootDetailUiState
 import com.example.kunbaapp.utils.EntityType
@@ -21,7 +26,8 @@ import kotlinx.coroutines.launch
 class FamilyViewModel(
     savedStateHandle: SavedStateHandle,
     private val apiRepository: IApiRepository,
-    private val databaseRepository: IDatabaseRepository
+    private val databaseRepository: IDatabaseRepository,
+    private val offlineApiRepository: IOfflineApiRepository
 ): ViewModel(){
 
     val familyIdFromUrl: Int = checkNotNull(
@@ -42,6 +48,21 @@ class FamilyViewModel(
                 _uiState.update {
                     it.copy(
                         family = result
+                    )
+                }
+            }
+        }
+    }
+
+    private fun getFamilyFromDb(){
+        viewModelScope.launch(Dispatchers.IO) {
+            val response = offlineApiRepository.getFamily(familyIdFromUrl)
+
+            if(response != null)
+            {
+                _uiState.update {
+                    it.copy(
+                        family = response.toFamilyDto()
                     )
                 }
             }
@@ -135,7 +156,8 @@ class FamilyViewModel(
     }
 
     init {
-        getFamily()
+        //getFamily()
+        getFamilyFromDb()
         getChildrenFamily()
         //getFavoritesFromDb()
         isFavoriteExist()
@@ -147,4 +169,25 @@ data class FamilyUiState(
     //val favoritesFromDb: List<Favorite> = listOf(),
     val isFavorite: Boolean = false,
     val childrenFamily : List<ChildFamilyDto> = listOf()
+)
+
+fun FamilyDbo.toFamilyDto() : FamilyDto = FamilyDto(
+    familyId = familyId,
+    fatherInfo = fatherInfo.toNodeDto(),
+    motherInfo = motherInfo.toNodeDto(),
+    children = children.map {
+        it.toNodeDto()
+    }
+)
+
+fun NodeDbo.toNodeDto() : NodeDto = NodeDto(
+    nodeId = nodeId,
+    familyId = familyId,
+    rootId = rootId,
+    firstName = firstName,
+    lastName = lastName,
+    gender = gender,
+    dateOfBirth = dateOfBirth,
+    placeOfBirth = placeOfBirth,
+    image_Url = image_Url
 )
