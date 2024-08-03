@@ -49,15 +49,18 @@ fun RootDetailScreen(
     viewModel: RootDetailViewModel = getViewModel<RootDetailViewModel>()
 ) {
     //val uiState by viewModel.uiState.collectAsState()
-    val uiState by viewModel.uiState.collectAsState(initial = RootDetailUiState())
+    //val uiState by viewModel.uiState.collectAsState(initial = RootDetailUiState())
+    //val uiStateDb by viewModel.uiStateDb.collectAsState(initial = RootDetailUiState())
+    val uiStateDb by viewModel.uiStateDb.collectAsState(initial = RootDetailUiState())
     //Text(text = uiState.rootDetail.toString())
+
     Scaffold(
         topBar = {
             KunbaAppTopBar(
                 canNavigateBack = true,
                 title = RootDetailDestination.titleRes,
                 navigateUp = navigateUp,
-                isFavorite = uiState.isFavorite,
+                isFavorite = uiStateDb.isFavorite,//uiState.isFavorite,
                 toggleFavorite = {},//{viewModel.toggleFavoriteButton(viewModel.rootIdFromUrl)},
                 showFavorite = true
             )
@@ -77,13 +80,12 @@ fun RootDetailScreen(
         }
     ){innerPadding ->
         TabScreen(
-            families = uiState.rootDetail.familyDtos,
+            families = uiStateDb.rootDetail.familyDtos,//uiState.rootDetail.familyDtos,
             onItemClick =  {navigateToFamilyScreen(it) },
             onIndividualClick = { navigateToNodeScreen(it) },
-            nodes = uiState.rootDetail.nodeDtos,
+            nodes = uiStateDb.rootDetail.nodeDtos,//uiState.rootDetail.nodeDtos,
             modifier = Modifier.padding(innerPadding),
-            timelineObjects = uiState.rootTimeLineList,
-            //refreshTimeline = {viewModel.}
+            timelineObjects = uiStateDb.rootTimeLineList,//uiState.rootTimeLineList,
         )
         /*
         Column(modifier = Modifier.padding(innerPadding)) {

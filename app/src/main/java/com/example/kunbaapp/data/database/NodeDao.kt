@@ -4,6 +4,7 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import com.example.kunbaapp.data.models.entity.FamilyDbo
 import com.example.kunbaapp.data.models.entity.NodeDbo
 import kotlinx.coroutines.flow.Flow
 
@@ -14,4 +15,13 @@ interface NodeDao {
 
     @Query("SELECT * from node")
     fun getAllNodes(): Flow<List<NodeDbo>>
+
+    @Query("SELECT * from node WHERE nodeId = :nodeId")
+    fun getNode(nodeId: Int): NodeDbo?
+
+    @Query("SELECT * from node WHERE rootId = :rootId")
+    fun getNodesByRootId(rootId: Int): List<NodeDbo>
+
+    @Query("SELECT * from node WHERE rootId = :rootId")
+    fun getNodesByRootIdV1(rootId: Int): Flow<List<NodeDbo>>
 }

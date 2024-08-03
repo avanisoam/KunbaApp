@@ -12,10 +12,17 @@ import com.example.kunbaapp.data.models.entity.RootRegisterDbo
 import com.example.kunbaapp.data.repository.contract.IApiRepository
 import com.example.kunbaapp.data.repository.contract.IDatabaseRepository
 import com.example.kunbaapp.data.repository.contract.IOfflineApiRepository
+import com.example.kunbaapp.ui.family.FamilyUiState
+import com.example.kunbaapp.ui.node.NodeUiState
+import com.example.kunbaapp.ui.rootDetail.RootDetailUiState
 import com.example.kunbaapp.utils.EntityType
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
@@ -42,6 +49,74 @@ class HomeViewModel(
             }
         }
     }
+
+    val uiStateDb : Flow<HomeUiState> = offlineApiRepository.getRootRegisters()
+        .map {
+            HomeUiState(
+                roots = it.map {rootDbo ->
+                    rootDbo.toRootRegisterDto()
+                }
+            )
+        }.stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5000),
+            initialValue = HomeUiState()
+        )
+
+
+
+    /*
+    val uiStateFamilyDb : Flow<FamilyUiState> = offlineApiRepository.getFamilyV1(1)
+        .map {
+            FamilyUiState(
+                familyDbo = it ?: FamilyDbo(0, NodeDbo(), NodeDbo(), listOf())
+
+            )
+        }.stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5000),
+            initialValue = FamilyUiState()
+        )
+
+     */
+
+    val uiStateFamiliesDb : Flow<FamilyUiState> = offlineApiRepository.getFamilies()
+        .map {
+            FamilyUiState(
+                listOfFamilies = it
+
+            )
+        }.stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5000),
+            initialValue = FamilyUiState()
+        )
+
+    val uiStateNodesDb : Flow<NodeUiState> = offlineApiRepository.getNodes()
+        .map {
+            Log.d("FLOW-DB",it.toString())
+            NodeUiState(
+                listOfNodesDbo = it
+
+            )
+        }.stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5000),
+            initialValue = NodeUiState()
+        )
+
+    val uiStateRootDetailDb : Flow<RootDetailUiState> = offlineApiRepository.fetchRootDetailFlow(1)
+        .map {
+            Log.d("FLOW-DB",it.toString())
+            RootDetailUiState(
+                rootDetailDbo = it
+
+            )
+        }.stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5000),
+            initialValue = RootDetailUiState()
+        )
     private fun getFavoritesFromDb() {
         viewModelScope.launch(Dispatchers.IO) {
             val response = databaseRepository.getFavoriteByType(EntityType.Root)
@@ -174,9 +249,9 @@ class HomeViewModel(
     }
 
     init {
-        getRoots()
-        getFavoritesFromDb()
-        loadData()
+        //getRoots()
+        //getFavoritesFromDb()
+        //loadData()
     }
 }
 
@@ -184,4 +259,9 @@ data class HomeUiState(
     val roots: List<RootRegisterDto> = listOf(),
     val favoritesRootIds: List<Int> = listOf(),
     //val isFavorite: Boolean = false
+)
+
+fun RootRegisterDbo.toRootRegisterDto() : RootRegisterDto = RootRegisterDto(
+    rootId = rootId,
+    rootName = rootName
 )

@@ -1,6 +1,7 @@
 package com.example.kunbaapp.ui.rootDetail
 
 import android.util.Log
+import androidx.compose.runtime.LaunchedEffect
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -8,16 +9,28 @@ import com.example.kunbaapp.data.models.dto.RootDetailDto
 import com.example.kunbaapp.data.models.dto.timelineDtos.TempTimelineObject
 import com.example.kunbaapp.data.models.dto.timelineDtos.TimelineObject
 import com.example.kunbaapp.data.models.entity.Favorite
+import com.example.kunbaapp.data.models.entity.RootDetailsDbo
+import com.example.kunbaapp.data.repository.OfflineApiRepository
 import com.example.kunbaapp.data.repository.contract.IApiRepository
 import com.example.kunbaapp.data.repository.contract.IDatabaseRepository
+import com.example.kunbaapp.data.repository.contract.IOfflineApiRepository
+import com.example.kunbaapp.ui.family.toFamilyDto
+import com.example.kunbaapp.ui.family.toNodeDto
 import com.example.kunbaapp.ui.home.HomeUiState
+import com.example.kunbaapp.ui.node.NodeUiState
 import com.example.kunbaapp.ui.poc.Poc_RootDetailUiState
 import com.example.kunbaapp.utils.EntityType
+import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.emitAll
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
@@ -28,7 +41,8 @@ import kotlinx.coroutines.withContext
 class RootDetailViewModel(
     savedStateHandle: SavedStateHandle,
     private val apiRepository: IApiRepository,
-    private val databaseRepository: IDatabaseRepository
+    private val databaseRepository: IDatabaseRepository,
+    private val offlineApiRepository: IOfflineApiRepository
 ): ViewModel(){
 
 
@@ -64,6 +78,7 @@ class RootDetailViewModel(
 
      */
 
+    /*
     val uiState : Flow<RootDetailUiState> = apiRepository.fetchRootDetailHotFlow(rootIdFromUrl)
         .map {
            RootDetailUiState(
@@ -78,7 +93,56 @@ class RootDetailViewModel(
             started = SharingStarted.WhileSubscribed(5000),
             initialValue = RootDetailUiState()
         )
+     */
 
+   private fun getRootDetailFromDb() : Flow<RootDetailsDbo>{
+
+        var rootDetailsDbo : Flow<RootDetailsDbo> = flowOf()
+        viewModelScope.launch(Dispatchers.IO) {
+            val temp = offlineApiRepository.fetchRootDetailFlow(rootIdFromUrl)
+            rootDetailsDbo = temp
+        }
+        return  rootDetailsDbo
+    }
+
+    val uiStateDb: Flow<RootDetailUiState> = offlineApiRepository.fetchRootDetailFlow(rootIdFromUrl)
+        .map {
+            RootDetailUiState(
+                rootDetail = it.toRootDetailDto(),
+                rootTimeLineList = getTimelineObject(
+                    it.toRootDetailDto() ?: RootDetailDto()
+                )
+            )
+        }.stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5000),
+            initialValue = RootDetailUiState()
+        )
+
+    /*
+     val uiStateDb1: Deferred<StateFlow<RootDetailUiState>> =
+         viewModelScope.async(Dispatchers.IO) {
+                    offlineApiRepository.fetchRootDetailFlow(rootIdFromUrl)
+                        //getRootDetailFromDb()
+                        .map {
+                            Log.d("DBFlow", getRootDetailFromDb().toString())
+                            RootDetailUiState(
+                                rootDetail = it.toRootDetailDto() ?: RootDetailDto(),
+                                rootTimeLineList = getTimelineObject(
+                                    it.toRootDetailDto() ?: RootDetailDto()
+                                )
+                            )
+                        }
+                        .stateIn(
+                            scope = viewModelScope,
+                            started = SharingStarted.WhileSubscribed(5000),
+                            initialValue = RootDetailUiState()
+                        )
+                }
+
+
+    val uiStateDb: Flow<RootDetailUiState> = flow { emitAll(uiStateDb1.await()) }
+     */
 
     private fun getTimelineObject(rootDetail: RootDetailDto) : List<TimelineObject>{
         val tempTimeLine: MutableList<TimelineObject> = mutableListOf()
@@ -253,5 +317,13 @@ data class RootDetailUiState(
     val rootDetail : RootDetailDto = RootDetailDto(),
     //val favoritesRootIds: List<Int> = listOf(),
     val isFavorite: Boolean = false,
-    val rootTimeLineList : List<TimelineObject> = listOf()
+    val rootTimeLineList : List<TimelineObject> = listOf(),
+    val rootDetailDbo : RootDetailsDbo = RootDetailsDbo(0, listOf(), listOf())
+)
+
+fun RootDetailsDbo.toRootDetailDto() : RootDetailDto = RootDetailDto(
+    rootId = rootId,
+    familyDtos = familyDbos.map { it.toFamilyDto() },
+    nodeDtos = nodeDbos.map { it.toNodeDto() }
+
 )

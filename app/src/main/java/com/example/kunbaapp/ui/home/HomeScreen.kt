@@ -2,6 +2,7 @@ package com.example.kunbaapp.ui.home
 
 import android.util.Log
 import androidx.annotation.StringRes
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
@@ -20,7 +21,10 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.example.kunbaapp.R
 import com.example.kunbaapp.data.models.dto.RootRegisterDto
+import com.example.kunbaapp.ui.family.FamilyUiState
 import com.example.kunbaapp.ui.navigation.NavigationDestination
+import com.example.kunbaapp.ui.node.NodeUiState
+import com.example.kunbaapp.ui.rootDetail.RootDetailUiState
 import com.example.kunbaapp.ui.shared.KunbaAppTopBar
 import com.example.kunbaapp.ui.shared.RootItem
 import org.koin.androidx.compose.getViewModel
@@ -38,6 +42,13 @@ fun HomeScreen(
     viewModel: HomeViewModel = getViewModel<HomeViewModel>()
 ) {
     val uiState by viewModel.uiState.collectAsState()
+
+    val uiStateDb by viewModel.uiStateDb.collectAsState(initial = HomeUiState())
+    //val uiStateFamilyDb by viewModel.uiStateFamilyDb.collectAsState(initial = FamilyUiState())
+    val uiStateFamiliesDb by viewModel.uiStateFamiliesDb.collectAsState(initial = FamilyUiState())
+    //val uiStateNodesDb by viewModel.uiStateNodesDb.collectAsState(initial = NodeUiState())
+    val uiStateRootDetailDb by viewModel.uiStateRootDetailDb.collectAsState(initial = RootDetailUiState())
+
     Scaffold(
         topBar = {
             KunbaAppTopBar(
@@ -59,16 +70,36 @@ fun HomeScreen(
             }
         }
     ) {innerPadding ->
-        HomeBody(
-            rootList = uiState.roots,
-            onItemClick = {
-                Log.d("URL","2# - ${it.toString()}" )
-                navigateToDetailScreen(it)
-                          },
-            toggleFavorite = {viewModel.toggleFavoriteButton(it)},
-            favoriteIds = uiState.favoritesRootIds,
-            modifier = Modifier.padding(innerPadding)
-        )
+        Column {
+
+
+            HomeBody(
+                rootList = uiStateDb.roots,//uiState.roots,
+                onItemClick = {
+                    Log.d("URL", "2# - ${it.toString()}")
+                    navigateToDetailScreen(it)
+                },
+                toggleFavorite = { viewModel.toggleFavoriteButton(it) },
+                favoriteIds = uiState.favoritesRootIds,
+                modifier = Modifier.padding(innerPadding)
+            )
+            //Text(text = uiStateFamilyDb.familyDbo.toString())
+            /*
+           uiStateFamiliesDb.listOfFamilies.forEach { 
+               Text(text = it.toString())
+           }
+
+             */
+            /*
+            uiStateNodesDb.listOfNodesDbo.forEach {
+                Text(text = it.toString())
+            }
+
+             */
+
+            Text(text = uiStateRootDetailDb.rootDetailDbo.toString())
+
+        }
     }
 }
 

@@ -168,7 +168,9 @@ data class FamilyUiState(
     val family : FamilyDto = FamilyDto(),
     //val favoritesFromDb: List<Favorite> = listOf(),
     val isFavorite: Boolean = false,
-    val childrenFamily : List<ChildFamilyDto> = listOf()
+    val childrenFamily : List<ChildFamilyDto> = listOf(),
+    val familyDbo: FamilyDbo = FamilyDbo(0, NodeDbo(), NodeDbo(), listOf()),
+    val listOfFamilies: List<FamilyDbo> = listOf()
 )
 
 fun FamilyDbo.toFamilyDto() : FamilyDto = FamilyDto(

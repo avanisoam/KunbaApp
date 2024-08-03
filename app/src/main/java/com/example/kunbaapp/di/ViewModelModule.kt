@@ -4,6 +4,8 @@ import com.example.kunbaapp.ui.family.FamilyViewModel
 import com.example.kunbaapp.ui.favorite.FavoriteViewModel
 import com.example.kunbaapp.ui.home.HomeViewModel
 import com.example.kunbaapp.ui.node.NodeViewModel
+import com.example.kunbaapp.ui.poc.KunbaNotificationsViewModel
+import com.example.kunbaapp.ui.poc.NotificationsViewModel
 import com.example.kunbaapp.ui.poc.Poc_FormViewModel
 import com.example.kunbaapp.ui.poc.Poc_RootDetailViewModel
 import com.example.kunbaapp.ui.rootDetail.RootDetailViewModel
@@ -16,7 +18,7 @@ val viewModelModule = module {
     }
 
     viewModel{
-        RootDetailViewModel(get(),get(),get())
+        RootDetailViewModel(get(),get(),get(),get())
     }
 
     viewModel{
@@ -24,7 +26,7 @@ val viewModelModule = module {
     }
 
     viewModel{
-        NodeViewModel(get(),get(),get())
+        NodeViewModel(get(),get(),get(),get())
     }
 
     viewModel{
@@ -36,5 +38,13 @@ val viewModelModule = module {
     }
     viewModel{
         Poc_FormViewModel()
+    }
+
+    viewModel{
+        NotificationsViewModel()
+    }
+
+    viewModel{
+        KunbaNotificationsViewModel()
     }
 }

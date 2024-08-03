@@ -5,6 +5,7 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import com.example.kunbaapp.data.models.entity.Favorite
+import com.example.kunbaapp.data.models.entity.NodeDbo
 import com.example.kunbaapp.data.models.entity.RootRegisterDbo
 import kotlinx.coroutines.flow.Flow
 
@@ -16,4 +17,7 @@ interface RootRegisterDao {
 
     @Query("SELECT * from root_register")
     fun getAllroots(): Flow<List<RootRegisterDbo>>
+
+    @Query("SELECT * from root_register WHERE rootId = :rootId")
+    fun getRootRegister(rootId: Int): RootRegisterDbo?
 }

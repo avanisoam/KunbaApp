@@ -16,6 +16,12 @@ interface FamilyDao {
     @Query("SELECT * from family")
     fun getAllFamilies(): Flow<List<FamilyDbo>>
 
+    @Query("SELECT * from family")
+    fun getAllFamiliesV1(): List<FamilyDbo>
+
     @Query("SELECT * from family WHERE familyId = :familyId")
     fun getFamily(familyId: Int): FamilyDbo?
+
+    @Query("SELECT * from family WHERE familyId = :familyId")
+    fun getFamilyV1(familyId: Int): Flow<FamilyDbo?>
 }

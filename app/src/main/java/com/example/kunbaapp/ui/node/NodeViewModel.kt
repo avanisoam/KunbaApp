@@ -14,8 +14,12 @@ import com.example.kunbaapp.data.models.dto.timelineDtos.TimelineObject
 import com.example.kunbaapp.data.models.dto.timelineDtos.NodeTimelineDto
 import com.example.kunbaapp.data.models.dto.timelineDtos.TempTimelineObject
 import com.example.kunbaapp.data.models.entity.Favorite
+import com.example.kunbaapp.data.models.entity.NodeDbo
+import com.example.kunbaapp.data.repository.OfflineApiRepository
 import com.example.kunbaapp.data.repository.contract.IApiRepository
 import com.example.kunbaapp.data.repository.contract.IDatabaseRepository
+import com.example.kunbaapp.data.repository.contract.IOfflineApiRepository
+import com.example.kunbaapp.ui.family.toNodeDto
 import com.example.kunbaapp.ui.poc.Item
 import com.example.kunbaapp.ui.poc.ItemDetails
 import com.example.kunbaapp.ui.poc.toItem
@@ -34,7 +38,8 @@ import kotlinx.coroutines.launch
 class NodeViewModel(
     savedStateHandle: SavedStateHandle,
     private val apiRepository: IApiRepository,
-    private val databaseRepository: IDatabaseRepository
+    private val databaseRepository: IDatabaseRepository,
+    private val offlineApiRepository: IOfflineApiRepository
 ) : ViewModel() {
     val nodeIdFromUrl: Int = checkNotNull(
         savedStateHandle[
@@ -76,6 +81,25 @@ class NodeViewModel(
                     it.copy(
                         node = result,
                         updateNodeDto = result.toUpdateNodeDto()
+                    )
+                }
+                //itemUiState = NodeUiState(node = result)
+
+                getFamilyTimeline()
+                isFavoriteExist()
+            }
+        }
+    }
+
+    private fun getNodeFromDb() {
+        viewModelScope.launch(Dispatchers.IO) {
+            val response = offlineApiRepository.getNode(nodeIdFromUrl)
+            Log.d("URL", nodeIdFromUrl.toString())
+            if (response != null) {
+                _uiState.update {
+                    it.copy(
+                        node = response.toNodeDto(),
+                        updateNodeDto = _uiState.value.node.toUpdateNodeDto()
                     )
                 }
                 //itemUiState = NodeUiState(node = result)
@@ -344,9 +368,9 @@ class NodeViewModel(
         }
     }
     init {
-        getNode()
+        //getNode()
         //getFavoritesFromDb()
-
+        getNodeFromDb()
     }
 }
 
@@ -361,7 +385,8 @@ data class NodeUiState(
     val nodeTimelineDtos : List<NodeTimelineDto> = listOf(),
     val nodeStage : List<TimelineObject> = listOf(),
     val updateNodeDto: UpdateNodeDto = UpdateNodeDto(),
-    val selectedEntity: String = ""
+    val selectedEntity: String = "",
+    val listOfNodesDbo: List<NodeDbo> = listOf()
 )
 
 fun NodeDto.toUpdateNodeDto(): UpdateNodeDto = UpdateNodeDto(
