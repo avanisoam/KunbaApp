@@ -18,6 +18,9 @@ interface RootRegisterDao {
     @Query("SELECT * from root_register")
     fun getAllroots(): Flow<List<RootRegisterDbo>>
 
+    @Query("SELECT * from root_register")
+    fun getAllRootsV1(): List<RootRegisterDbo>
+
     @Query("SELECT * from root_register WHERE rootId = :rootId")
     fun getRootRegister(rootId: Int): RootRegisterDbo?
 }

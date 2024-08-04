@@ -14,6 +14,7 @@ interface IOfflineApiRepository {
     suspend fun addRootRegister(rootRegisterDbo: RootRegisterDbo)
 
     fun getRootRegisters(): Flow<List<RootRegisterDbo>>
+    fun getRootRegistersV1(): List<RootRegisterDbo>
 
     fun getRoot(rootId: Int): RootRegisterDbo?
 

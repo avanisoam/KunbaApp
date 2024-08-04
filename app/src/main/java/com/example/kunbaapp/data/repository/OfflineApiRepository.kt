@@ -26,6 +26,8 @@ class OfflineApiRepository(
     override suspend fun addRootRegister(rootRegisterDbo: RootRegisterDbo) = rootRegisterDao.insertRootRegister(rootRegisterDbo)
 
     override fun getRootRegisters(): Flow<List<RootRegisterDbo>> = rootRegisterDao.getAllroots()
+    override fun getRootRegistersV1(): List<RootRegisterDbo> = rootRegisterDao.getAllRootsV1()
+
     override fun getRoot(rootId: Int): RootRegisterDbo? = rootRegisterDao.getRootRegister(rootId)
 
     override suspend fun addNode(nodeDbo: NodeDbo) = nodeDao.insertNode(nodeDbo)

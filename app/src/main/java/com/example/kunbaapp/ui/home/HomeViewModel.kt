@@ -23,6 +23,7 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
@@ -250,10 +251,29 @@ class HomeViewModel(
         }
     }
 
+    private fun checkAndSyncRootRegisterData() {
+        viewModelScope.launch(Dispatchers.IO) {
+            val response = offlineApiRepository.getRootRegistersV1()
+            if(response == listOf<RootRegisterDbo>())
+            {
+                // Call Api and fill the table root_register
+                val rootsFromApi = apiRepository.fetchRoots()
+                val result = rootsFromApi.body()
+                if(rootsFromApi.isSuccessful && result != null)
+                {
+                    result.forEach {
+                        offlineApiRepository.addRootRegister(it.toRootRegisterDbo())
+                    }
+                }
+            }
+        }
+    }
+
     init {
+        checkAndSyncRootRegisterData()
         //getRoots()
         //getFavoritesFromDb()
-        loadData()
+        //loadData()
     }
 }
 
@@ -267,3 +287,9 @@ fun RootRegisterDbo.toRootRegisterDto() : RootRegisterDto = RootRegisterDto(
     rootId = rootId,
     rootName = rootName
 )
+
+fun RootRegisterDto.toRootRegisterDbo() : RootRegisterDbo = RootRegisterDbo(
+    rootId = rootId,
+    rootName = rootName
+)
+
