@@ -185,16 +185,16 @@ data class FamilyUiState(
     //val favoritesFromDb: List<Favorite> = listOf(),
     val isFavorite: Boolean = false,
     val childrenFamily : List<ChildFamilyDto> = listOf(),
-    val familyDbo: FamilyDbo = FamilyDbo(0, NodeDbo(), NodeDbo(), listOf()),
+    val familyDbo: FamilyDbo = FamilyDbo(0,0,0, NodeDbo(), NodeDbo(), listOf()),
     val listOfFamilies: List<FamilyDbo> = listOf()
 )
 
 fun FamilyDbo.toFamilyDto() : FamilyDto = FamilyDto(
     familyId = familyId,
-    fatherInfo = fatherInfo.toNodeDto(),
-    motherInfo = motherInfo.toNodeDto(),
+    fatherInfo = fatherInfo?.toNodeDto() ?: NodeDto(),
+    motherInfo = motherInfo?.toNodeDto() ?: NodeDto(),
     children = children.map {
-        it.toNodeDto()
+        it?.toNodeDto() ?: NodeDto()
     }
 )
 

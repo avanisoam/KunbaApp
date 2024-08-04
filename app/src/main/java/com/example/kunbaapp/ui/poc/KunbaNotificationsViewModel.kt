@@ -39,7 +39,7 @@ class KunbaNotificationsViewModel: ViewModel() {
                         Log.i("Quick Notification", "${it.nodeId} commented on your post: ${it.firstName}")
                     }
                     is FamilyDbo -> {
-                        Log.i("Quick Notification", "${it.familyId} reacted with ${it.fatherInfo.firstName} to your post: ${it.motherInfo.firstName}")
+                        Log.i("Quick Notification", "${it.familyId} reacted with ${it.fatherInfo?.firstName} to your post: ${it.motherInfo?.firstName}")
                     }
 
                 }
@@ -66,7 +66,7 @@ class KunbaNotificationsViewModel: ViewModel() {
              */
             familyActivity.combine(nodesActivity) { fam, node ->
                 Log.i("Quick Notification", "${node.nodeId} reacted with ${node.firstName} on ${node.lastName}\n" +
-                        "and ${fam.familyId} commented ${fam.fatherInfo.firstName} on ${fam.motherInfo.firstName}")
+                        "and ${fam.familyId} commented ${fam.fatherInfo?.firstName} on ${fam.motherInfo?.firstName}")
 
             }.collect()
         }

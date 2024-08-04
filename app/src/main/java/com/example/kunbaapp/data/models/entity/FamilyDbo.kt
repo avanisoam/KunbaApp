@@ -12,9 +12,13 @@ data class FamilyDbo(
     @PrimaryKey
     val familyId : Int,
 
-    val fatherInfo : NodeDbo,
+    val fatherId: Int?,
 
-    val motherInfo : NodeDbo,
+    val motherId: Int?,
 
-    val children : List<NodeDbo>
+    val fatherInfo : NodeDbo?,
+
+    val motherInfo : NodeDbo?,
+
+    val children : List<NodeDbo> = listOf()
 ) : Parcelable

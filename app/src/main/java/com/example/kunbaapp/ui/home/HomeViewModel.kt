@@ -239,6 +239,8 @@ class HomeViewModel(
 
             val family1 = FamilyDbo(
                 familyId = 1,
+                fatherId = 1,
+                motherId = 2,
                 fatherInfo = node2,
                 motherInfo = node3,
                 children = children
@@ -251,7 +253,7 @@ class HomeViewModel(
     init {
         //getRoots()
         //getFavoritesFromDb()
-        //loadData()
+        loadData()
     }
 }
 

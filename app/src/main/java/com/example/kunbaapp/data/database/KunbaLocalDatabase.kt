@@ -10,7 +10,7 @@ import com.example.kunbaapp.data.models.entity.NodeTypeConvertor
 import com.example.kunbaapp.data.models.entity.RootRegisterDbo
 import com.example.kunbaapp.utils.EntityTypeConverter
 
-@Database(entities = [Favorite::class,RootRegisterDbo::class,NodeDbo::class,FamilyDbo::class], version = 4, exportSchema = false)
+@Database(entities = [Favorite::class,RootRegisterDbo::class,NodeDbo::class,FamilyDbo::class], version = 5, exportSchema = false)
 @TypeConverters(EntityTypeConverter::class,NodeTypeConvertor::class)
 abstract class KunbaLocalDatabase : RoomDatabase() {
     abstract fun favoriteDao(): FavoriteDao

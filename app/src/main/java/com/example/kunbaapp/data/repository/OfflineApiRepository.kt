@@ -83,8 +83,10 @@ class OfflineApiRepository(
                     it.nodeId
                 }
 
-                val families = familyDao.getAllFamiliesV1().filter {
-                    it.fatherInfo.nodeId != null && fatherIds.contains(it.fatherInfo.nodeId)
+                val families = familyDao.getAllFamiliesV1()
+                    .filter {
+                    //it.fatherInfo.nodeId != null && fatherIds.contains(it.fatherInfo.nodeId)
+                    it.fatherId!= null && fatherIds.contains(it.fatherId)
                 }
 
                 //rootDetailDbo.familyDbos = families

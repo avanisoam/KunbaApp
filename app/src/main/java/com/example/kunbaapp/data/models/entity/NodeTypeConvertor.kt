@@ -8,24 +8,32 @@ import com.google.gson.reflect.TypeToken
 @ProvidedTypeConverter
 class NodeTypeConvertor {
     @TypeConverter
-    fun nodeToString(nodeDbo: NodeDbo):String{
-        return "${nodeDbo.nodeId},${nodeDbo.rootId},${nodeDbo.familyId},${nodeDbo.firstName},${nodeDbo.lastName},${nodeDbo.gender},${nodeDbo.dateOfBirth},${nodeDbo.placeOfBirth},${nodeDbo.image_Url}"
+    fun nodeToString(nodeDbo: NodeDbo?):String{
+        return if(nodeDbo != null) {
+            "${nodeDbo.nodeId},${nodeDbo.rootId},${nodeDbo.familyId},${nodeDbo.firstName},${nodeDbo.lastName},${nodeDbo.gender},${nodeDbo.dateOfBirth},${nodeDbo.placeOfBirth},${nodeDbo.image_Url}"
+        } else {
+            ""
+        }
     }
 
     @TypeConverter
     fun stringToNode(nodeDbo: String): NodeDbo{
-        return nodeDbo.split(',').let { sourceArray ->
-            NodeDbo(
-                nodeId = sourceArray[0].toInt(),
-                rootId = sourceArray[1].toInt(),
-                familyId = sourceArray[2].toIntOrNull(),
-                firstName = sourceArray[3],
-                lastName = sourceArray[4],
-                gender = sourceArray[5].toCharArray()[0],
-                dateOfBirth = sourceArray[6],
-                placeOfBirth = sourceArray[7],
-                image_Url = sourceArray[8]
-            )
+        return if(nodeDbo.isEmpty()){
+            NodeDbo()
+        }else {
+            nodeDbo.split(',').let { sourceArray ->
+                NodeDbo(
+                    nodeId = sourceArray[0].toInt(),
+                    rootId = sourceArray[1].toInt(),
+                    familyId = sourceArray[2].toIntOrNull(),
+                    firstName = sourceArray[3],
+                    lastName = sourceArray[4],
+                    gender = sourceArray[5].toCharArray()[0],
+                    dateOfBirth = sourceArray[6],
+                    placeOfBirth = sourceArray[7],
+                    image_Url = sourceArray[8]
+                )
+            }
         }
     }
 
@@ -71,13 +79,21 @@ class NodeTypeConvertor {
 
     @TypeConverter
     fun toNodeList(data: String): List<NodeDbo> {
-        val listType = object : TypeToken<ArrayList<NodeDbo>>() {}.type
-        return GsonBuilder().create().fromJson(data, listType)
+        return if(data.isEmpty()) {
+            listOf()
+        } else {
+            val listType = object : TypeToken<ArrayList<NodeDbo>>() {}.type
+            GsonBuilder().create().fromJson(data, listType)
+        }
     }
 
     @TypeConverter
     fun toNodeString(breed:  List<NodeDbo>): String {
-        return GsonBuilder().create().toJson(breed)
+        return if(breed.isEmpty()) {
+            ""
+        } else {
+            GsonBuilder().create().toJson(breed)
+        }
     }
 
 
