@@ -55,6 +55,7 @@ fun NodeScreen(
 ) {
     val uiState by viewModel.uiState.collectAsState()
     val uiState1 by viewModel.uiState1.collectAsState(initial = NodeUiState())
+    val uiStateNodesDb by viewModel.uiStateNodesDb.collectAsState(initial = NodeUiState())
 
     //Text(text = uiState.node.toString())
     val context = LocalContext.current
@@ -148,7 +149,7 @@ fun NodeScreen(
                 //KunbaFamilyTime(timelineStages = uiState.nodeStage)
                 Column(modifier = Modifier.padding(innerPadding)) {
                     NodeItem(
-                        node = uiState1.node,
+                        node = uiStateNodesDb.node,//uiState1.node,
                         onItemClick = {navigateToFamilyScreen(it)},
                     )
                     Spacer(modifier = Modifier.width(20.dp))

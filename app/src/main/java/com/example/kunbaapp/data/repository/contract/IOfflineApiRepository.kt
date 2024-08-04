@@ -23,6 +23,8 @@ interface IOfflineApiRepository {
 
     fun getNode(nodeId: Int): NodeDbo?
 
+    fun getNodeV1(nodeId: Int): Flow<NodeDbo?>
+
     suspend fun addFamily(familyDbo: FamilyDbo)
 
     fun getFamilies(): Flow<List<FamilyDbo>>

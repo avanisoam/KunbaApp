@@ -71,6 +71,19 @@ class NodeViewModel(
                     initialValue = NodeUiState()
                 )
 
+    val uiStateNodesDb : Flow<NodeUiState> = offlineApiRepository.getNodeV1(nodeIdFromUrl)
+        .map {
+            Log.d("FLOW-DB",it.toString())
+            NodeUiState(
+                node = it?.toNodeDto()?: NodeDto()
+
+            )
+        }.stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5000),
+            initialValue = NodeUiState()
+        )
+
     private fun getNode() {
         viewModelScope.launch {
             val response = apiRepository.fetchNode(nodeIdFromUrl)
@@ -370,7 +383,7 @@ class NodeViewModel(
     init {
         //getNode()
         //getFavoritesFromDb()
-        getNodeFromDb()
+        //getNodeFromDb()
     }
 }
 

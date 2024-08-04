@@ -18,8 +18,12 @@ import com.example.kunbaapp.ui.rootDetail.RootDetailDestination
 import com.example.kunbaapp.ui.rootDetail.RootDetailUiState
 import com.example.kunbaapp.utils.EntityType
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
@@ -38,6 +42,18 @@ class FamilyViewModel(
 
     private val _uiState = MutableStateFlow<FamilyUiState>(FamilyUiState())
     val uiState: StateFlow<FamilyUiState> = _uiState
+
+    val uiStateFamilyDb : Flow<FamilyUiState> = offlineApiRepository.getFamilyV1(familyIdFromUrl)
+        .map {
+            FamilyUiState(
+                family = it?.toFamilyDto()?: FamilyDto()
+
+            )
+        }.stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5000),
+            initialValue = FamilyUiState()
+        )
 
     private fun getFamily(){
         viewModelScope.launch {
@@ -157,7 +173,7 @@ class FamilyViewModel(
 
     init {
         //getFamily()
-        getFamilyFromDb()
+        //getFamilyFromDb()
         getChildrenFamily()
         //getFavoritesFromDb()
         isFavoriteExist()
