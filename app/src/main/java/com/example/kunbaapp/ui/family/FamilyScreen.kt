@@ -45,6 +45,7 @@ fun FamilyScreen(
     viewModel: FamilyViewModel = getViewModel<FamilyViewModel>()
 ) {
     val uiState by viewModel.uiState.collectAsState()
+    val uiStateFamilyDb by viewModel.uiStateFamilyDb.collectAsState(initial = FamilyUiState())
 
     //Text(text = uiState.family.toString())
     Scaffold(
@@ -75,7 +76,7 @@ fun FamilyScreen(
         LazyColumn(modifier = Modifier.padding(innerPadding)) {
             item {
                 RootFamilyItem(
-                    family = uiState.family,
+                    family = uiStateFamilyDb.family,//uiState.family,
                     onItemClick = { navigateToFamilyScreen(it) },
                     onIndividualClick = { navigateToNodeScreen(it) },
                 )

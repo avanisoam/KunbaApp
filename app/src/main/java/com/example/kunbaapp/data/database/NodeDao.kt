@@ -19,9 +19,13 @@ interface NodeDao {
     @Query("SELECT * from node WHERE nodeId = :nodeId")
     fun getNode(nodeId: Int): NodeDbo?
 
+    @Query("SELECT * from node WHERE nodeId = :nodeId")
+    fun getNodeV1(nodeId: Int): Flow<NodeDbo?>
+
     @Query("SELECT * from node WHERE rootId = :rootId")
     fun getNodesByRootId(rootId: Int): List<NodeDbo>
 
     @Query("SELECT * from node WHERE rootId = :rootId")
     fun getNodesByRootIdV1(rootId: Int): Flow<List<NodeDbo>>
+
 }

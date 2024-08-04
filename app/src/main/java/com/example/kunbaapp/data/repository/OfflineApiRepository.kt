@@ -32,6 +32,7 @@ class OfflineApiRepository(
 
     override fun getNodes(): Flow<List<NodeDbo>> = nodeDao.getAllNodes()
     override fun getNode(nodeId: Int): NodeDbo? = nodeDao.getNode(nodeId)
+    override fun getNodeV1(nodeId: Int): Flow<NodeDbo?> = nodeDao.getNodeV1(nodeId)
 
     override suspend fun addFamily(familyDbo: FamilyDbo) = familyDao.insertFamily(familyDbo)
 
