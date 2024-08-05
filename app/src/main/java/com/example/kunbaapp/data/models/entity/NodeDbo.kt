@@ -12,10 +12,10 @@ data class NodeDbo(
     val nodeId : Int = 0,
     val rootId : Int = 0,
     val familyId : Int? = null,
-    val firstName : String = "",
-    val lastName : String = "",
-    val gender : Char = 'M',
-    val dateOfBirth : String = "",
-    val placeOfBirth : String = "",
-    val image_Url : String = ""
+    val firstName : String? = null,
+    val lastName : String? = null,
+    val gender : Char? = null,
+    val dateOfBirth : String? = null,
+    val placeOfBirth : String? = null,
+    val image_Url : String? = null
 ) : Parcelable

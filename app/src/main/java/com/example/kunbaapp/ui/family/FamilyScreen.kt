@@ -82,7 +82,7 @@ fun FamilyScreen(
                 )
             }
             item {
-                uiState.family.children.forEach { node ->
+                uiStateFamilyDb.family.children.forEach { node ->
                     RootNodeItem(
                         node = node,
                         onItemClick = { navigateToNodeScreen(it) },

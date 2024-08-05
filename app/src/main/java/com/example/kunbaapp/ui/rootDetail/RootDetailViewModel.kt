@@ -5,18 +5,25 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.kunbaapp.data.models.dto.NodeDto
 import com.example.kunbaapp.data.models.dto.RootDetailDto
 import com.example.kunbaapp.data.models.dto.timelineDtos.TempTimelineObject
 import com.example.kunbaapp.data.models.dto.timelineDtos.TimelineObject
+import com.example.kunbaapp.data.models.entity.FamilyDbo
 import com.example.kunbaapp.data.models.entity.Favorite
+import com.example.kunbaapp.data.models.entity.NodeDbo
 import com.example.kunbaapp.data.models.entity.RootDetailsDbo
+import com.example.kunbaapp.data.models.entity.RootRegisterDbo
 import com.example.kunbaapp.data.repository.OfflineApiRepository
 import com.example.kunbaapp.data.repository.contract.IApiRepository
 import com.example.kunbaapp.data.repository.contract.IDatabaseRepository
 import com.example.kunbaapp.data.repository.contract.IOfflineApiRepository
+import com.example.kunbaapp.ui.family.toFamilyDbo
 import com.example.kunbaapp.ui.family.toFamilyDto
+import com.example.kunbaapp.ui.family.toNodeDbo
 import com.example.kunbaapp.ui.family.toNodeDto
 import com.example.kunbaapp.ui.home.HomeUiState
+import com.example.kunbaapp.ui.home.toRootRegisterDbo
 import com.example.kunbaapp.ui.node.NodeUiState
 import com.example.kunbaapp.ui.poc.Poc_RootDetailUiState
 import com.example.kunbaapp.utils.EntityType
@@ -303,7 +310,53 @@ class RootDetailViewModel(
 
      */
 
+    private fun checkAndSyncRootDetailData() {
+        viewModelScope.launch(Dispatchers.IO) {
+            val isLocal = offlineApiRepository.checkIsLocalState(rootIdFromUrl)
+            if(isLocal.not())
+            {
+               val response = apiRepository.fetchRootDetails(rootIdFromUrl)
+                val result = response.body()
+                Log.d("RootDetail", result.toString())
+
+                if(response.isSuccessful && result != null)
+                {
+
+                    result.nodeDtos.forEach {
+                        offlineApiRepository.addNode(it.toNodeDbo())
+                    }
+
+
+                    result.familyDtos.forEach{familyDto ->
+                        val family = FamilyDbo(
+                            familyId = familyDto.familyId,
+                            fatherId = familyDto.fatherInfo.nodeId?: null,
+                            motherId = familyDto.motherInfo.nodeId?:null,
+                            fatherInfo = familyDto.fatherInfo.toNodeDbo(),
+                            motherInfo = familyDto.motherInfo.toNodeDbo(),
+                            children = listOf()
+                        )
+                        offlineApiRepository.addFamily(family)
+                    }
+
+
+                    /*
+
+                    result.familyDtos.forEach {
+                        offlineApiRepository.addFamily(it.toFamilyDbo())
+                    }
+
+                     */
+
+
+                }
+
+            }
+        }
+    }
+
     init {
+        checkAndSyncRootDetailData()
             //getRootDetail()
             //getFavoritesFromDb()
             //getRootDetailFlow()

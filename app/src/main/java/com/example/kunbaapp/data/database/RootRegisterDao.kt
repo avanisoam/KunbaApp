@@ -23,4 +23,7 @@ interface RootRegisterDao {
 
     @Query("SELECT * from root_register WHERE rootId = :rootId")
     fun getRootRegister(rootId: Int): RootRegisterDbo?
+
+    @Query("SELECT isLocal from root_register WHERE rootId = :rootId")
+    fun checkIsLocalState(rootId: Int) : Boolean
 }

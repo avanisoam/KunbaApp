@@ -3,6 +3,7 @@ package com.example.kunbaapp.data.models.entity
 import android.os.Parcelable
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import com.example.kunbaapp.data.models.dto.ChildFamilyDto
 import com.example.kunbaapp.data.models.dto.NodeDto
 import kotlinx.parcelize.Parcelize
 
@@ -20,5 +21,7 @@ data class FamilyDbo(
 
     val motherInfo : NodeDbo?,
 
-    val children : List<NodeDbo> = listOf()
+    val children : List<NodeDbo> = listOf(),
+
+    var childrenFamily: List<ChildFamilyDto> = listOf()
 ) : Parcelable

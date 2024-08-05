@@ -15,11 +15,14 @@ import com.example.kunbaapp.data.models.dto.timelineDtos.NodeTimelineDto
 import com.example.kunbaapp.data.models.dto.timelineDtos.TempTimelineObject
 import com.example.kunbaapp.data.models.entity.Favorite
 import com.example.kunbaapp.data.models.entity.NodeDbo
+import com.example.kunbaapp.data.models.entity.RootRegisterDbo
 import com.example.kunbaapp.data.repository.OfflineApiRepository
 import com.example.kunbaapp.data.repository.contract.IApiRepository
 import com.example.kunbaapp.data.repository.contract.IDatabaseRepository
 import com.example.kunbaapp.data.repository.contract.IOfflineApiRepository
+import com.example.kunbaapp.ui.family.toNodeDbo
 import com.example.kunbaapp.ui.family.toNodeDto
+import com.example.kunbaapp.ui.home.toRootRegisterDbo
 import com.example.kunbaapp.ui.poc.Item
 import com.example.kunbaapp.ui.poc.ItemDetails
 import com.example.kunbaapp.ui.poc.toItem
@@ -380,7 +383,25 @@ class NodeViewModel(
                     && dateOfBirth.isNotBlank() && placeOfBirth.isNotBlank() && image_Url.isNotBlank()
         }
     }
+
+    private fun checkAndSyncNodeData() {
+        viewModelScope.launch(Dispatchers.IO) {
+            val response = offlineApiRepository.getNode(nodeIdFromUrl)
+            if(response == null)
+            {
+                // Call Api and fill the table root_register
+                val nodeFromApi = apiRepository.fetchNode(nodeIdFromUrl)
+                val result = nodeFromApi.body()
+                if(nodeFromApi.isSuccessful && result != null)
+                {
+                    offlineApiRepository.addNode(result.toNodeDbo())
+
+                }
+            }
+        }
+    }
     init {
+        checkAndSyncNodeData()
         //getNode()
         //getFavoritesFromDb()
         //getNodeFromDb()

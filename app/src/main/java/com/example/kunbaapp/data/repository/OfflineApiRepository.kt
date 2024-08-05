@@ -4,6 +4,7 @@ import android.util.Log
 import com.example.kunbaapp.data.database.FamilyDao
 import com.example.kunbaapp.data.database.NodeDao
 import com.example.kunbaapp.data.database.RootRegisterDao
+import com.example.kunbaapp.data.models.dto.ChildFamilyDto
 import com.example.kunbaapp.data.models.entity.FamilyDbo
 import com.example.kunbaapp.data.models.entity.NodeDbo
 import com.example.kunbaapp.data.models.entity.RootDetailsDbo
@@ -29,6 +30,7 @@ class OfflineApiRepository(
     override fun getRootRegistersV1(): List<RootRegisterDbo> = rootRegisterDao.getAllRootsV1()
 
     override fun getRoot(rootId: Int): RootRegisterDbo? = rootRegisterDao.getRootRegister(rootId)
+    override fun checkIsLocalState(rootId: Int): Boolean = rootRegisterDao.checkIsLocalState(rootId)
 
     override suspend fun addNode(nodeDbo: NodeDbo) = nodeDao.insertNode(nodeDbo)
 
@@ -43,12 +45,14 @@ class OfflineApiRepository(
         familyDao.getFamily(familyId)
 
     override fun getFamilyV1(familyId: Int): Flow<FamilyDbo?> = familyDao.getFamilyV1(familyId)
-        /*
-        flow{
-        familyDao.getFamily(familyId)
-    }
+    //override fun checkChildrenExists(familyId: Int): List<ChildFamilyDto> = familyDao.checkChildrenExists(familyId)
+    override suspend fun update(familyDbo: FamilyDbo) = familyDao.update(familyDbo)
+    /*
+    flow{
+    familyDao.getFamily(familyId)
+}
 
-         */
+     */
 
     override fun fetchRootDetailFlow(rootId: Int): Flow<RootDetailsDbo> = flow {
         while(true){

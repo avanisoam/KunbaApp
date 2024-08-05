@@ -171,10 +171,36 @@ class FamilyViewModel(
         }
     }
 
+    fun checkAndSyncChildrenFamilyInDb() {
+        viewModelScope.launch(Dispatchers.IO) {
+            val familyFromDb = offlineApiRepository.getFamily(familyIdFromUrl)
+           // val childrenInFamily = offlineApiRepository.checkChildrenExists(familyIdFromUrl)
+
+            if(familyFromDb?.childrenFamily == listOf<ChildFamilyDto>()) {
+                val response = apiRepository.getChildrenFamily(familyIdFromUrl)
+                val result = response.body()
+
+                if(response.isSuccessful && result != null) {
+                    familyFromDb.childrenFamily = result
+                    offlineApiRepository.update(familyFromDb)
+                    /*
+                    _uiState.update {
+                        it.copy(
+                            childrenFamily = result
+                        )
+                    }
+
+                     */
+                }
+            }
+        }
+    }
+
     init {
+        //checkAndSyncChildrenFamilyInDb()
         //getFamily()
         //getFamilyFromDb()
-        getChildrenFamily()
+        //getChildrenFamily()
         //getFavoritesFromDb()
         isFavoriteExist()
     }
@@ -194,11 +220,34 @@ fun FamilyDbo.toFamilyDto() : FamilyDto = FamilyDto(
     fatherInfo = fatherInfo?.toNodeDto() ?: NodeDto(),
     motherInfo = motherInfo?.toNodeDto() ?: NodeDto(),
     children = children.map {
-        it?.toNodeDto() ?: NodeDto()
+        it.toNodeDto() ?: NodeDto()
+    }
+)
+
+fun FamilyDto.toFamilyDbo() : FamilyDbo = FamilyDbo(
+    familyId = familyId,
+    fatherId = fatherInfo.nodeId?:null,
+    motherId = motherInfo.nodeId?: null,
+    fatherInfo = fatherInfo.toNodeDbo() ?: null,
+    motherInfo = motherInfo.toNodeDbo() ?: null,
+    children = children.map {
+        it.toNodeDbo() ?: NodeDbo()
     }
 )
 
 fun NodeDbo.toNodeDto() : NodeDto = NodeDto(
+    nodeId = nodeId,
+    familyId = familyId,
+    rootId = rootId,
+    firstName = firstName?: "",
+    lastName = lastName?: "",
+    gender = gender?: 'M',
+    dateOfBirth = dateOfBirth?: "",
+    placeOfBirth = placeOfBirth?: "",
+    image_Url = image_Url?: ""
+)
+
+fun NodeDto.toNodeDbo() : NodeDbo = NodeDbo(
     nodeId = nodeId,
     familyId = familyId,
     rootId = rootId,
