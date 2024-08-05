@@ -74,6 +74,9 @@ fun FamilyScreen(
         }
     ) {innerPadding ->
         LazyColumn(modifier = Modifier.padding(innerPadding)) {
+            item { 
+                Text(text = uiState.familyV2.toString())
+            }
             item {
                 RootFamilyItem(
                     family = uiStateFamilyDb.family,//uiState.family,
@@ -82,7 +85,7 @@ fun FamilyScreen(
                 )
             }
             item {
-                uiState.family.children.forEach { node ->
+                uiStateFamilyDb.family.children.forEach { node ->
                     RootNodeItem(
                         node = node,
                         onItemClick = { navigateToNodeScreen(it) },

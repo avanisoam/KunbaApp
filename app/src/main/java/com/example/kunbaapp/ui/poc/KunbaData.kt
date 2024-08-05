@@ -71,6 +71,8 @@ val nodeList = listOf(
 val familyList = listOf(
     FamilyDbo(
         familyId = 1,
+        fatherId = 1,
+        motherId = 2,
         fatherInfo = nodeList[1],
         motherInfo = nodeList[2],
         children = nodeList.filter {
@@ -79,6 +81,8 @@ val familyList = listOf(
     ),
     FamilyDbo(
         familyId = 2,
+        fatherId = 1,
+        motherId = 2,
         fatherInfo = nodeList[1],
         motherInfo = nodeList[2],
         children = nodeList.filter {
@@ -87,6 +91,8 @@ val familyList = listOf(
     ),
     FamilyDbo(
         familyId = 3,
+        fatherId = 1,
+        motherId = 2,
         fatherInfo = nodeList[1],
         motherInfo = nodeList[2],
         children = nodeList.filter {
@@ -95,6 +101,8 @@ val familyList = listOf(
     ),
     FamilyDbo(
         familyId = 4,
+        fatherId = 1,
+        motherId = 2,
         fatherInfo = nodeList[1],
         motherInfo = nodeList[2],
         children = nodeList.filter {

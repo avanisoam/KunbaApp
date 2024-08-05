@@ -21,6 +21,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.example.kunbaapp.R
 import com.example.kunbaapp.data.models.dto.RootRegisterDto
+import com.example.kunbaapp.data.models.dto.V2.RootRegisterDtoV2
 import com.example.kunbaapp.ui.family.FamilyUiState
 import com.example.kunbaapp.ui.navigation.NavigationDestination
 import com.example.kunbaapp.ui.node.NodeUiState
@@ -75,6 +76,7 @@ fun HomeScreen(
 
             HomeBody(
                 rootList = uiStateDb.roots,//uiState.roots,
+                rootListV2 = uiState.rootsV2,
                 onItemClick = {
                     Log.d("URL", "2# - ${it.toString()}")
                     navigateToDetailScreen(it)
@@ -106,12 +108,20 @@ fun HomeScreen(
 @Composable
 fun HomeBody(
     rootList : List<RootRegisterDto>,
+    rootListV2 : List<RootRegisterDtoV2>,
     favoriteIds: List<Int>,
     onItemClick: (Int) -> Unit,
     toggleFavorite: (Int) -> Unit,
     modifier: Modifier = Modifier
 ) {
     LazyColumn(modifier = modifier) {
+        item {
+            rootListV2.forEach { root ->
+
+                root.rootName?.let { Text(text = it) }
+
+            }
+        }
         item {
             rootList.forEach { root ->
 

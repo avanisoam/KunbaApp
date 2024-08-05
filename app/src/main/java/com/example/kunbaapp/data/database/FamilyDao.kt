@@ -4,6 +4,8 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import androidx.room.Update
+import com.example.kunbaapp.data.models.dto.ChildFamilyDto
 import com.example.kunbaapp.data.models.entity.FamilyDbo
 import com.example.kunbaapp.data.models.entity.NodeDbo
 import kotlinx.coroutines.flow.Flow
@@ -24,4 +26,14 @@ interface FamilyDao {
 
     @Query("SELECT * from family WHERE familyId = :familyId")
     fun getFamilyV1(familyId: Int): Flow<FamilyDbo?>
+
+    /*
+    @Query("SELECT children from family WHERE familyId = :familyId")
+    fun checkChildrenExists(familyId: Int): List<ChildFamilyDto>
+
+     */
+
+    @Update
+    suspend fun update(familyDbo: FamilyDbo)
+
 }

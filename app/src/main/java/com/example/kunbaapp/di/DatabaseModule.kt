@@ -7,6 +7,7 @@ import com.example.kunbaapp.data.database.FavoriteDao
 import com.example.kunbaapp.data.database.KunbaLocalDatabase
 import com.example.kunbaapp.data.database.NodeDao
 import com.example.kunbaapp.data.database.RootRegisterDao
+import com.example.kunbaapp.data.models.entity.ChildrenFamilyTypeConvertor
 import com.example.kunbaapp.data.models.entity.NodeTypeConvertor
 import com.example.kunbaapp.utils.EntityTypeConverter
 import org.koin.dsl.module
@@ -20,6 +21,7 @@ fun provideDataBase(application: Application): KunbaLocalDatabase =
         .fallbackToDestructiveMigration()
         .addTypeConverter(NodeTypeConvertor())
         .addTypeConverter(EntityTypeConverter())
+        .addTypeConverter(ChildrenFamilyTypeConvertor())
         .build()
 
 fun provideDao(kunbaDb: KunbaLocalDatabase): FavoriteDao =

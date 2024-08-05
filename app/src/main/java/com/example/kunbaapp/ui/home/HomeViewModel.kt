@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.kunbaapp.data.models.dto.RootDetailDto
 import com.example.kunbaapp.data.models.dto.RootRegisterDto
+import com.example.kunbaapp.data.models.dto.V2.RootRegisterDtoV2
 import com.example.kunbaapp.data.models.entity.FamilyDbo
 import com.example.kunbaapp.data.models.entity.Favorite
 import com.example.kunbaapp.data.models.entity.NodeDbo
@@ -23,6 +24,7 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
@@ -239,6 +241,8 @@ class HomeViewModel(
 
             val family1 = FamilyDbo(
                 familyId = 1,
+                fatherId = 1,
+                motherId = 2,
                 fatherInfo = node2,
                 motherInfo = node3,
                 children = children
@@ -248,7 +252,42 @@ class HomeViewModel(
         }
     }
 
+    private fun checkAndSyncRootRegisterData() {
+        viewModelScope.launch(Dispatchers.IO) {
+            val response = offlineApiRepository.getRootRegistersV1()
+            if(response == listOf<RootRegisterDbo>())
+            {
+                // Call Api and fill the table root_register
+                val rootsFromApi = apiRepository.fetchRoots()
+                val result = rootsFromApi.body()
+                if(rootsFromApi.isSuccessful && result != null)
+                {
+                    result.forEach {
+                        offlineApiRepository.addRootRegister(it.toRootRegisterDbo())
+                    }
+                }
+            }
+        }
+    }
+
+    private fun getRootsV2() {
+        viewModelScope.launch(Dispatchers.IO){
+            val response = apiRepository.fetchRootsV2()
+            val result = response.body()
+            if(response.isSuccessful || result != null)
+            {
+                _uiState.update {
+                    it.copy(
+                        rootsV2 = result!!
+                    )
+                }
+            }
+        }
+    }
+
     init {
+        getRootsV2()
+        checkAndSyncRootRegisterData()
         //getRoots()
         //getFavoritesFromDb()
         //loadData()
@@ -258,6 +297,7 @@ class HomeViewModel(
 data class HomeUiState(
     val roots: List<RootRegisterDto> = listOf(),
     val favoritesRootIds: List<Int> = listOf(),
+    val rootsV2: List<RootRegisterDtoV2> = listOf()
     //val isFavorite: Boolean = false
 )
 
@@ -265,3 +305,9 @@ fun RootRegisterDbo.toRootRegisterDto() : RootRegisterDto = RootRegisterDto(
     rootId = rootId,
     rootName = rootName
 )
+
+fun RootRegisterDto.toRootRegisterDbo() : RootRegisterDbo = RootRegisterDbo(
+    rootId = rootId,
+    rootName = rootName
+)
+

@@ -1,5 +1,6 @@
 package com.example.kunbaapp.data.repository.contract
 
+import com.example.kunbaapp.data.models.dto.ChildFamilyDto
 import com.example.kunbaapp.data.models.dto.RootDetailDto
 import com.example.kunbaapp.data.models.entity.FamilyDbo
 import com.example.kunbaapp.data.models.entity.Favorite
@@ -14,8 +15,11 @@ interface IOfflineApiRepository {
     suspend fun addRootRegister(rootRegisterDbo: RootRegisterDbo)
 
     fun getRootRegisters(): Flow<List<RootRegisterDbo>>
+    fun getRootRegistersV1(): List<RootRegisterDbo>
 
     fun getRoot(rootId: Int): RootRegisterDbo?
+
+    fun checkIsLocalState(rootId: Int) : Boolean
 
     suspend fun addNode(nodeDbo: NodeDbo)
 
@@ -31,6 +35,10 @@ interface IOfflineApiRepository {
 
     fun getFamily(familyId: Int): FamilyDbo?
     fun getFamilyV1(familyId: Int): Flow<FamilyDbo?>
+
+    //fun checkChildrenExists(familyId: Int): List<ChildFamilyDto>
+
+    suspend fun update(familyDbo: FamilyDbo)
 
     fun fetchRootDetailFlow(rootId: Int) : Flow<RootDetailsDbo>
 }

@@ -10,16 +10,20 @@ import androidx.lifecycle.viewModelScope
 import com.example.kunbaapp.data.models.dto.NodeDto
 import com.example.kunbaapp.data.models.dto.NodeDtos.AddNodeDto
 import com.example.kunbaapp.data.models.dto.NodeDtos.UpdateNodeDto
+import com.example.kunbaapp.data.models.dto.V2.NewNodeDto
 import com.example.kunbaapp.data.models.dto.timelineDtos.TimelineObject
 import com.example.kunbaapp.data.models.dto.timelineDtos.NodeTimelineDto
 import com.example.kunbaapp.data.models.dto.timelineDtos.TempTimelineObject
 import com.example.kunbaapp.data.models.entity.Favorite
 import com.example.kunbaapp.data.models.entity.NodeDbo
+import com.example.kunbaapp.data.models.entity.RootRegisterDbo
 import com.example.kunbaapp.data.repository.OfflineApiRepository
 import com.example.kunbaapp.data.repository.contract.IApiRepository
 import com.example.kunbaapp.data.repository.contract.IDatabaseRepository
 import com.example.kunbaapp.data.repository.contract.IOfflineApiRepository
+import com.example.kunbaapp.ui.family.toNodeDbo
 import com.example.kunbaapp.ui.family.toNodeDto
+import com.example.kunbaapp.ui.home.toRootRegisterDbo
 import com.example.kunbaapp.ui.poc.Item
 import com.example.kunbaapp.ui.poc.ItemDetails
 import com.example.kunbaapp.ui.poc.toItem
@@ -380,7 +384,45 @@ class NodeViewModel(
                     && dateOfBirth.isNotBlank() && placeOfBirth.isNotBlank() && image_Url.isNotBlank()
         }
     }
+
+    private fun checkAndSyncNodeData() {
+        viewModelScope.launch(Dispatchers.IO) {
+            val response = offlineApiRepository.getNode(nodeIdFromUrl)
+            if(response == null)
+            {
+                // Call Api and fill the table root_register
+                val nodeFromApi = apiRepository.fetchNode(nodeIdFromUrl)
+                val result = nodeFromApi.body()
+                if(nodeFromApi.isSuccessful && result != null)
+                {
+                    offlineApiRepository.addNode(result.toNodeDbo())
+
+                }
+            }
+        }
+    }
+
+    private fun getNodeV2() {
+        viewModelScope.launch {
+            val response = apiRepository.fetchNodeV2(nodeIdFromUrl)
+            val result = response.body()
+            Log.d("URL", nodeIdFromUrl.toString())
+            if (result != null) {
+                _uiState.update {
+                    it.copy(
+                        nodeV2 = result,
+                    )
+                }
+                //itemUiState = NodeUiState(node = result)
+
+                //getFamilyTimeline()
+                //isFavoriteExist()
+            }
+        }
+    }
     init {
+        getNodeV2()
+        checkAndSyncNodeData()
         //getNode()
         //getFavoritesFromDb()
         //getNodeFromDb()
@@ -390,6 +432,7 @@ class NodeViewModel(
 
 data class NodeUiState(
     val node: NodeDto = NodeDto(),
+    val nodeV2: NewNodeDto = NewNodeDto(),
     //val favoritesFromDb: List<Favorite> = listOf(),
     val isFavorite: Boolean = false,
     val uniqueId: String = "",
