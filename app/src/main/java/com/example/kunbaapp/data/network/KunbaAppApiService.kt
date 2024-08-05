@@ -6,6 +6,10 @@ import com.example.kunbaapp.data.models.dto.NodeDto
 import com.example.kunbaapp.data.models.dto.NodeDtos.AddNodeDto
 import com.example.kunbaapp.data.models.dto.RootDetailDto
 import com.example.kunbaapp.data.models.dto.RootRegisterDto
+import com.example.kunbaapp.data.models.dto.V2.FamilyWithChildrenDto
+import com.example.kunbaapp.data.models.dto.V2.NewNodeDto
+import com.example.kunbaapp.data.models.dto.V2.RootDetailDtoV2
+import com.example.kunbaapp.data.models.dto.V2.RootRegisterDtoV2
 import com.example.kunbaapp.data.models.dto.timelineDtos.NodeTimelineDto
 import retrofit2.Response
 import retrofit2.http.Body
@@ -69,4 +73,22 @@ interface KunbaAppApiService {
         @Path("nodeId") nodeId: Int,
         @Body nodeDto: NodeDto
     ) : Response<NodeDto>
+
+    @GET("roots")
+    suspend fun fetchRootsV2()  : Response<List<RootRegisterDtoV2>>
+
+    @GET("{rootId}/roots")
+    suspend fun fetchRootDetailsV2(
+        @Path("rootId") rootId: Int
+    ): Response<RootDetailDtoV2>
+
+    @GET("{familyId}/family")
+    suspend fun fetchFamilyV2(
+        @Path("familyId") familyId: Int
+    ): Response<FamilyWithChildrenDto>
+
+    @GET("{nodeId}/getNode")
+    suspend fun fetchNodeV2(
+        @Path("nodeId") nodeId: Int
+    ) : Response<NewNodeDto>
 }

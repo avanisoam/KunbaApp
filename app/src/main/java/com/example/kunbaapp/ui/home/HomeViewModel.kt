@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.kunbaapp.data.models.dto.RootDetailDto
 import com.example.kunbaapp.data.models.dto.RootRegisterDto
+import com.example.kunbaapp.data.models.dto.V2.RootRegisterDtoV2
 import com.example.kunbaapp.data.models.entity.FamilyDbo
 import com.example.kunbaapp.data.models.entity.Favorite
 import com.example.kunbaapp.data.models.entity.NodeDbo
@@ -269,7 +270,23 @@ class HomeViewModel(
         }
     }
 
+    private fun getRootsV2() {
+        viewModelScope.launch(Dispatchers.IO){
+            val response = apiRepository.fetchRootsV2()
+            val result = response.body()
+            if(response.isSuccessful || result != null)
+            {
+                _uiState.update {
+                    it.copy(
+                        rootsV2 = result!!
+                    )
+                }
+            }
+        }
+    }
+
     init {
+        getRootsV2()
         checkAndSyncRootRegisterData()
         //getRoots()
         //getFavoritesFromDb()
@@ -280,6 +297,7 @@ class HomeViewModel(
 data class HomeUiState(
     val roots: List<RootRegisterDto> = listOf(),
     val favoritesRootIds: List<Int> = listOf(),
+    val rootsV2: List<RootRegisterDtoV2> = listOf()
     //val isFavorite: Boolean = false
 )
 

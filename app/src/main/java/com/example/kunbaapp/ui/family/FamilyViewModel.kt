@@ -7,6 +7,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.kunbaapp.data.models.dto.ChildFamilyDto
 import com.example.kunbaapp.data.models.dto.FamilyDto
 import com.example.kunbaapp.data.models.dto.NodeDto
+import com.example.kunbaapp.data.models.dto.V2.FamilyWithChildrenDto
 import com.example.kunbaapp.data.models.entity.FamilyDbo
 import com.example.kunbaapp.data.models.entity.Favorite
 import com.example.kunbaapp.data.models.entity.NodeDbo
@@ -196,7 +197,23 @@ class FamilyViewModel(
         }
     }
 
+    private fun getFamilyV2(){
+        viewModelScope.launch {
+            val response = apiRepository.fetchFamilyV2(familyIdFromUrl)
+            val result = response.body()
+            if(result != null)
+            {
+                _uiState.update {
+                    it.copy(
+                        familyV2 = result
+                    )
+                }
+            }
+        }
+    }
+
     init {
+        getFamilyV2()
         //checkAndSyncChildrenFamilyInDb()
         //getFamily()
         //getFamilyFromDb()
@@ -208,6 +225,7 @@ class FamilyViewModel(
 
 data class FamilyUiState(
     val family : FamilyDto = FamilyDto(),
+    val familyV2 : FamilyWithChildrenDto = FamilyWithChildrenDto(),
     //val favoritesFromDb: List<Favorite> = listOf(),
     val isFavorite: Boolean = false,
     val childrenFamily : List<ChildFamilyDto> = listOf(),

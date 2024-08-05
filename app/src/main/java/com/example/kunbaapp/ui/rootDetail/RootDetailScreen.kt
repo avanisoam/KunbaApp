@@ -13,6 +13,7 @@ import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -48,7 +49,7 @@ fun RootDetailScreen(
     navigateToHome: () -> Unit,
     viewModel: RootDetailViewModel = getViewModel<RootDetailViewModel>()
 ) {
-    //val uiState by viewModel.uiState.collectAsState()
+    val uiState by viewModel.uiState.collectAsState()
     //val uiState by viewModel.uiState.collectAsState(initial = RootDetailUiState())
     //val uiStateDb by viewModel.uiStateDb.collectAsState(initial = RootDetailUiState())
     val uiStateDb by viewModel.uiStateDb.collectAsState(initial = RootDetailUiState())
@@ -81,12 +82,26 @@ fun RootDetailScreen(
     ){innerPadding ->
         TabScreen(
             families = uiStateDb.rootDetail.familyDtos,//uiState.rootDetail.familyDtos,
-            onItemClick =  {navigateToFamilyScreen(it) },
+            onItemClick = { navigateToFamilyScreen(it) },
             onIndividualClick = { navigateToNodeScreen(it) },
             nodes = uiStateDb.rootDetail.nodeDtos,//uiState.rootDetail.nodeDtos,
             modifier = Modifier.padding(innerPadding),
             timelineObjects = uiStateDb.rootTimeLineList,//uiState.rootTimeLineList,
         )
+        /*
+        Column(modifier = Modifier.padding(innerPadding)) {
+            Text(text = uiState.rootDetailV2.toString())
+            TabScreen(
+                families = uiStateDb.rootDetail.familyDtos,//uiState.rootDetail.familyDtos,
+                onItemClick = { navigateToFamilyScreen(it) },
+                onIndividualClick = { navigateToNodeScreen(it) },
+                nodes = uiStateDb.rootDetail.nodeDtos,//uiState.rootDetail.nodeDtos,
+                //modifier = Modifier.padding(innerPadding),
+                timelineObjects = uiStateDb.rootTimeLineList,//uiState.rootTimeLineList,
+            )
+        }
+
+         */
         /*
         Column(modifier = Modifier.padding(innerPadding)) {
             TabScreen()

@@ -10,6 +10,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.kunbaapp.data.models.dto.NodeDto
 import com.example.kunbaapp.data.models.dto.NodeDtos.AddNodeDto
 import com.example.kunbaapp.data.models.dto.NodeDtos.UpdateNodeDto
+import com.example.kunbaapp.data.models.dto.V2.NewNodeDto
 import com.example.kunbaapp.data.models.dto.timelineDtos.TimelineObject
 import com.example.kunbaapp.data.models.dto.timelineDtos.NodeTimelineDto
 import com.example.kunbaapp.data.models.dto.timelineDtos.TempTimelineObject
@@ -400,7 +401,27 @@ class NodeViewModel(
             }
         }
     }
+
+    private fun getNodeV2() {
+        viewModelScope.launch {
+            val response = apiRepository.fetchNodeV2(nodeIdFromUrl)
+            val result = response.body()
+            Log.d("URL", nodeIdFromUrl.toString())
+            if (result != null) {
+                _uiState.update {
+                    it.copy(
+                        nodeV2 = result,
+                    )
+                }
+                //itemUiState = NodeUiState(node = result)
+
+                //getFamilyTimeline()
+                //isFavoriteExist()
+            }
+        }
+    }
     init {
+        getNodeV2()
         checkAndSyncNodeData()
         //getNode()
         //getFavoritesFromDb()
@@ -411,6 +432,7 @@ class NodeViewModel(
 
 data class NodeUiState(
     val node: NodeDto = NodeDto(),
+    val nodeV2: NewNodeDto = NewNodeDto(),
     //val favoritesFromDb: List<Favorite> = listOf(),
     val isFavorite: Boolean = false,
     val uniqueId: String = "",

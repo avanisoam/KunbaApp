@@ -148,6 +148,7 @@ fun NodeScreen(
             "" -> {
                 //KunbaFamilyTime(timelineStages = uiState.nodeStage)
                 Column(modifier = Modifier.padding(innerPadding)) {
+                    Text(text = uiState.nodeV2.toString())
                     NodeItem(
                         node = uiStateNodesDb.node,//uiState1.node,
                         onItemClick = {navigateToFamilyScreen(it)},

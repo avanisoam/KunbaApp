@@ -7,6 +7,10 @@ import com.example.kunbaapp.data.models.dto.NodeDto
 import com.example.kunbaapp.data.models.dto.NodeDtos.AddNodeDto
 import com.example.kunbaapp.data.models.dto.RootDetailDto
 import com.example.kunbaapp.data.models.dto.RootRegisterDto
+import com.example.kunbaapp.data.models.dto.V2.FamilyWithChildrenDto
+import com.example.kunbaapp.data.models.dto.V2.NewNodeDto
+import com.example.kunbaapp.data.models.dto.V2.RootDetailDtoV2
+import com.example.kunbaapp.data.models.dto.V2.RootRegisterDtoV2
 import com.example.kunbaapp.data.models.dto.timelineDtos.NodeTimelineDto
 import com.example.kunbaapp.data.network.KunbaAppApiService
 import com.example.kunbaapp.data.repository.contract.IApiRepository
@@ -59,4 +63,16 @@ class ApiRepository(private val kunbaAppApiService: KunbaAppApiService): IApiRep
 
     override suspend fun updateNode(nodeId: Int, nodeDto: NodeDto): Response<NodeDto> =
         kunbaAppApiService.updateNode(nodeId, nodeDto)
+
+    override suspend fun fetchRootsV2(): Response<List<RootRegisterDtoV2>> =
+        kunbaAppApiService.fetchRootsV2()
+
+    override suspend fun fetchRootDetailsV2(rootId: Int): Response<RootDetailDtoV2> =
+        kunbaAppApiService.fetchRootDetailsV2(rootId)
+
+    override suspend fun fetchFamilyV2(familyId: Int): Response<FamilyWithChildrenDto> =
+        kunbaAppApiService.fetchFamilyV2(familyId)
+
+    override suspend fun fetchNodeV2(nodeId: Int): Response<NewNodeDto> =
+        kunbaAppApiService.fetchNodeV2(nodeId)
 }

@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.kunbaapp.data.models.dto.NodeDto
 import com.example.kunbaapp.data.models.dto.RootDetailDto
+import com.example.kunbaapp.data.models.dto.V2.RootDetailDtoV2
 import com.example.kunbaapp.data.models.dto.timelineDtos.TempTimelineObject
 import com.example.kunbaapp.data.models.dto.timelineDtos.TimelineObject
 import com.example.kunbaapp.data.models.entity.FamilyDbo
@@ -59,8 +60,8 @@ class RootDetailViewModel(
         ]
     )
 
-    //private val _uiState = MutableStateFlow<RootDetailUiState>(RootDetailUiState())
-    //val uiState: StateFlow<RootDetailUiState> = _uiState
+    private val _uiState = MutableStateFlow<RootDetailUiState>(RootDetailUiState())
+    val uiState: StateFlow<RootDetailUiState> = _uiState
 
 
     /*
@@ -355,7 +356,33 @@ class RootDetailViewModel(
         }
     }
 
+    private fun getRootDetailV2(){
+        viewModelScope.launch {
+            Log.d("rootIdFromUrl", rootIdFromUrl.toString())
+            val response = apiRepository.fetchRootDetailsV2(rootIdFromUrl)
+            Log.d("rootIdFromUrl", response.toString())
+            val result = response.body()
+            Log.d("URL", rootIdFromUrl.toString())
+            if(result != null) {
+                _uiState.update {
+                    it.copy(
+                        rootDetailV2 = result,
+                        /*
+                        rootTimeLineList = getTimelineObject(
+                            result
+                        )
+
+                         */
+                    )
+                }
+                //getTimelineObject()
+            }
+        }
+
+    }
+
     init {
+        getRootDetailV2()
         checkAndSyncRootDetailData()
             //getRootDetail()
             //getFavoritesFromDb()
@@ -368,6 +395,7 @@ class RootDetailViewModel(
 
 data class RootDetailUiState(
     val rootDetail : RootDetailDto = RootDetailDto(),
+    val rootDetailV2 : RootDetailDtoV2 = RootDetailDtoV2(),
     //val favoritesRootIds: List<Int> = listOf(),
     val isFavorite: Boolean = false,
     val rootTimeLineList : List<TimelineObject> = listOf(),
