@@ -7,6 +7,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.kunbaapp.data.models.dto.ChildFamilyDto
 import com.example.kunbaapp.data.models.dto.FamilyDto
 import com.example.kunbaapp.data.models.dto.NodeDto
+import com.example.kunbaapp.data.models.dto.V2.FamilyDtoV2
 import com.example.kunbaapp.data.models.dto.V2.FamilyWithChildrenDto
 import com.example.kunbaapp.data.models.entity.FamilyDbo
 import com.example.kunbaapp.data.models.entity.Favorite
@@ -27,6 +28,7 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class FamilyViewModel(
     savedStateHandle: SavedStateHandle,
@@ -44,10 +46,10 @@ class FamilyViewModel(
     private val _uiState = MutableStateFlow<FamilyUiState>(FamilyUiState())
     val uiState: StateFlow<FamilyUiState> = _uiState
 
-    val uiStateFamilyDb : Flow<FamilyUiState> = offlineApiRepository.getFamilyV1(familyIdFromUrl)
+    val uiStateFamilyDb : Flow<FamilyUiState> = offlineApiRepository.getFamilyV2(familyIdFromUrl)
         .map {
             FamilyUiState(
-                family = it?.toFamilyDto()?: FamilyDto()
+                familyV2 = it?.toFamilyWithChildrenDto()?: FamilyWithChildrenDto()
 
             )
         }.stateIn(
@@ -56,6 +58,7 @@ class FamilyViewModel(
             initialValue = FamilyUiState()
         )
 
+    /*
     private fun getFamily(){
         viewModelScope.launch {
             val response = apiRepository.fetchFamily(familyIdFromUrl)
@@ -71,6 +74,9 @@ class FamilyViewModel(
         }
     }
 
+     */
+
+    /*
     private fun getFamilyFromDb(){
         viewModelScope.launch(Dispatchers.IO) {
             val response = offlineApiRepository.getFamily(familyIdFromUrl)
@@ -85,6 +91,8 @@ class FamilyViewModel(
             }
         }
     }
+
+     */
 
     /*
     private fun getFavoritesFromDb() {
@@ -157,6 +165,7 @@ class FamilyViewModel(
         }
     }
 
+    /*
     fun getChildrenFamily() {
         viewModelScope.launch {
             val response = apiRepository.getChildrenFamily(familyIdFromUrl)
@@ -171,20 +180,24 @@ class FamilyViewModel(
             }
         }
     }
+     */
 
-    fun checkAndSyncChildrenFamilyInDb() {
+   private fun checkAndSyncChildrenFamilyInDb() {
         viewModelScope.launch(Dispatchers.IO) {
             val familyFromDb = offlineApiRepository.getFamily(familyIdFromUrl)
            // val childrenInFamily = offlineApiRepository.checkChildrenExists(familyIdFromUrl)
+            if(familyFromDb != null) {
+                if (familyFromDb.childrenFamily == listOf<ChildFamilyDto>()) {
+                    //val response = apiRepository.getChildrenFamily(familyIdFromUrl)
+                    val response = apiRepository.fetchFamilyV2(familyIdFromUrl)
+                    val result = response.body()
 
-            if(familyFromDb?.childrenFamily == listOf<ChildFamilyDto>()) {
-                val response = apiRepository.getChildrenFamily(familyIdFromUrl)
-                val result = response.body()
+                    if (response.isSuccessful && result != null) {
 
-                if(response.isSuccessful && result != null) {
-                    familyFromDb.childrenFamily = result
-                    offlineApiRepository.update(familyFromDb)
-                    /*
+                        offlineApiRepository.addFamily(result.toFamilyDbo())
+                        //familyFromDb.childrenFamily = result.childrenFamily ?: listOf()
+                        //offlineApiRepository.update(familyFromDb)
+                        /*
                     _uiState.update {
                         it.copy(
                             childrenFamily = result
@@ -192,11 +205,39 @@ class FamilyViewModel(
                     }
 
                      */
+                    }
+                }
+            }
+            else{
+                val familyFromApi = apiRepository.fetchFamilyV2(familyIdFromUrl)
+                val result = familyFromApi.body()
+                if(familyFromApi.isSuccessful && result != null) {
+                    Log.d("Result", result.toString())
+                    val fatherNode = result.fatherNode
+                    withContext(Dispatchers.IO) {
+                        if (fatherNode != null) {
+                            offlineApiRepository.addNode(fatherNode.toNodeDbo())
+                        }
+                    }
+                    val motherNode = result.motherNode
+                    if(motherNode != null) {
+                        offlineApiRepository.addNode(motherNode.toNodeDbo())
+                    }
+                    val children = result.children
+                    Log.d("Result", fatherNode.toString())
+                    Log.d("Result", motherNode.toString())
+                    Log.d("Result", children.toString())
+                    offlineApiRepository.addFamily(result.toFamilyDbo())
+                    result.children?.forEach {
+                        Log.d("Result", it.toString())
+                        offlineApiRepository.addNode(it.toNodeDbo())
+                    }
                 }
             }
         }
     }
 
+    /*
     private fun getFamilyV2(){
         viewModelScope.launch {
             val response = apiRepository.fetchFamilyV2(familyIdFromUrl)
@@ -212,9 +253,11 @@ class FamilyViewModel(
         }
     }
 
+     */
+
     init {
-        getFamilyV2()
-        //checkAndSyncChildrenFamilyInDb()
+        //getFamilyV2()
+        checkAndSyncChildrenFamilyInDb()
         //getFamily()
         //getFamilyFromDb()
         //getChildrenFamily()
@@ -224,13 +267,13 @@ class FamilyViewModel(
 }
 
 data class FamilyUiState(
-    val family : FamilyDto = FamilyDto(),
+    //val family : FamilyDto = FamilyDto(),
     val familyV2 : FamilyWithChildrenDto = FamilyWithChildrenDto(),
     //val favoritesFromDb: List<Favorite> = listOf(),
     val isFavorite: Boolean = false,
-    val childrenFamily : List<ChildFamilyDto> = listOf(),
-    val familyDbo: FamilyDbo = FamilyDbo(0,0,0, NodeDbo(), NodeDbo(), listOf()),
-    val listOfFamilies: List<FamilyDbo> = listOf()
+    //val childrenFamily : List<ChildFamilyDto> = listOf(),
+    //val familyDbo: FamilyDbo = FamilyDbo(0,0,0, NodeDbo(), NodeDbo(), listOf()),
+    //val listOfFamilies: List<FamilyDbo> = listOf()
 )
 
 fun FamilyDbo.toFamilyDto() : FamilyDto = FamilyDto(
@@ -275,4 +318,29 @@ fun NodeDto.toNodeDbo() : NodeDbo = NodeDbo(
     dateOfBirth = dateOfBirth,
     placeOfBirth = placeOfBirth,
     image_Url = image_Url
+)
+
+fun FamilyDbo.toFamilyDtoV2() : FamilyDtoV2 = FamilyDtoV2(
+    familyId = familyId,
+    fatherInfo = fatherInfo?.toNodeDto(),
+    motherInfo = motherInfo?.toNodeDto()
+)
+
+fun FamilyDbo.toFamilyWithChildrenDto(): FamilyWithChildrenDto = FamilyWithChildrenDto(
+    familyId = familyId,
+    fatherNode = fatherInfo?.toNodeDto(),
+    motherNode = motherInfo?.toNodeDto(),
+    children = children.map { it.toNodeDto() },
+    childrenFamily = childrenFamily
+)
+
+fun FamilyWithChildrenDto.toFamilyDbo(): FamilyDbo = FamilyDbo(
+    familyId = familyId,
+    fatherId = fatherNode?.nodeId,
+    motherId = motherNode?.nodeId,
+    fatherInfo = fatherNode?.toNodeDbo(),
+    motherInfo = motherNode?.toNodeDbo(),
+    //children = children?.map { it.toNodeDbo() } ?: listOf(),
+    children = listOf(),
+    childrenFamily= childrenFamily ?: listOf()
 )

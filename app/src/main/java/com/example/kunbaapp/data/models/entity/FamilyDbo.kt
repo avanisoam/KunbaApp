@@ -21,7 +21,7 @@ data class FamilyDbo(
 
     val motherInfo : NodeDbo?,
 
-    val children : List<NodeDbo> = listOf(),
+    var children : List<NodeDbo> = listOf(),
 
     var childrenFamily: List<ChildFamilyDto> = listOf()
 ) : Parcelable

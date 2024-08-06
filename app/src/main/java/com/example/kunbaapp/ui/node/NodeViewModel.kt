@@ -79,7 +79,11 @@ class NodeViewModel(
         .map {
             Log.d("FLOW-DB",it.toString())
             NodeUiState(
-                node = it?.toNodeDto()?: NodeDto()
+                nodeV2 = NewNodeDto(
+                    individual = it?.toNodeDto() ?: NodeDto(),
+
+                ),//it?.toNodeDto()?: NodeDto()
+                nodeStage = getFamilyTimelineV1()
 
             )
         }.stateIn(
@@ -391,7 +395,8 @@ class NodeViewModel(
             if(response == null)
             {
                 // Call Api and fill the table root_register
-                val nodeFromApi = apiRepository.fetchNode(nodeIdFromUrl)
+                //val nodeFromApi = apiRepository.fetchNode(nodeIdFromUrl)
+                val nodeFromApi = apiRepository.fetchNodeV2(nodeIdFromUrl)
                 val result = nodeFromApi.body()
                 if(nodeFromApi.isSuccessful && result != null)
                 {
@@ -402,26 +407,28 @@ class NodeViewModel(
         }
     }
 
-    private fun getNodeV2() {
+    private fun getFamilyTimelineV1() : List<TimelineObject> {
+        val nodeStage : MutableList<TimelineObject> = mutableListOf()
         viewModelScope.launch {
             val response = apiRepository.fetchNodeV2(nodeIdFromUrl)
             val result = response.body()
             Log.d("URL", nodeIdFromUrl.toString())
             if (result != null) {
-                _uiState.update {
-                    it.copy(
-                        nodeV2 = result,
-                    )
-                }
-                //itemUiState = NodeUiState(node = result)
 
-                //getFamilyTimeline()
-                //isFavoriteExist()
+               result.ancestors?.forEach {
+                   nodeStage.add(
+                       TimelineObject(
+                           initiator = it.toTempTimelineObject(),
+                           //children = result.ancestors.map { it.toTempTimelineObject() }
+                       )
+                   )
+               }
             }
         }
+        return nodeStage
     }
     init {
-        getNodeV2()
+        //getNodeV2()
         checkAndSyncNodeData()
         //getNode()
         //getFavoritesFromDb()
@@ -467,4 +474,31 @@ fun UpdateNodeDto.toNodeDto(): NodeDto = NodeDto(
     dateOfBirth = dateOfBirth,
     placeOfBirth = placeOfBirth,
     image_Url = image_Url
+)
+
+fun NewNodeDto.toNodeDbo(): NodeDbo = NodeDbo(
+    nodeId = individual.nodeId,
+    rootId = individual.rootId,
+    familyId = individual.familyId,
+    firstName = individual.firstName,
+    lastName = individual.lastName,
+    gender = individual.gender,
+    dateOfBirth = individual.dateOfBirth,
+    placeOfBirth = individual.placeOfBirth,
+    image_Url = individual.image_Url
+)
+
+fun NewNodeDto.toTimelineObject(): TimelineObject = TimelineObject(
+    initiator = individual.toTempTimelineObject(),
+    children = ancestors?.map { it.toTempTimelineObject() } ?: listOf()
+)
+
+fun NodeDto.toTempTimelineObject(): TempTimelineObject = TempTimelineObject(
+    id= nodeId,
+    name = "$firstName $lastName"
+)
+
+fun NodeTimelineDto.toTempTimelineObject(): TempTimelineObject = TempTimelineObject(
+    id= nodeId,
+    name = "$firstName $lastName"
 )

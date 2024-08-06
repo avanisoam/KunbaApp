@@ -21,6 +21,7 @@ import com.example.kunbaapp.data.repository.contract.IDatabaseRepository
 import com.example.kunbaapp.data.repository.contract.IOfflineApiRepository
 import com.example.kunbaapp.ui.family.toFamilyDbo
 import com.example.kunbaapp.ui.family.toFamilyDto
+import com.example.kunbaapp.ui.family.toFamilyDtoV2
 import com.example.kunbaapp.ui.family.toNodeDbo
 import com.example.kunbaapp.ui.family.toNodeDto
 import com.example.kunbaapp.ui.home.HomeUiState
@@ -60,8 +61,8 @@ class RootDetailViewModel(
         ]
     )
 
-    private val _uiState = MutableStateFlow<RootDetailUiState>(RootDetailUiState())
-    val uiState: StateFlow<RootDetailUiState> = _uiState
+    //private val _uiState = MutableStateFlow<RootDetailUiState>(RootDetailUiState())
+    //val uiState: StateFlow<RootDetailUiState> = _uiState
 
 
     /*
@@ -103,6 +104,7 @@ class RootDetailViewModel(
         )
      */
 
+    /*
    private fun getRootDetailFromDb() : Flow<RootDetailsDbo>{
 
         var rootDetailsDbo : Flow<RootDetailsDbo> = flowOf()
@@ -112,13 +114,14 @@ class RootDetailViewModel(
         }
         return  rootDetailsDbo
     }
+     */
 
     val uiStateDb: Flow<RootDetailUiState> = offlineApiRepository.fetchRootDetailFlow(rootIdFromUrl)
         .map {
             RootDetailUiState(
-                rootDetail = it.toRootDetailDto(),
+                rootDetailV2 = it.toRootDetailDtoV2(),
                 rootTimeLineList = getTimelineObject(
-                    it.toRootDetailDto() ?: RootDetailDto()
+                    it.toRootDetailDtoV2() ?: RootDetailDtoV2()
                 )
             )
         }.stateIn(
@@ -152,34 +155,41 @@ class RootDetailViewModel(
     val uiStateDb: Flow<RootDetailUiState> = flow { emitAll(uiStateDb1.await()) }
      */
 
-    private fun getTimelineObject(rootDetail: RootDetailDto) : List<TimelineObject>{
+    private fun getTimelineObject(rootDetail: RootDetailDtoV2) : List<TimelineObject>{
+        Log.d("TEST",rootDetail.toString() )
         val tempTimeLine: MutableList<TimelineObject> = mutableListOf()
-        if (rootDetail.familyDtos.isNotEmpty()) {
+        if (rootDetail.familyDtos.isNullOrEmpty().not()) {
             val families = rootDetail.familyDtos//result.familyDtos
+            Log.d("TEST",families.toString() )
+            val temp = families?.forEach { family ->
 
-            val temp = families.forEach { family ->
-                val fName = "${family.fatherInfo.firstName} ${family.fatherInfo.lastName}"
-                val mName = "${family.motherInfo.firstName} ${family.motherInfo.lastName}"
-                val t = TimelineObject(
-                    initiator = TempTimelineObject(
-                        id = family.familyId,
-                        name = "$fName - $mName"
-                    ),
-                    children = rootDetail.nodeDtos
-                        .filter { node ->
-                            node.familyId == family.familyId
-                        }
-                        .map { child ->
-                            val fullName = "${child.firstName} ${child.lastName}"
-                            TempTimelineObject(
-                                id = child.nodeId,
-                                name = fullName
-                            )
-                        }
+                val fName = "${family.fatherInfo?.firstName} ${family.fatherInfo?.lastName}"
+                val mName = "${family.motherInfo?.firstName} ${family.motherInfo?.lastName}"
 
-                )
+                val t = rootDetail.nodeDtos
+                    ?.filter { node ->
+                        node.familyId == family.familyId
+                    }?.let {
 
-                tempTimeLine.add(t)
+                        TimelineObject(
+                            initiator = TempTimelineObject(
+                                id = family.familyId,
+                                name = "$fName - $mName"
+                            ),
+                            children = it
+                                .map { child ->
+                                    val fullName = "${child.firstName} ${child.lastName}"
+                                    TempTimelineObject(
+                                        id = child.nodeId,
+                                        name = fullName
+                                    )
+                                }
+
+                        )
+
+                    }
+
+                t?.let { tempTimeLine.add(it) }
 
 
             }
@@ -187,6 +197,8 @@ class RootDetailViewModel(
         }
         return tempTimeLine
     }
+
+    /*
     private fun getRootDetailFlow(){
         apiRepository.fetchRootDetailHotFlow(rootIdFromUrl)
             .map {
@@ -203,6 +215,7 @@ class RootDetailViewModel(
             )
 
     }
+     */
 
     /*
     fun toggleFavoriteButton(id: Int) {
@@ -316,25 +329,26 @@ class RootDetailViewModel(
             val isLocal = offlineApiRepository.checkIsLocalState(rootIdFromUrl)
             if(isLocal.not())
             {
-               val response = apiRepository.fetchRootDetails(rootIdFromUrl)
+               //val response = apiRepository.fetchRootDetails(rootIdFromUrl)
+               val response = apiRepository.fetchRootDetailsV2(rootIdFromUrl)
                 val result = response.body()
                 Log.d("RootDetail", result.toString())
 
                 if(response.isSuccessful && result != null)
                 {
 
-                    result.nodeDtos.forEach {
+                    result.nodeDtos?.forEach {
                         offlineApiRepository.addNode(it.toNodeDbo())
                     }
 
 
-                    result.familyDtos.forEach{familyDto ->
+                    result.familyDtos?.forEach{familyDto ->
                         val family = FamilyDbo(
                             familyId = familyDto.familyId,
-                            fatherId = familyDto.fatherInfo.nodeId?: null,
-                            motherId = familyDto.motherInfo.nodeId?:null,
-                            fatherInfo = familyDto.fatherInfo.toNodeDbo(),
-                            motherInfo = familyDto.motherInfo.toNodeDbo(),
+                            fatherId = familyDto.fatherInfo?.nodeId,
+                            motherId = familyDto.motherInfo?.nodeId,
+                            fatherInfo = familyDto.fatherInfo?.toNodeDbo(),
+                            motherInfo = familyDto.motherInfo?.toNodeDbo(),
                             children = listOf()
                         )
                         offlineApiRepository.addFamily(family)
@@ -356,6 +370,7 @@ class RootDetailViewModel(
         }
     }
 
+    /*
     private fun getRootDetailV2(){
         viewModelScope.launch {
             Log.d("rootIdFromUrl", rootIdFromUrl.toString())
@@ -380,9 +395,10 @@ class RootDetailViewModel(
         }
 
     }
+     */
 
     init {
-        getRootDetailV2()
+        //getRootDetailV2()
         checkAndSyncRootDetailData()
             //getRootDetail()
             //getFavoritesFromDb()
@@ -394,12 +410,12 @@ class RootDetailViewModel(
 }
 
 data class RootDetailUiState(
-    val rootDetail : RootDetailDto = RootDetailDto(),
+    //val rootDetail : RootDetailDto = RootDetailDto(),
     val rootDetailV2 : RootDetailDtoV2 = RootDetailDtoV2(),
     //val favoritesRootIds: List<Int> = listOf(),
     val isFavorite: Boolean = false,
     val rootTimeLineList : List<TimelineObject> = listOf(),
-    val rootDetailDbo : RootDetailsDbo = RootDetailsDbo(0, listOf(), listOf())
+    //val rootDetailDbo : RootDetailsDbo = RootDetailsDbo(0, listOf(), listOf())
 )
 
 fun RootDetailsDbo.toRootDetailDto() : RootDetailDto = RootDetailDto(
@@ -407,4 +423,10 @@ fun RootDetailsDbo.toRootDetailDto() : RootDetailDto = RootDetailDto(
     familyDtos = familyDbos.map { it.toFamilyDto() },
     nodeDtos = nodeDbos.map { it.toNodeDto() }
 
+)
+
+fun RootDetailsDbo.toRootDetailDtoV2(): RootDetailDtoV2 = RootDetailDtoV2(
+    rootId = rootId,
+    familyDtos = familyDbos.map { it.toFamilyDtoV2() },
+    nodeDtos = nodeDbos.map { it.toNodeDto() }
 )

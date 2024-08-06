@@ -13,8 +13,11 @@ import com.example.kunbaapp.data.repository.contract.IOfflineApiRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.flatMapMerge
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.merge
 import kotlinx.coroutines.withContext
 
@@ -45,6 +48,28 @@ class OfflineApiRepository(
         familyDao.getFamily(familyId)
 
     override fun getFamilyV1(familyId: Int): Flow<FamilyDbo?> = familyDao.getFamilyV1(familyId)
+    override fun getFamilyV2(familyId: Int): Flow<FamilyDbo?> = flow {
+        while(true){
+            var family = FamilyDbo(0,0,0, NodeDbo(), NodeDbo(), listOf(), listOf())
+            withContext(Dispatchers.IO) {
+                val familyFromDb = familyDao.getFamily(familyId)
+                val childrenNodes = nodeDao.getNodesByFamilyId(familyId)
+                if(familyFromDb != null) {
+                    if(childrenNodes != null)
+                    {
+                        familyFromDb.children = childrenNodes
+                    }
+                    family = familyFromDb
+                    //familyFromDb.children = childrenNodes
+                    //familyDao.update(familyFromDb)
+                }
+
+            }
+            emit(family)
+            delay(5000)
+        }
+    }
+
     //override fun checkChildrenExists(familyId: Int): List<ChildFamilyDto> = familyDao.checkChildrenExists(familyId)
     override suspend fun update(familyDbo: FamilyDbo) = familyDao.update(familyDbo)
     /*

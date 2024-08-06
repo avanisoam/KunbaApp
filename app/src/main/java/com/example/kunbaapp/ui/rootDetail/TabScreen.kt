@@ -19,14 +19,16 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import com.example.kunbaapp.data.models.dto.FamilyDto
 import com.example.kunbaapp.data.models.dto.NodeDto
+import com.example.kunbaapp.data.models.dto.V2.FamilyDtoV2
+import com.example.kunbaapp.data.models.dto.V2.FamilyWithChildrenDto
 import com.example.kunbaapp.data.models.dto.timelineDtos.TimelineObject
 
 @Composable
 fun TabScreen(
-    families: List<FamilyDto>,
+    families: List<FamilyDtoV2>?,//List<FamilyDto>,
     onItemClick: (Int) -> Unit,
     onIndividualClick: (Int) -> Unit,
-    nodes: List<NodeDto>,
+    nodes: List<NodeDto>?,
     timelineObjects: List<TimelineObject>,
     refreshTimeline: () -> Unit = {},
     modifier: Modifier = Modifier

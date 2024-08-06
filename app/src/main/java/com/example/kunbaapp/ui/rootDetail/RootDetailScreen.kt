@@ -49,7 +49,7 @@ fun RootDetailScreen(
     navigateToHome: () -> Unit,
     viewModel: RootDetailViewModel = getViewModel<RootDetailViewModel>()
 ) {
-    val uiState by viewModel.uiState.collectAsState()
+    //val uiState by viewModel.uiState.collectAsState()
     //val uiState by viewModel.uiState.collectAsState(initial = RootDetailUiState())
     //val uiStateDb by viewModel.uiStateDb.collectAsState(initial = RootDetailUiState())
     val uiStateDb by viewModel.uiStateDb.collectAsState(initial = RootDetailUiState())
@@ -81,10 +81,10 @@ fun RootDetailScreen(
         }
     ){innerPadding ->
         TabScreen(
-            families = uiStateDb.rootDetail.familyDtos,//uiState.rootDetail.familyDtos,
+            families = uiStateDb.rootDetailV2.familyDtos,//uiStateDb.rootDetail.familyDtos,//uiState.rootDetail.familyDtos,
             onItemClick = { navigateToFamilyScreen(it) },
             onIndividualClick = { navigateToNodeScreen(it) },
-            nodes = uiStateDb.rootDetail.nodeDtos,//uiState.rootDetail.nodeDtos,
+            nodes = uiStateDb.rootDetailV2.nodeDtos,//uiStateDb.rootDetail.nodeDtos,//uiState.rootDetail.nodeDtos,
             modifier = Modifier.padding(innerPadding),
             timelineObjects = uiStateDb.rootTimeLineList,//uiState.rootTimeLineList,
         )

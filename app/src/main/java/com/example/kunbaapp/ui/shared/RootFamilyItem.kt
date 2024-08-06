@@ -14,12 +14,15 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
 import com.example.kunbaapp.R
+import com.example.kunbaapp.data.models.dto.ChildFamilyDto
 import com.example.kunbaapp.data.models.dto.FamilyDto
 import com.example.kunbaapp.data.models.dto.RootRegisterDto
+import com.example.kunbaapp.data.models.dto.V2.FamilyDtoV2
+import com.example.kunbaapp.data.models.dto.V2.FamilyWithChildrenDto
 
 @Composable
 fun RootFamilyItem(
-    family: FamilyDto,
+    family: FamilyDtoV2,//FamilyDto,
     onItemClick: (Int) -> Unit,
     onIndividualClick: (Int) -> Unit,
     //toggleFavorite: (Int) -> Unit,
@@ -51,4 +54,40 @@ fun RootFamilyItem(
             }
         }
         }
+}
+
+@Composable
+fun FamilyItem(
+    family: FamilyWithChildrenDto,//FamilyDto,
+    onItemClick: (Int) -> Unit,
+    onIndividualClick: (Int) -> Unit,
+    //toggleFavorite: (Int) -> Unit,
+    //isFavorite: Boolean,
+    modifier: Modifier = Modifier
+) {
+    Card(
+        modifier = modifier.padding(dimensionResource(R.dimen.padding_small))
+    ){
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(dimensionResource(R.dimen.padding_small)),
+            //.clickable { onItemClick(family.familyId) },
+            horizontalArrangement = Arrangement.Center
+        ) {
+            if (family.fatherNode != null) {
+                Button(onClick = { onIndividualClick(family.fatherNode.nodeId) }) {
+                    Text(text = family.fatherNode.firstName)
+                }
+            }
+            Button(onClick = { onItemClick(family.familyId) }) {
+                Text(text = "M")
+            }
+            if (family.motherNode != null) {
+                Button(onClick = { onIndividualClick(family.motherNode.nodeId) }) {
+                    Text(text = family.motherNode.firstName)
+                }
+            }
+        }
+    }
 }

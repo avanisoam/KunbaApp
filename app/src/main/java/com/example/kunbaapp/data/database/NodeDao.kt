@@ -28,4 +28,7 @@ interface NodeDao {
     @Query("SELECT * from node WHERE rootId = :rootId")
     fun getNodesByRootIdV1(rootId: Int): Flow<List<NodeDbo>>
 
+    @Query("SELECT * from node WHERE familyId = :familyId")
+    fun getNodesByFamilyId(familyId: Int): List<NodeDbo>?
+
 }

@@ -34,9 +34,23 @@ class HomeViewModel(
     private val offlineApiRepository: IOfflineApiRepository
 ): ViewModel() {
 
-    private val _uiState = MutableStateFlow<HomeUiState>(HomeUiState())
-    val uiState: StateFlow<HomeUiState> = _uiState
+    //private val _uiState = MutableStateFlow<HomeUiState>(HomeUiState())
+    //val uiState: StateFlow<HomeUiState> = _uiState
 
+    val uiStateDb : Flow<HomeUiState> = offlineApiRepository.getRootRegisters()
+        .map {
+            HomeUiState(
+                rootsV2 = it.map {rootDbo ->
+                    rootDbo.toRootRegisterDtoV2()
+                }
+            )
+        }.stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5000),
+            initialValue = HomeUiState()
+        )
+
+    /*
     private fun getRoots() {
         viewModelScope.launch(Dispatchers.IO){
             val response = apiRepository.fetchRoots()
@@ -269,7 +283,26 @@ class HomeViewModel(
             }
         }
     }
+    */
+    private fun checkAndSyncRootRegisterData() {
+        viewModelScope.launch(Dispatchers.IO) {
+            val response = offlineApiRepository.getRootRegistersV1()
+            if(response == listOf<RootRegisterDbo>())
+            {
+                // Call Api and fill the table root_register
+                val rootsFromApi = apiRepository.fetchRootsV2()
+                val result = rootsFromApi.body()
+                if(rootsFromApi.isSuccessful && result != null)
+                {
+                    result.forEach {
+                        offlineApiRepository.addRootRegister(it.toRootRegisterDbo())
+                    }
+                }
+            }
+        }
+    }
 
+    /*
     private fun getRootsV2() {
         viewModelScope.launch(Dispatchers.IO){
             val response = apiRepository.fetchRootsV2()
@@ -284,10 +317,11 @@ class HomeViewModel(
             }
         }
     }
+     */
 
     init {
-        getRootsV2()
         checkAndSyncRootRegisterData()
+        //getRootsV2()
         //getRoots()
         //getFavoritesFromDb()
         //loadData()
@@ -295,7 +329,7 @@ class HomeViewModel(
 }
 
 data class HomeUiState(
-    val roots: List<RootRegisterDto> = listOf(),
+    //val roots: List<RootRegisterDto> = listOf(),
     val favoritesRootIds: List<Int> = listOf(),
     val rootsV2: List<RootRegisterDtoV2> = listOf()
     //val isFavorite: Boolean = false
@@ -309,5 +343,19 @@ fun RootRegisterDbo.toRootRegisterDto() : RootRegisterDto = RootRegisterDto(
 fun RootRegisterDto.toRootRegisterDbo() : RootRegisterDbo = RootRegisterDbo(
     rootId = rootId,
     rootName = rootName
+)
+
+fun RootRegisterDtoV2.toRootRegisterDbo(): RootRegisterDbo = RootRegisterDbo(
+    rootId = id,
+    rootName= rootName?:""
+)
+
+fun RootRegisterDbo.toRootRegisterDtoV2(): RootRegisterDtoV2 = RootRegisterDtoV2(
+    id = rootId,
+    rootName = rootName,
+    latitude = null,
+    longitude = null,
+    familyName = null,
+    rootNodeId = null
 )
 

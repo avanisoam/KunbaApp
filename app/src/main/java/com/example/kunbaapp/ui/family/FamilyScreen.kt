@@ -23,6 +23,7 @@ import androidx.compose.ui.unit.dp
 import com.example.kunbaapp.R
 import com.example.kunbaapp.data.models.dto.ChildFamilyDto
 import com.example.kunbaapp.ui.navigation.NavigationDestination
+import com.example.kunbaapp.ui.shared.FamilyItem
 import com.example.kunbaapp.ui.shared.KunbaAppTopBar
 import com.example.kunbaapp.ui.shared.RootFamilyItem
 import com.example.kunbaapp.ui.shared.RootNodeItem
@@ -75,17 +76,17 @@ fun FamilyScreen(
     ) {innerPadding ->
         LazyColumn(modifier = Modifier.padding(innerPadding)) {
             item { 
-                Text(text = uiState.familyV2.toString())
+                Text(text = uiStateFamilyDb.familyV2.toString())
             }
             item {
-                RootFamilyItem(
-                    family = uiStateFamilyDb.family,//uiState.family,
+                FamilyItem(
+                    family = uiStateFamilyDb.familyV2,//uiState.family,
                     onItemClick = { navigateToFamilyScreen(it) },
                     onIndividualClick = { navigateToNodeScreen(it) },
                 )
             }
             item {
-                uiStateFamilyDb.family.children.forEach { node ->
+                uiStateFamilyDb.familyV2.children?.forEach { node ->
                     RootNodeItem(
                         node = node,
                         onItemClick = { navigateToNodeScreen(it) },
@@ -94,9 +95,9 @@ fun FamilyScreen(
                         ),
                         description = if(node.gender == 'M') "Male" else "Female"
                     )
-                    val marriages : List<ChildFamilyDto> = uiState.childrenFamily.filter { it.nodeId == node.nodeId }
-                    if(marriages.isNotEmpty()){
-                        marriages.forEach {
+                    val marriages : List<ChildFamilyDto>? = uiStateFamilyDb.familyV2.childrenFamily?.filter { it.nodeId == node.nodeId }
+                    if(marriages.isNullOrEmpty().not()){
+                        marriages?.forEach {
                             Button(onClick = { navigateToFamilyScreen(it.marriageId) }) {
                                 Text(text = "Marriage: ${it.marriageId}")
                             }

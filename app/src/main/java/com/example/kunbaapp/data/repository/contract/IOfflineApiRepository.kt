@@ -36,6 +36,8 @@ interface IOfflineApiRepository {
     fun getFamily(familyId: Int): FamilyDbo?
     fun getFamilyV1(familyId: Int): Flow<FamilyDbo?>
 
+    fun getFamilyV2(familyId: Int): Flow<FamilyDbo?>
+
     //fun checkChildrenExists(familyId: Int): List<ChildFamilyDto>
 
     suspend fun update(familyDbo: FamilyDbo)

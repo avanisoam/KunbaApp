@@ -10,12 +10,15 @@ import androidx.compose.ui.res.dimensionResource
 import com.example.kunbaapp.R
 import com.example.kunbaapp.data.models.dto.FamilyDto
 import com.example.kunbaapp.data.models.dto.NodeDto
+import com.example.kunbaapp.data.models.dto.V2.FamilyDtoV2
+import com.example.kunbaapp.data.models.dto.V2.FamilyWithChildrenDto
 import com.example.kunbaapp.ui.shared.DogItem
 import com.example.kunbaapp.ui.shared.RootFamilyItem
 
+
 @Composable
 fun RootDetailSplitUI(
-    families: List<FamilyDto>,
+    families: List<FamilyDtoV2>?,//List<FamilyDto>,
     onItemClick: (Int) -> Unit,
     onIndividualClick: (Int) -> Unit,
     nodes: List<NodeDto>,
@@ -41,14 +44,14 @@ fun RootDetailSplitUI(
 
 @Composable
 fun RootDetailBody(
-    families: List<FamilyDto>,
+    families: List<FamilyDtoV2>?,//List<FamilyDto>,
     onItemClick: (Int) -> Unit,
     onIndividualClick: (Int) -> Unit,
     modifier: Modifier = Modifier
 ) {
     LazyColumn(modifier = modifier) {
         item {
-            families.forEach { root ->
+            families?.forEach { root ->
                 RootFamilyItem(
                     family = root,
                     onItemClick = {onItemClick(root.familyId)},
@@ -62,13 +65,13 @@ fun RootDetailBody(
 
 @Composable
 fun NodesBody(
-    nodes: List<NodeDto>,
+    nodes: List<NodeDto>?,
     onIndividualClick: (Int) -> Unit,
     modifier: Modifier = Modifier
 ) {
     LazyColumn(modifier = modifier) {
         item {
-            nodes.forEach { node ->
+            nodes?.forEach { node ->
                 /*
                 RootNodeItem(
                     node = node,
@@ -102,3 +105,4 @@ fun NodesBody(
         }
     }
 }
+

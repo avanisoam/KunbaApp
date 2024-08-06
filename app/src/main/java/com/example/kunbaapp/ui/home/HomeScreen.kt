@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material3.Button
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -28,6 +29,7 @@ import com.example.kunbaapp.ui.node.NodeUiState
 import com.example.kunbaapp.ui.rootDetail.RootDetailUiState
 import com.example.kunbaapp.ui.shared.KunbaAppTopBar
 import com.example.kunbaapp.ui.shared.RootItem
+import com.example.kunbaapp.ui.shared.RootItemV2
 import org.koin.androidx.compose.getViewModel
 
 object HomeDestination : NavigationDestination {
@@ -42,14 +44,16 @@ fun HomeScreen(
     navigateToFavorite: () -> Unit = {},
     viewModel: HomeViewModel = getViewModel<HomeViewModel>()
 ) {
-    val uiState by viewModel.uiState.collectAsState()
+    val uiStateDb by viewModel.uiStateDb.collectAsState(initial = HomeUiState())
+    //val uiState by viewModel.uiState.collectAsState()
 
+    /*
     val uiStateDb by viewModel.uiStateDb.collectAsState(initial = HomeUiState())
     //val uiStateFamilyDb by viewModel.uiStateFamilyDb.collectAsState(initial = FamilyUiState())
     val uiStateFamiliesDb by viewModel.uiStateFamiliesDb.collectAsState(initial = FamilyUiState())
     //val uiStateNodesDb by viewModel.uiStateNodesDb.collectAsState(initial = NodeUiState())
     val uiStateRootDetailDb by viewModel.uiStateRootDetailDb.collectAsState(initial = RootDetailUiState())
-
+     */
     Scaffold(
         topBar = {
             KunbaAppTopBar(
@@ -71,6 +75,36 @@ fun HomeScreen(
             }
         }
     ) {innerPadding ->
+        Column(modifier = Modifier.padding(innerPadding)) {
+        //LazyColumn(modifier = Modifier.padding(innerPadding)) {
+            /*
+            item {
+                uiStateDb.rootsV2.forEach { root ->
+
+                    root.rootName?.let {
+                        Button(onClick = { navigateToDetailScreen(root.id) }) {
+                            Text(text = it)
+                        }
+                    }
+
+                }
+            }
+
+             */
+
+                HomeBodyV2(
+                    rootListV2 = uiStateDb.rootsV2,//uiState.roots,
+                    onItemClick = {
+                        Log.d("URL", "2# - ${it.toString()}")
+                        navigateToDetailScreen(it)
+                    },
+                    toggleFavorite = {},//{ viewModel.toggleFavoriteButton(it) },
+                    favoriteIds = uiStateDb.favoritesRootIds,
+                    //modifier = Modifier.padding(innerPadding)
+                )
+
+        }
+        /*
         Column {
 
 
@@ -102,6 +136,7 @@ fun HomeScreen(
             Text(text = uiStateRootDetailDb.rootDetailDbo.toString())
 
         }
+         */
     }
 }
 
@@ -132,6 +167,34 @@ fun HomeBody(
                         onItemClick(root.rootId)
                     },
                     toggleFavorite = {toggleFavorite(root.rootId)},
+                    favoriteIds = favoriteIds
+
+                )
+
+            }
+        }
+    }
+}
+
+@Composable
+fun HomeBodyV2(
+    rootListV2 : List<RootRegisterDtoV2>,
+    favoriteIds: List<Int>,
+    onItemClick: (Int) -> Unit,
+    toggleFavorite: (Int) -> Unit,
+    modifier: Modifier = Modifier
+) {
+    LazyColumn(modifier = modifier) {
+        item {
+            rootListV2.forEach { root ->
+
+                RootItemV2(
+                    root = root,
+                    onItemClick = {
+                        Log.d("URL","1# - ${root.id.toString()}" )
+                        onItemClick(root.id)
+                    },
+                    toggleFavorite = {toggleFavorite(root.id)},
                     favoriteIds = favoriteIds
 
                 )

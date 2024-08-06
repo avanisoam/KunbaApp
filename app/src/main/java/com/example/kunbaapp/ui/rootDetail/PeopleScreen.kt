@@ -9,7 +9,7 @@ import com.example.kunbaapp.data.models.dto.NodeDto
 @Composable
 fun PeopleScreen(
     onIndividualClick: (Int) -> Unit,
-    nodes: List<NodeDto>,
+    nodes: List<NodeDto>?,
 ) {
     //Text(text = "People Screen")
     NodesBody(
