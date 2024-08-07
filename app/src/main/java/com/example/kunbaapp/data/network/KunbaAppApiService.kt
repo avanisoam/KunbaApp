@@ -74,20 +74,20 @@ interface KunbaAppApiService {
         @Body nodeDto: NodeDto
     ) : Response<NodeDto>
 
-    @GET("roots")
+    @GET("MobileApiV2/roots")
     suspend fun fetchRootsV2()  : Response<List<RootRegisterDtoV2>>
 
-    @GET("{rootId}/roots")
+    @GET("MobileApiV2/{rootId}/roots")
     suspend fun fetchRootDetailsV2(
         @Path("rootId") rootId: Int
     ): Response<RootDetailDtoV2>
 
-    @GET("{familyId}/family")
+    @GET("MobileApiV2/{familyId}/family")
     suspend fun fetchFamilyV2(
         @Path("familyId") familyId: Int
     ): Response<FamilyWithChildrenDto>
 
-    @GET("{nodeId}/getNode")
+    @GET("MobileApiV2/{nodeId}/getNode")
     suspend fun fetchNodeV2(
         @Path("nodeId") nodeId: Int
     ) : Response<NewNodeDto>
