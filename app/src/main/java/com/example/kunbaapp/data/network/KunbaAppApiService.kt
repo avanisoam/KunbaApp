@@ -19,56 +19,56 @@ import retrofit2.http.PUT
 import retrofit2.http.Path
 
 interface KunbaAppApiService {
-    @GET("roots")
+    @GET("MobileApi/roots")
     suspend fun fetchRoots()  : Response<List<RootRegisterDto>>
 
-    @GET("{rootId}/roots")
+    @GET("MobileApi/{rootId}/roots")
     suspend fun fetchRootDetails(
         @Path("rootId") rootId: Int
     ): Response<RootDetailDto>
 
-    @GET("{familyId}/family")
+    @GET("MobileApi/{familyId}/family")
     suspend fun fetchFamily(
         @Path("familyId") familyId: Int
     ): Response<FamilyDto>
 
-    @GET("{nodeId}/node")
+    @GET("MobileApi/{nodeId}/node")
     suspend fun fetchNode(
         @Path("nodeId") nodeId: Int
     ) : Response<NodeDto>
 
-    @GET("{familyId}/ChildFamily")
+    @GET("MobileApi/{familyId}/ChildFamily")
     suspend fun getChildrenFamily(
         @Path("familyId") familyId: Int
     ): Response<List<ChildFamilyDto>>
 
-    @POST("addNode")
+    @POST("MobileApi/addNode")
     suspend fun addNode(@Body addNodeDto: AddNodeDto) : Response<NodeDto>
 
-    @POST("getFamilyTimeLine")
+    @POST("MobileApi/getFamilyTimeLine")
     suspend fun getFamilyTimeLine(@Body nodeDto: NodeDto) : Response<List<NodeTimelineDto>>
 
-    @POST("addPartner/{nodeId}")
+    @POST("MobileApi/addPartner/{nodeId}")
     suspend fun addPartner(
         @Path("nodeId") nodeId: Int
     ) : Response<NodeDto>
 
-    @POST("addNewParents/{nodeId}")
+    @POST("MobileApi/addNewParents/{nodeId}")
     suspend fun addParents(
         @Path("nodeId") nodeId: Int
     ) : Response<NodeDto>
 
-    @POST("addNewSibling/{nodeId}")
+    @POST("MobileApi/addNewSibling/{nodeId}")
     suspend fun addSibling(
         @Path("nodeId") nodeId: Int
     ) : Response<NodeDto>
 
-    @POST("addChildWithNewPartner/{fatherId}")
+    @POST("MobileApi/addChildWithNewPartner/{fatherId}")
     suspend fun addChild(
         @Path("fatherId") fatherId: Int
     ) : Response<NodeDto>
 
-    @PUT("{nodeId}/updateNode")
+    @PUT("MobileApi/{nodeId}/updateNode")
     suspend fun updateNode(
         @Path("nodeId") nodeId: Int,
         @Body nodeDto: NodeDto

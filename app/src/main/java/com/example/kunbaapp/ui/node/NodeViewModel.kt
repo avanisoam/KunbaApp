@@ -38,6 +38,7 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class NodeViewModel(
     savedStateHandle: SavedStateHandle,
@@ -196,9 +197,8 @@ class NodeViewModel(
     fun addSibling(){
         viewModelScope.launch {
             val response = apiRepository.addSibling(nodeIdFromUrl)
-            Log.d("Partner", response.body().toString())
+            Log.d("Sibling", response.body().toString())
             val result = response.body()
-
         }
     }
 

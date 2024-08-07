@@ -207,6 +207,10 @@ class RootDetailViewModel(
                             children = listOf()
                         )
                         offlineApiRepository.addFamily(family)
+                        withContext(Dispatchers.IO){
+                            familyDto.motherInfo?.toNodeDbo()
+                                ?.let { offlineApiRepository.addNode(it) }
+                        }
                     }
                 }
 
