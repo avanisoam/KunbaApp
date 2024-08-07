@@ -50,33 +50,9 @@ class NodeViewModel(
             NodeDestination.ID_ARG
         ]
     )
-    /*
-    val uniqueIdFromUrl: String = checkNotNull(
-        savedStateHandle[
-            NodeDestination.UniqueId_ARG
-        ]
-    )
-     */
 
     private val _uiState = MutableStateFlow<NodeUiState>(NodeUiState())
     val uiState: StateFlow<NodeUiState> = _uiState
-
-    /*
-    val uiState1 : Flow<NodeUiState> =
-            apiRepository.fetchNodeHotFlow(nodeIdFromUrl)
-                .map {
-                    NodeUiState(
-                        node = it.body()?: NodeDto()
-                    )
-                }.stateIn(
-                    scope = viewModelScope,
-                    //started = SharingStarted.Eagerly
-                    //started = SharingStarted.Lazily
-                    started = SharingStarted.WhileSubscribed(5000),
-                    initialValue = NodeUiState()
-                )
-
-     */
 
     val uiStateNodesDb : Flow<NodeUiState> = offlineApiRepository.getNodeV1(nodeIdFromUrl)
         .map {
@@ -96,44 +72,6 @@ class NodeViewModel(
             initialValue = NodeUiState()
         )
 
-    private fun getNode() {
-        viewModelScope.launch {
-            val response = apiRepository.fetchNode(nodeIdFromUrl)
-            val result = response.body()
-            Log.d("URL", nodeIdFromUrl.toString())
-            if (result != null) {
-                _uiState.update {
-                    it.copy(
-                        node = result,
-                        updateNodeDto = result.toUpdateNodeDto()
-                    )
-                }
-                //itemUiState = NodeUiState(node = result)
-
-                getFamilyTimeline()
-                isFavoriteExist()
-            }
-        }
-    }
-
-    private fun getNodeFromDb() {
-        viewModelScope.launch(Dispatchers.IO) {
-            val response = offlineApiRepository.getNode(nodeIdFromUrl)
-            Log.d("URL", nodeIdFromUrl.toString())
-            if (response != null) {
-                _uiState.update {
-                    it.copy(
-                        node = response.toNodeDto(),
-                        updateNodeDto = _uiState.value.node.toUpdateNodeDto()
-                    )
-                }
-                //itemUiState = NodeUiState(node = result)
-
-                getFamilyTimeline()
-                isFavoriteExist()
-            }
-        }
-    }
     fun toggleFavoriteButton(id: Int) {
         Log.d("Favorite", id.toString())
         viewModelScope.launch(Dispatchers.IO) {
@@ -226,70 +164,6 @@ class NodeViewModel(
         }
     }
 
-    fun getFamilyTimeline() {
-        viewModelScope.launch {
-            val response = apiRepository.getFamilyTimeLine(_uiState.value.node)
-            val result = response.body()
-
-            if(response.isSuccessful && result != null)
-            {
-                _uiState.update {
-                    it.copy(
-                        nodeTimelineDtos = result
-                    )
-                }
-                val nodeStage : MutableList<TimelineObject> = mutableListOf()
-                _uiState.value.nodeTimelineDtos.forEach {
-                    val temp = it
-                    val fullName = "${it.firstName} ${it.lastName}"
-                        /*
-                        val objectList : List<TempTimelineObject> =
-                            listOf(
-                                TempTimelineObject(
-                                    id= 1,
-                                    name= "Roli"
-                                ),
-                                TempTimelineObject(
-                                    id= 2,
-                                    name= "Rohit"
-                                ),
-                                TempTimelineObject(
-                                    id= 3,
-                                    name= "Mohit"
-                                ),
-                            )
-
-                         */
-
-                    val tempTimelineObject = TempTimelineObject(
-                        id = it.nodeId,
-                        name = fullName
-                    )
-                    var temp1 = TimelineObject(
-                        initiator = tempTimelineObject,
-                    )
-                    /*
-                    if(it.firstName == "Ravindra ")
-                    {
-                        temp1 = TimelineObject(
-                            initiator = tempTimelineObject,
-                            children = objectList
-                        )
-                    }
-                     */
-                    nodeStage.add(
-                        temp1
-                    )
-                }
-                _uiState.update {
-                    it.copy(
-                        nodeStage = nodeStage
-                    )
-                }
-            }
-        }
-    }
-
     fun addPartner(){
         Log.d("Partner", "Init")
         viewModelScope.launch {
@@ -350,28 +224,6 @@ class NodeViewModel(
                 // TODO: Send converted item to API or DB
                 Log.d("UpdateNodeDto", "After: ${item.toString()}")
             }
-            /*
-            val nodeDto = NodeDto(
-                nodeId = updateNode.nodeId,
-                rootId = updateNode.rootId,
-                familyId = updateNode.familyId,
-                firstName = updateNode.firstName?: "",
-                lastName = updateNode.lastName?:"",
-                dateOfBirth = updateNode.dateOfBirth?:"",
-                placeOfBirth = updateNode.placeOfBirth?:"",
-                image_Url = updateNode.image_Url?:""
-            )
-            if(_uiState.value.node != NodeDto()) {
-                val updatedNode = apiRepository.updateNode(nodeIdFromUrl, updateNode.toNodeDto())
-                if(updatedNode.isSuccessful && updatedNode.body() != null) {
-                    _uiState.update {
-                        it.copy(
-                            node = updatedNode.body()?: NodeDto()
-                        )
-                    }
-                }
-            }
-             */
         }
 
     }
@@ -431,32 +283,8 @@ class NodeViewModel(
         }
         return nodeStage
     }
-
-    private fun isFavoriteExistV1() : Boolean{
-        var isExits : Boolean = false
-        viewModelScope.launch(Dispatchers.IO) {
-            val favoriteFromDb = databaseRepository.getFavoriteByTypeAndRefId(
-                type = EntityType.Node,
-                refId = nodeIdFromUrl
-            )
-            if(favoriteFromDb != null)
-            {
-                isExits = true
-            }
-            else
-            {
-                isExits = false
-            }
-        }
-        return isExits
-    }
-
     init {
-        //getNodeV2()
         checkAndSyncNodeData()
-        //getNode()
-        //getFavoritesFromDb()
-        //getNodeFromDb()
         isFavoriteExist()
     }
 }
@@ -465,7 +293,6 @@ class NodeViewModel(
 data class NodeUiState(
     val node: NodeDto = NodeDto(),
     val nodeV2: NewNodeDto = NewNodeDto(),
-    //val favoritesFromDb: List<Favorite> = listOf(),
     val isFavorite: Boolean = false,
     val uniqueId: String = "",
     val addNodeDto : AddNodeDto = AddNodeDto(),

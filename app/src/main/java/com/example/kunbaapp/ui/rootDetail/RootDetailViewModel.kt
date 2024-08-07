@@ -64,58 +64,6 @@ class RootDetailViewModel(
     private val _uiState = MutableStateFlow<RootDetailUiState>(RootDetailUiState())
     val uiState: StateFlow<RootDetailUiState> = _uiState
 
-
-    /*
-    private fun getRootDetail(){
-        viewModelScope.launch {
-            Log.d("rootIdFromUrl", rootIdFromUrl.toString())
-            val response = apiRepository.fetchRootDetails(rootIdFromUrl)
-            Log.d("rootIdFromUrl", response.toString())
-            val result = response.body()
-            Log.d("URL", rootIdFromUrl.toString())
-            if(result != null) {
-                _uiState.update {
-                    it.copy(
-                        rootDetail = result
-                    )
-                }
-                getTimelineObject()
-            }
-        }
-
-    }
-
-     */
-
-    /*
-    val uiState : Flow<RootDetailUiState> = apiRepository.fetchRootDetailHotFlow(rootIdFromUrl)
-        .map {
-           RootDetailUiState(
-                rootDetail = it.body() ?: RootDetailDto(),
-                rootTimeLineList = getTimelineObject(it.body() ?: RootDetailDto())
-            )
-        }
-        .stateIn(
-            scope = viewModelScope,
-            //started = SharingStarted.Eagerly
-            //started = SharingStarted.Lazily
-            started = SharingStarted.WhileSubscribed(5000),
-            initialValue = RootDetailUiState()
-        )
-     */
-
-    /*
-   private fun getRootDetailFromDb() : Flow<RootDetailsDbo>{
-
-        var rootDetailsDbo : Flow<RootDetailsDbo> = flowOf()
-        viewModelScope.launch(Dispatchers.IO) {
-            val temp = offlineApiRepository.fetchRootDetailFlow(rootIdFromUrl)
-            rootDetailsDbo = temp
-        }
-        return  rootDetailsDbo
-    }
-     */
-
     val uiStateDb: Flow<RootDetailUiState> = offlineApiRepository.fetchRootDetailFlow(rootIdFromUrl)
         .map {
             RootDetailUiState(
@@ -129,31 +77,6 @@ class RootDetailViewModel(
             started = SharingStarted.WhileSubscribed(5000),
             initialValue = RootDetailUiState()
         )
-
-    /*
-     val uiStateDb1: Deferred<StateFlow<RootDetailUiState>> =
-         viewModelScope.async(Dispatchers.IO) {
-                    offlineApiRepository.fetchRootDetailFlow(rootIdFromUrl)
-                        //getRootDetailFromDb()
-                        .map {
-                            Log.d("DBFlow", getRootDetailFromDb().toString())
-                            RootDetailUiState(
-                                rootDetail = it.toRootDetailDto() ?: RootDetailDto(),
-                                rootTimeLineList = getTimelineObject(
-                                    it.toRootDetailDto() ?: RootDetailDto()
-                                )
-                            )
-                        }
-                        .stateIn(
-                            scope = viewModelScope,
-                            started = SharingStarted.WhileSubscribed(5000),
-                            initialValue = RootDetailUiState()
-                        )
-                }
-
-
-    val uiStateDb: Flow<RootDetailUiState> = flow { emitAll(uiStateDb1.await()) }
-     */
 
     private fun getTimelineObject(rootDetail: RootDetailDtoV2) : List<TimelineObject>{
         Log.d("TEST",rootDetail.toString() )
@@ -197,26 +120,6 @@ class RootDetailViewModel(
         }
         return tempTimeLine
     }
-
-    /*
-    private fun getRootDetailFlow(){
-        apiRepository.fetchRootDetailHotFlow(rootIdFromUrl)
-            .map {
-                RootDetailUiState(
-                    rootDetail = it.body() ?: RootDetailDto()
-                )
-            }
-            .stateIn(
-                scope = viewModelScope,
-                //started = SharingStarted.Eagerly
-                //started = SharingStarted.Lazily
-                started = SharingStarted.WhileSubscribed(5000),
-                initialValue = RootDetailUiState()
-            )
-
-    }
-     */
-
 
     fun toggleFavoriteButton(id: Int) {
         Log.d("Favorite - family", id.toString())
@@ -276,55 +179,6 @@ class RootDetailViewModel(
         }
     }
 
-    /*
-   suspend fun getTimelineObject(){
-        withContext(Dispatchers.IO) {
-            if(_uiState.value.rootDetail.familyDtos.isNotEmpty())
-            {
-                val families = _uiState.value.rootDetail.familyDtos//result.familyDtos
-
-                val tempTimeLine : MutableList<TimelineObject> = mutableListOf()
-
-             val temp =  families.forEach {family ->
-                     val fName = "${family.fatherInfo.firstName} ${family.fatherInfo.lastName}"
-                     val mName = "${family.motherInfo.firstName} ${family.motherInfo.lastName}"
-                     val t = TimelineObject(
-                         initiator = TempTimelineObject(
-                             id = family.familyId,
-                             name = "$fName - $mName"
-                         ),
-                         children =  _uiState.value.rootDetail.nodeDtos
-                             .filter {node ->
-                                 node.familyId == family.familyId
-                             }
-                             .map {child ->
-                             val fullName = "${child.firstName} ${child.lastName}"
-                             TempTimelineObject(
-                                 id = child.nodeId,
-                                 name = fullName
-                             )
-                         }
-
-                     )
-
-                 tempTimeLine.add(t)
-
-
-
-                 }
-
-                _uiState.update {
-                    it.copy(
-                        rootTimeLineList = tempTimeLine
-                    )
-                }
-
-            }
-        }
-    }
-
-     */
-
     private fun checkAndSyncRootDetailData() {
         viewModelScope.launch(Dispatchers.IO) {
             val isLocal = offlineApiRepository.checkIsLocalState(rootIdFromUrl)
@@ -354,69 +208,24 @@ class RootDetailViewModel(
                         )
                         offlineApiRepository.addFamily(family)
                     }
-
-
-                    /*
-
-                    result.familyDtos.forEach {
-                        offlineApiRepository.addFamily(it.toFamilyDbo())
-                    }
-
-                     */
-
-
                 }
 
             }
         }
     }
-
-    /*
-    private fun getRootDetailV2(){
-        viewModelScope.launch {
-            Log.d("rootIdFromUrl", rootIdFromUrl.toString())
-            val response = apiRepository.fetchRootDetailsV2(rootIdFromUrl)
-            Log.d("rootIdFromUrl", response.toString())
-            val result = response.body()
-            Log.d("URL", rootIdFromUrl.toString())
-            if(result != null) {
-                _uiState.update {
-                    it.copy(
-                        rootDetailV2 = result,
-                        /*
-                        rootTimeLineList = getTimelineObject(
-                            result
-                        )
-
-                         */
-                    )
-                }
-                //getTimelineObject()
-            }
-        }
-
-    }
-     */
 
     init {
-        //getRootDetailV2()
         checkAndSyncRootDetailData()
-            //getRootDetail()
-            //getFavoritesFromDb()
-            //getRootDetailFlow()
-            isFavoriteExist()
+        isFavoriteExist()
 
     }
 
 }
 
 data class RootDetailUiState(
-    //val rootDetail : RootDetailDto = RootDetailDto(),
     val rootDetailV2 : RootDetailDtoV2 = RootDetailDtoV2(),
-    //val favoritesRootIds: List<Int> = listOf(),
     val isFavorite: Boolean = false,
     val rootTimeLineList : List<TimelineObject> = listOf(),
-    //val rootDetailDbo : RootDetailsDbo = RootDetailsDbo(0, listOf(), listOf())
 )
 
 fun RootDetailsDbo.toRootDetailDto() : RootDetailDto = RootDetailDto(

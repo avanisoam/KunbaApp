@@ -58,55 +58,6 @@ class FamilyViewModel(
             initialValue = FamilyUiState()
         )
 
-    /*
-    private fun getFamily(){
-        viewModelScope.launch {
-            val response = apiRepository.fetchFamily(familyIdFromUrl)
-            val result = response.body()
-            if(result != null)
-            {
-                _uiState.update {
-                    it.copy(
-                        family = result
-                    )
-                }
-            }
-        }
-    }
-
-     */
-
-    /*
-    private fun getFamilyFromDb(){
-        viewModelScope.launch(Dispatchers.IO) {
-            val response = offlineApiRepository.getFamily(familyIdFromUrl)
-
-            if(response != null)
-            {
-                _uiState.update {
-                    it.copy(
-                        family = response.toFamilyDto()
-                    )
-                }
-            }
-        }
-    }
-
-     */
-
-    /*
-    private fun getFavoritesFromDb() {
-        viewModelScope.launch(Dispatchers.IO) {
-            val response = databaseRepository.getFavoriteByType(EntityType.Family)
-            _uiState.update {
-                it.copy(
-                    favoritesFromDb = response
-                )
-            }
-        }
-    }
-     */
-
     fun toggleFavoriteButton(id: Int) {
         Log.d("Favorite - family", id.toString())
         viewModelScope.launch(Dispatchers.IO) {
@@ -165,23 +116,6 @@ class FamilyViewModel(
         }
     }
 
-    /*
-    fun getChildrenFamily() {
-        viewModelScope.launch {
-            val response = apiRepository.getChildrenFamily(familyIdFromUrl)
-            val result = response.body()
-            if(result != null)
-            {
-                _uiState.update {
-                    it.copy(
-                        childrenFamily = result
-                    )
-                }
-            }
-        }
-    }
-     */
-
    private fun checkAndSyncChildrenFamilyInDb() {
         viewModelScope.launch(Dispatchers.IO) {
             val familyFromDb = offlineApiRepository.getFamily(familyIdFromUrl)
@@ -195,16 +129,6 @@ class FamilyViewModel(
                     if (response.isSuccessful && result != null) {
 
                         offlineApiRepository.addFamily(result.toFamilyDbo())
-                        //familyFromDb.childrenFamily = result.childrenFamily ?: listOf()
-                        //offlineApiRepository.update(familyFromDb)
-                        /*
-                    _uiState.update {
-                        it.copy(
-                            childrenFamily = result
-                        )
-                    }
-
-                     */
                     }
                 }
             }
@@ -237,43 +161,15 @@ class FamilyViewModel(
         }
     }
 
-    /*
-    private fun getFamilyV2(){
-        viewModelScope.launch {
-            val response = apiRepository.fetchFamilyV2(familyIdFromUrl)
-            val result = response.body()
-            if(result != null)
-            {
-                _uiState.update {
-                    it.copy(
-                        familyV2 = result
-                    )
-                }
-            }
-        }
-    }
-
-     */
-
     init {
-        //getFamilyV2()
         checkAndSyncChildrenFamilyInDb()
-        //getFamily()
-        //getFamilyFromDb()
-        //getChildrenFamily()
-        //getFavoritesFromDb()
         isFavoriteExist()
     }
 }
 
 data class FamilyUiState(
-    //val family : FamilyDto = FamilyDto(),
     val familyV2 : FamilyWithChildrenDto = FamilyWithChildrenDto(),
-    //val favoritesFromDb: List<Favorite> = listOf(),
     val isFavorite: Boolean = false,
-    //val childrenFamily : List<ChildFamilyDto> = listOf(),
-    //val familyDbo: FamilyDbo = FamilyDbo(0,0,0, NodeDbo(), NodeDbo(), listOf()),
-    //val listOfFamilies: List<FamilyDbo> = listOf()
 )
 
 fun FamilyDbo.toFamilyDto() : FamilyDto = FamilyDto(
