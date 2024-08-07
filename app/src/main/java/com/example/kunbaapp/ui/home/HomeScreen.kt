@@ -45,7 +45,7 @@ fun HomeScreen(
     viewModel: HomeViewModel = getViewModel<HomeViewModel>()
 ) {
     val uiStateDb by viewModel.uiStateDb.collectAsState(initial = HomeUiState())
-    //val uiState by viewModel.uiState.collectAsState()
+    val uiState by viewModel.uiState.collectAsState()
 
     /*
     val uiStateDb by viewModel.uiStateDb.collectAsState(initial = HomeUiState())
@@ -98,8 +98,8 @@ fun HomeScreen(
                         Log.d("URL", "2# - ${it.toString()}")
                         navigateToDetailScreen(it)
                     },
-                    toggleFavorite = {},//{ viewModel.toggleFavoriteButton(it) },
-                    favoriteIds = uiStateDb.favoritesRootIds,
+                    toggleFavorite = { viewModel.toggleFavoriteButton(it) },
+                    favoriteIds = uiState.favoritesRootIds,
                     //modifier = Modifier.padding(innerPadding)
                 )
 

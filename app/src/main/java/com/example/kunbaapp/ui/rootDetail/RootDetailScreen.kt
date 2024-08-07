@@ -49,7 +49,7 @@ fun RootDetailScreen(
     navigateToHome: () -> Unit,
     viewModel: RootDetailViewModel = getViewModel<RootDetailViewModel>()
 ) {
-    //val uiState by viewModel.uiState.collectAsState()
+    val uiState by viewModel.uiState.collectAsState()
     //val uiState by viewModel.uiState.collectAsState(initial = RootDetailUiState())
     //val uiStateDb by viewModel.uiStateDb.collectAsState(initial = RootDetailUiState())
     val uiStateDb by viewModel.uiStateDb.collectAsState(initial = RootDetailUiState())
@@ -61,8 +61,8 @@ fun RootDetailScreen(
                 canNavigateBack = true,
                 title = RootDetailDestination.titleRes,
                 navigateUp = navigateUp,
-                isFavorite = uiStateDb.isFavorite,//uiState.isFavorite,
-                toggleFavorite = {},//{viewModel.toggleFavoriteButton(viewModel.rootIdFromUrl)},
+                isFavorite = uiState.isFavorite,
+                toggleFavorite = {viewModel.toggleFavoriteButton(viewModel.rootIdFromUrl)},
                 showFavorite = true
             )
         },

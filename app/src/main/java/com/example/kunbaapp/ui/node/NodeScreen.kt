@@ -54,7 +54,7 @@ fun NodeScreen(
     viewModel: NodeViewModel = getViewModel<NodeViewModel>()
 ) {
     val uiState by viewModel.uiState.collectAsState()
-    val uiState1 by viewModel.uiState1.collectAsState(initial = NodeUiState())
+    //val uiState1 by viewModel.uiState1.collectAsState(initial = NodeUiState())
     val uiStateNodesDb by viewModel.uiStateNodesDb.collectAsState(initial = NodeUiState())
 
     //Text(text = uiState.node.toString())

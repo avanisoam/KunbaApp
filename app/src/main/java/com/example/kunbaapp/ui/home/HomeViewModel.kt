@@ -34,15 +34,16 @@ class HomeViewModel(
     private val offlineApiRepository: IOfflineApiRepository
 ): ViewModel() {
 
-    //private val _uiState = MutableStateFlow<HomeUiState>(HomeUiState())
-    //val uiState: StateFlow<HomeUiState> = _uiState
+    private val _uiState = MutableStateFlow<HomeUiState>(HomeUiState())
+    val uiState: StateFlow<HomeUiState> = _uiState
 
     val uiStateDb : Flow<HomeUiState> = offlineApiRepository.getRootRegisters()
         .map {
             HomeUiState(
                 rootsV2 = it.map {rootDbo ->
                     rootDbo.toRootRegisterDtoV2()
-                }
+                },
+                //favoritesRootIds = getFavoritesFromDb()
             )
         }.stateIn(
             scope = viewModelScope,
@@ -133,43 +134,8 @@ class HomeViewModel(
             started = SharingStarted.WhileSubscribed(5000),
             initialValue = RootDetailUiState()
         )
-    private fun getFavoritesFromDb() {
-        viewModelScope.launch(Dispatchers.IO) {
-            val response = databaseRepository.getFavoriteByType(EntityType.Root)
 
-            _uiState.update {
-                it.copy(
-                    favoritesRootIds = response.map{
-                        it.refId
-                    }.toList()
-                )
-            }
-        }
-    }
 
-    fun toggleFavoriteButton(id: Int) {
-        Log.d("Favorite - root", id.toString())
-        viewModelScope.launch(Dispatchers.IO) {
-            val favoriteFromDb =
-                databaseRepository.getFavoriteByTypeAndRefId(type = EntityType.Root, refId = id)
-            //Log.d("Favorite - root", favoriteFromDb.toString())
-            if (favoriteFromDb != null) {
-                databaseRepository.removeFavorite(favoriteFromDb)
-                Log.d("Favorite - root", "Removed from Favorites")
-
-            }
-            else {
-                val favorite = Favorite(
-                    id = 0,
-                    type = EntityType.Root,
-                    refId = id,
-                    displayText = "Root: ${id}"
-                )
-                databaseRepository.addFavorite(favorite)
-                Log.d("Favorite - root", "Added to Favorites")
-            }
-        }
-    }
 
     fun getRootsFromDb(){
         viewModelScope.launch {
@@ -318,12 +284,49 @@ class HomeViewModel(
         }
     }
      */
+    private fun getFavoritesFromDb() {
+        viewModelScope.launch(Dispatchers.IO) {
+            val response = databaseRepository.getFavoriteByType(EntityType.Root)
+
+            _uiState.update {
+                it.copy(
+                    favoritesRootIds = response.map{
+                        it.refId
+                    }.toList()
+                )
+            }
+        }
+    }
+
+    fun toggleFavoriteButton(id: Int) {
+        Log.d("Favorite - root", id.toString())
+        viewModelScope.launch(Dispatchers.IO) {
+            val favoriteFromDb =
+                databaseRepository.getFavoriteByTypeAndRefId(type = EntityType.Root, refId = id)
+            //Log.d("Favorite - root", favoriteFromDb.toString())
+            if (favoriteFromDb != null) {
+                databaseRepository.removeFavorite(favoriteFromDb)
+                Log.d("Favorite - root", "Removed from Favorites")
+
+            }
+            else {
+                val favorite = Favorite(
+                    id = 0,
+                    type = EntityType.Root,
+                    refId = id,
+                    displayText = "Root: ${id}"
+                )
+                databaseRepository.addFavorite(favorite)
+                Log.d("Favorite - root", "Added to Favorites")
+            }
+        }
+    }
 
     init {
         checkAndSyncRootRegisterData()
         //getRootsV2()
         //getRoots()
-        //getFavoritesFromDb()
+        getFavoritesFromDb()
         //loadData()
     }
 }

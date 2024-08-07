@@ -61,8 +61,8 @@ class RootDetailViewModel(
         ]
     )
 
-    //private val _uiState = MutableStateFlow<RootDetailUiState>(RootDetailUiState())
-    //val uiState: StateFlow<RootDetailUiState> = _uiState
+    private val _uiState = MutableStateFlow<RootDetailUiState>(RootDetailUiState())
+    val uiState: StateFlow<RootDetailUiState> = _uiState
 
 
     /*
@@ -217,7 +217,7 @@ class RootDetailViewModel(
     }
      */
 
-    /*
+
     fun toggleFavoriteButton(id: Int) {
         Log.d("Favorite - family", id.toString())
         viewModelScope.launch(Dispatchers.IO) {
@@ -276,6 +276,7 @@ class RootDetailViewModel(
         }
     }
 
+    /*
    suspend fun getTimelineObject(){
         withContext(Dispatchers.IO) {
             if(_uiState.value.rootDetail.familyDtos.isNotEmpty())
@@ -403,7 +404,7 @@ class RootDetailViewModel(
             //getRootDetail()
             //getFavoritesFromDb()
             //getRootDetailFlow()
-            //isFavoriteExist()
+            isFavoriteExist()
 
     }
 

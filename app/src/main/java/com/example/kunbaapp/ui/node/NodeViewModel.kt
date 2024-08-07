@@ -61,6 +61,7 @@ class NodeViewModel(
     private val _uiState = MutableStateFlow<NodeUiState>(NodeUiState())
     val uiState: StateFlow<NodeUiState> = _uiState
 
+    /*
     val uiState1 : Flow<NodeUiState> =
             apiRepository.fetchNodeHotFlow(nodeIdFromUrl)
                 .map {
@@ -75,6 +76,8 @@ class NodeViewModel(
                     initialValue = NodeUiState()
                 )
 
+     */
+
     val uiStateNodesDb : Flow<NodeUiState> = offlineApiRepository.getNodeV1(nodeIdFromUrl)
         .map {
             Log.d("FLOW-DB",it.toString())
@@ -83,7 +86,8 @@ class NodeViewModel(
                     individual = it?.toNodeDto() ?: NodeDto(),
 
                 ),//it?.toNodeDto()?: NodeDto()
-                nodeStage = getFamilyTimelineV1()
+                nodeStage = getFamilyTimelineV1(),
+               // isFavorite = isFavoriteExistV1()
 
             )
         }.stateIn(
@@ -427,12 +431,33 @@ class NodeViewModel(
         }
         return nodeStage
     }
+
+    private fun isFavoriteExistV1() : Boolean{
+        var isExits : Boolean = false
+        viewModelScope.launch(Dispatchers.IO) {
+            val favoriteFromDb = databaseRepository.getFavoriteByTypeAndRefId(
+                type = EntityType.Node,
+                refId = nodeIdFromUrl
+            )
+            if(favoriteFromDb != null)
+            {
+                isExits = true
+            }
+            else
+            {
+                isExits = false
+            }
+        }
+        return isExits
+    }
+
     init {
         //getNodeV2()
         checkAndSyncNodeData()
         //getNode()
         //getFavoritesFromDb()
         //getNodeFromDb()
+        isFavoriteExist()
     }
 }
 
