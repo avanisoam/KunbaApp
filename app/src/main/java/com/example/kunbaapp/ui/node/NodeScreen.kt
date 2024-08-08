@@ -237,10 +237,11 @@ fun NodeScreen(
                 )
             }
             "edit_Node" -> {
-                Log.d("NodeDto", uiState.node.toString())
+                Log.d("NodeDto", uiStateNodesDb.nodeV2.toString())
                 //viewModel.convertNodeDtoIntoUpdateNodeDto()
+                //viewModel.convertNodeV2ToUpdateNodeDto(uiStateNodesDb.nodeV2.individual)
                 UpdateNodeBody(
-                    node = uiState.updateNodeDto,//viewModel.itemUiState.node.firstName,
+                    node = viewModel.convertNodeV2ToUpdateNodeDto(uiStateNodesDb.nodeV2.individual),//uiState.updateNodeDto,//viewModel.itemUiState.node.firstName,
                     onItemValueChange = {viewModel.updateNodeDto(it)},
                     onSaveClick = {
                         viewModel.updateNode(it)

@@ -107,9 +107,99 @@ class HomeViewModel(
         }
     }
 
+    fun loadData() {
+        viewModelScope.launch(Dispatchers.IO) {
+            val root1 = RootRegisterDbo(
+                rootId = 1,
+                rootName = "Sawai Singh"
+            )
+            offlineApiRepository.addRootRegister(root1)
+
+            val node1 = NodeDbo(
+                nodeId = 1,
+                rootId = 1,
+                familyId = 1,
+                firstName = "Me",
+                lastName = "Singh",
+                gender = 'M',
+                dateOfBirth = "2017-03-02 10:10:10",
+                placeOfBirth = "Gurgaon",
+                image_Url = "Image Url"
+            )
+            offlineApiRepository.addNode(node1)
+
+            val node2 = NodeDbo(
+                nodeId = 2,
+                rootId = 1,
+                familyId = null,
+                firstName = "Father of Me",
+                lastName = "Singh",
+                gender = 'M',
+                dateOfBirth = "2017-03-02 10:10:10",
+                placeOfBirth = "Gurgaon",
+                image_Url = "Image Url"
+            )
+            offlineApiRepository.addNode(node2)
+
+            val node3 = NodeDbo(
+                nodeId = 3,
+                rootId = 0,
+                familyId = 100,
+                firstName = "Mother of Me",
+                lastName = "Singh",
+                gender = 'F',
+                dateOfBirth = "2017-03-02 10:10:10",
+                placeOfBirth = "Bhiwani",
+                image_Url = "Image Url"
+            )
+            offlineApiRepository.addNode(node3)
+
+            val node4 = NodeDbo(
+                nodeId = 4,
+                rootId = 0,
+                familyId = null,
+                firstName = "Wife of Me",
+                lastName = "Singh",
+                gender = 'F',
+                dateOfBirth = "2017-03-02 10:10:10",
+                placeOfBirth = "Bhiwani1",
+                image_Url = "Image Url"
+            )
+            offlineApiRepository.addNode(node4)
+
+            val node5 = NodeDbo(
+                nodeId = 5,
+                rootId = 1,
+                familyId = 1,
+                firstName = "Sibling of Me",
+                lastName = "Singh",
+                gender = 'M',
+                dateOfBirth = "2017-03-02 10:10:10",
+                placeOfBirth = "Gurgaon",
+                image_Url = "Image Url"
+            )
+            offlineApiRepository.addNode(node5)
+
+            val children : List<NodeDbo> = listOf(node1,node5)
+
+            val family1 = FamilyDbo(
+                familyId = 1,
+                fatherId = 1,
+                motherId = 2,
+                fatherInfo = node2,
+                motherInfo = node3,
+                children = children
+            )
+
+            offlineApiRepository.addFamily(family1)
+        }
+    }
+
+
     init {
         checkAndSyncRootRegisterData()
         getFavoritesFromDb()
+        //loadData()
     }
 }
 

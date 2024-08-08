@@ -9,7 +9,10 @@ import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
 
 //private const val BASE_URL = "http://192.168.0.232:5233/api/MobileApi/"
-private const val BASE_URL = "http://192.168.0.232:5233/api/"
+//private const val BASE_URL = "http://192.168.0.232:5233/api/"
+//private const val BASE_URL = "http://172.25.243.171:5233/api/"
+private const val BASE_URL = "https://www.hitntry.com/api/"
+
 private fun provideHttpClient(): OkHttpClient {
     val loggingInterceptor = HttpLoggingInterceptor()
     loggingInterceptor.level = HttpLoggingInterceptor.Level.BODY

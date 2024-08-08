@@ -64,6 +64,7 @@ class NodeViewModel(
 
                 ),//it?.toNodeDto()?: NodeDto()
                 nodeStage = getFamilyTimelineV1(),
+                //updateNodeDto = it?.toUpdateNodeDto() ?: UpdateNodeDto()
                // isFavorite = isFavoriteExistV1()
 
             )
@@ -229,6 +230,7 @@ class NodeViewModel(
     }
 
     fun updateNodeDto(updateNodeDto: UpdateNodeDto){
+
         _uiState.update {
             it.copy(
                 updateNodeDto = updateNodeDto,
@@ -236,6 +238,15 @@ class NodeViewModel(
                 selectedEntity = updateNodeDto.gender
             )
         }
+
+    /*
+        uiStateNodesDb.map {
+            it.copy(
+                updateNodeDto = updateNodeDto
+            )
+        }
+
+     */
     }
 
     private fun validateInput(uiState: UpdateNodeDto = _uiState.value.updateNodeDto): Boolean {
@@ -282,6 +293,11 @@ class NodeViewModel(
             }
         }
         return nodeStage
+    }
+
+    fun convertNodeV2ToUpdateNodeDto(nodeDto: NodeDto) : UpdateNodeDto{
+        val updateNode = nodeDto.toUpdateNodeDto()
+        return  updateNode
     }
     init {
         checkAndSyncNodeData()
@@ -353,4 +369,16 @@ fun NodeDto.toTempTimelineObject(): TempTimelineObject = TempTimelineObject(
 fun NodeTimelineDto.toTempTimelineObject(): TempTimelineObject = TempTimelineObject(
     id= nodeId,
     name = "$firstName $lastName"
+)
+
+fun NodeDbo.toUpdateNodeDto() : UpdateNodeDto = UpdateNodeDto(
+    nodeId = nodeId,
+    rootId = rootId,
+    familyId = familyId.toString(),
+    firstName = firstName?: "",
+    lastName = lastName ?: "",
+    gender = gender.toString(),
+    dateOfBirth = dateOfBirth?: "",
+    placeOfBirth = placeOfBirth ?: "",
+    image_Url = image_Url ?: ""
 )
